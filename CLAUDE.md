@@ -149,6 +149,8 @@ html = re.sub(r'(--topbar-bg:\s*)#[0-9A-Fa-f]+;', f"\\g<1>{colors['topbar_bg']};
 html = re.sub(r'(--solution-label:\s*)#[0-9A-Fa-f]+;', f"\\g<1>{colors['solution_label']};", html, count=1)
 html = re.sub(r'(--footer-right-color:\s*)#[0-9A-Fa-f]+;', f"\\g<1>{colors['footer_right_color']};", html, count=1)
 
+html = html.replace('{{LOGO_FILE}}', f"../brand-assets/logo/{theme['logo_file']}")
+
 # Fill in approved content (product name, features, pain points, etc)
 
 # Hero image: keep as DASHED PLACEHOLDER for Phase 1
