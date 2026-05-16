@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SUPER MAXFIT · Internal Offering</title>
+<style>
+  :root {
+    /* THEME COLORS — replaced by Claude Code based on theme */
+    --primary: #E70012;              /* Fantech Gaming default */
+    --topbar-bg: #14171C;
+    --solution-label: #5BA84A;
+    --footer-right-color: #E70012;
+
+    /* FIXED COLORS — never change */
+    --solution-body: #555;
+    --ui-gray: #525864;
+    --card-border: #E5E7EB;
+    --card-bg: #FAFAFA;
+    --dark-text: #14171C;
+  }
+  @page { size: 264.6mm 396.9mm; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Poppins', 'Noto Sans CJK SC', sans-serif;
+    font-size: 9pt;
+    color: #14171C;
+    background: #FFFFFF;
+    line-height: 1.35;
+    font-weight: 400;
+  }
+  .page {
+    width: 264.6mm;
+    height: 396.9mm;
+    padding: 0;
+    position: relative;
+  }
+
+  /* === Top Bar === */
+  .topbar {
+    background: var(--topbar-bg);
+    color: #FFFFFF;
+    padding: 4mm 8mm;
+    display: table;
+    width: 100%;
+  }
+  .topbar-left, .topbar-right {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .topbar-right { text-align: right; font-size: 7.5pt; color: #B8BCC5; line-height: 1.3; }
+  .topbar-right b { color: #FFFFFF; font-weight: 500; }
+
+  /* Logo - 使用 Fantech 真实 Logo */
+  .logo-img {
+    height: 7mm;
+    vertical-align: middle;
+    display: inline-block;
+  }
+  .topbar-title {
+    font-size: 10pt;
+    font-weight: 500;
+    letter-spacing: 2pt;
+    color: #FFFFFF;
+    vertical-align: middle;
+    margin-left: 6mm;
+  }
+
+  /* === Title Strip === */
+  .title-strip {
+    padding: 3.5mm 8mm;
+    border-bottom: 1.5pt solid var(--primary);
+    display: table;
+    width: 100%;
+  }
+  .title-left, .title-right {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .product-name {
+    font-size: 17pt;
+    font-weight: 700;
+    letter-spacing: -0.3pt;
+    color: #14171C;
+    vertical-align: middle;
+  }
+  .product-category {
+    display: inline-block;
+    border: 1pt solid #E5E7EB;
+    background: #FFFFFF;
+    color: #525864;
+    font-size: 7.5pt;
+    padding: 1.5pt 5pt;
+    margin-left: 6pt;
+    vertical-align: middle;
+    font-weight: 400;
+  }
+  .title-right {
+    text-align: right;
+    font-size: 7pt;
+    color: #525864;
+    letter-spacing: 0.8pt;
+    font-weight: 400;
+  }
+
+  /* === Hero Block === */
+  .hero-block {
+    padding: 2mm 8mm 0;
+    display: table;
+    width: 100%;
+  }
+  .hero-left, .hero-right {
+    display: table-cell;
+    vertical-align: top;
+  }
+  .hero-left { width: 50%; padding-right: 4mm; }
+  .hero-right { width: 50%; padding-left: 4mm; }
+  .scene-tag {
+    display: inline-block;
+    background: var(--primary);
+    color: #FFFFFF;
+    font-size: 7.5pt;
+    font-weight: 600;
+    padding: 1.5pt 5pt;
+    letter-spacing: 0.6pt;
+    vertical-align: middle;
+  }
+  .scene-caption {
+    font-size: 9pt;
+    font-weight: 500;
+    color: #14171C;
+    margin-left: 4pt;
+    vertical-align: middle;
+  }
+  /* Hero image - 拉高以匹配右侧高度 */
+  .hero-img-placeholder {
+    width: 100%;
+    height: 50mm;
+    background: #FFFFFF;
+    border: 1pt dashed #D0D5DC;
+    border-radius: 2pt;
+    display: table;
+    color: #B8BCC5;
+    font-size: 8pt;
+    margin-top: 2mm;
+  }
+  .hero-img-placeholder .img-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+  }
+  .img-inner .label {
+    font-weight: 600;
+    color: #C8CDD3;
+    letter-spacing: 1.2pt;
+    font-size: 7.5pt;
+  }
+  .img-inner .hint {
+    font-size: 7pt;
+    color: #D0D5DC;
+    margin-top: 2pt;
+    font-weight: 400;
+  }
+  /* 卖点列表 — 间距更舒展 */
+  .features-title {
+    font-size: 7.5pt;
+    font-weight: 500;
+    color: #525864;
+    letter-spacing: 1.2pt;
+    margin-bottom: 3mm;
+  }
+  .feature-item {
+    margin-bottom: 4mm;
+    padding-left: 5mm;
+    position: relative;
+  }
+  .feature-item::before {
+    content: '';
+    width: 1.8mm;
+    height: 1.8mm;
+    background: var(--primary);
+    position: absolute;
+    left: 0;
+    top: 1.8mm;
+    border-radius: 50%;
+  }
+  .feature-name {
+    font-size: 8.5pt;
+    font-weight: 600;
+    color: #14171C;
+    margin-bottom: 0.8pt;
+    line-height: 1.3;
+  }
+  .feature-name.red { color: var(--primary); }
+  .feature-desc {
+    font-size: 7.5pt;
+    color: #525864;
+    line-height: 1.35;
+    font-weight: 400;
+  }
+  .feature-desc b { color: #14171C; font-weight: 600; }
+
+  /* === Hero Feature & Software Row — 精简版 === */
+  .feature-row {
+    padding: 0 8mm;
+    display: table;
+    width: 100%;
+  }
+  .feature-row-inner {
+    padding-top: 3.5mm;
+    display: table;
+    width: 100%;
+  }
+  .fr-left {
+    border-top: 2pt solid var(--primary);
+    padding-top: 4mm;
+  }
+  .fr-right {
+    border-top: 1pt solid #E5E7EB;
+    padding-top: 4mm;
+  }
+  .fr-left, .fr-right {
+    display: table-cell;
+    vertical-align: top;
+  }
+  .fr-left { width: 50%; padding-right: 5mm; }
+  .fr-right { width: 50%; padding-left: 5mm; border-left: 1pt solid #E5E7EB; }
+  .feature-label-row {
+    white-space: nowrap;
+    display: block;
+  }
+  .feature-label {
+    display: inline-block;
+    background: var(--primary);
+    color: #FFFFFF;
+    font-size: 6.5pt;
+    font-weight: 600;
+    padding: 1.5pt 4.5pt;
+    letter-spacing: 0.5pt;
+    vertical-align: middle;
+  }
+  .feature-headline {
+    display: inline-block;
+    font-size: 9pt;
+    font-weight: 700;
+    color: #14171C;
+    margin-left: 4pt;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .feature-sub {
+    font-size: 8pt;
+    color: #525864;
+    margin: 3mm 0 4mm;
+    font-weight: 400;
+    line-height: 1.35;
+  }
+  /* Hero Feature Detail 卡片 - 带边框 + 浅灰底,严格仿原版 */
+  .mode-row {
+    display: table;
+    width: 100%;
+    margin-top: 3mm;
+  }
+  .mode-cell {
+    display: table-cell;
+    padding-right: 2.5mm;
+    vertical-align: top;
+    width: 50%;
+  }
+  .mode-cell:last-child { padding-right: 0; padding-left: 2.5mm; }
+  .mode-card {
+    background: #FAFAFA;
+    border: 1pt solid #E5E7EB;
+    padding: 3mm 3.5mm 3mm;
+  }
+  .mode-tag {
+    font-size: 6.5pt;
+    color: var(--primary);
+    font-weight: 600;
+    letter-spacing: 0.8pt;
+    margin-bottom: 0.5pt;
+  }
+  .mode-title {
+    font-size: 9pt;
+    font-weight: 700;
+    color: #14171C;
+    margin-bottom: 3mm;
+  }
+  .mode-img {
+    width: 100%;
+    height: 28mm;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F0F0F0 100%);
+    border-radius: 1pt;
+    display: table;
+    margin-bottom: 2.5mm;
+  }
+  .mode-img .img-inner { display: table-cell; vertical-align: middle; text-align: center; color: #6B6F76; font-size: 7pt; }
+  .mode-desc {
+    font-size: 7.5pt;
+    color: #525864;
+    line-height: 1.35;
+    font-weight: 400;
+    text-align: center;
+    padding: 0 2mm;
+  }
+  .sw-editor-row {
+    display: table;
+    width: 100%;
+    margin-top: 3mm;
+  }
+  .sw-editor-cell {
+    display: table-cell;
+    padding-right: 2.5mm;
+    vertical-align: top;
+    width: 50%;
+  }
+  .sw-editor-cell:last-child { padding-right: 0; padding-left: 2.5mm; }
+  .sw-editor-card {
+    background: #FAFAFA;
+    border: 1pt solid #E5E7EB;
+    padding: 2.5mm 3mm 3mm;
+  }
+  .sw-editor-img {
+    width: 100%;
+    height: 18mm;
+    background: linear-gradient(135deg, #1A1816 0%, #2A2622 100%);
+    border-radius: 1pt;
+    display: table;
+    margin-bottom: 2.5mm;
+  }
+  .sw-editor-img .img-inner { display: table-cell; vertical-align: middle; text-align: center; color: #6B6F76; font-size: 7pt; }
+  .sw-editor-name {
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #14171C;
+    margin-bottom: 1pt;
+  }
+  .sw-editor-desc {
+    font-size: 7.5pt;
+    color: #525864;
+    line-height: 1.3;
+    font-weight: 400;
+  }
+
+  /* === Price Strip - 仿原版 #1A1A1A === */
+  .price-strip {
+    background: #1A1A1A;
+    margin-top: 4mm;
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  .price-cell {
+    display: table-cell;
+    padding: 3mm 4mm;
+    vertical-align: top;
+    border-right: 1pt solid #2A2D33;
+  }
+  .price-cell:last-child { border-right: none; }
+  .price-label {
+    font-size: 6.5pt;
+    color: #B8BCC5;
+    letter-spacing: 1pt;
+    font-weight: 500;
+    margin-bottom: 1mm;
+  }
+  .price-value {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1.1;
+  }
+  .price-value.red { color: var(--primary); font-size: 15pt; }
+  .price-suffix {
+    font-size: 7pt;
+    color: #B8BCC5;
+    margin-top: 1pt;
+    font-weight: 400;
+  }
+
+  /* === Lower Block === */
+  .lower-block {
+    padding: 1.5mm 8mm 15mm;
+    display: table;
+    width: 100%;
+  }
+  .lower-left, .lower-right {
+    display: table-cell;
+    vertical-align: top;
+  }
+  .lower-left { width: 52%; padding-right: 5mm; }
+  .lower-right { width: 48%; padding-left: 5mm; border-left: 1pt solid #E5E7EB; }
+
+  .section-title {
+    font-size: 7.5pt;
+    font-weight: 600;
+    color: #14171C;
+    letter-spacing: 1.2pt;
+    margin-bottom: 3mm;
+  }
+  /* Pain Items - 对齐原版样式 */
+  .pain-item {
+    margin-bottom: 6.5mm;
+    padding-left: 6mm;
+    position: relative;
+  }
+  .pain-num {
+    position: absolute;
+    left: 0;
+    top: 0.3mm;
+    width: 4.2mm;
+    height: 4.2mm;
+    background: var(--primary);
+    color: #FFFFFF;
+    font-size: 7pt;
+    font-weight: 600;
+    text-align: center;
+    line-height: 4.2mm;
+    border-radius: 50%;
+  }
+  .pain-problem {
+    font-size: 7.8pt;
+    font-weight: 600;
+    color: #14171C;
+    margin-bottom: 0.8mm;
+    line-height: 1.3;
+  }
+  .pain-arrow-mini {
+    color: #B8BCC5;
+    font-size: 7pt;
+    line-height: 1;
+    margin: 0.3mm 0 0.5mm 4mm;
+    font-weight: 400;
+  }
+  .pain-solution {
+    font-size: 7.5pt;
+    line-height: 1.35;
+    font-weight: 400;
+    padding-left: 0;
+    display: block;
+  }
+  .pain-solution .sol-label {
+    color: var(--solution-label);
+    font-weight: 700;
+    margin-right: 4pt;
+  }
+  .pain-solution .sol-body {
+    color: #555;
+    font-weight: 400;
+  }
+
+  /* === Right column blocks === */
+  .product-views {
+    display: table;
+    width: 100%;
+    margin-bottom: 2mm;
+  }
+  .pv-cell {
+    display: table-cell;
+    vertical-align: top;
+    padding: 0 1.5mm;
+    width: 50%;
+    text-align: center;
+  }
+  .pv-img {
+    width: 100%;
+    height: 24mm;
+    background: linear-gradient(135deg, #F5F5F5 0%, #E0E0E0 100%);
+    border-radius: 2pt;
+    display: table;
+    color: #6B6F76;
+    font-size: 7pt;
+  }
+  .pv-img .img-inner { display: table-cell; vertical-align: middle; text-align: center; }
+  .pv-caption {
+    font-size: 7pt;
+    color: #525864;
+    letter-spacing: 1pt;
+    margin-top: 2pt;
+    font-weight: 500;
+  }
+
+  .info-block {
+    margin-bottom: 2mm;
+  }
+  /* 带 tag 的 info-block (PARTNER / BOX) 加外框 */
+  .info-block-framed {
+    border: 1pt solid #E5E7EB;
+    padding: 2mm 3mm 1mm;
+    margin-bottom: 1.8mm;
+  }
+  .info-title {
+    font-size: 7pt;
+    font-weight: 600;
+    color: #14171C;
+    letter-spacing: 1.2pt;
+    margin-bottom: 1.5mm;
+  }
+  .info-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  .info-list li {
+    font-size: 7.5pt;
+    color: #14171C;
+    padding: 0.3pt 0;
+    padding-left: 4mm;
+    position: relative;
+    line-height: 1.3;
+    font-weight: 400;
+  }
+  .info-list li::before {
+    content: '·';
+    color: var(--primary);
+    position: absolute;
+    left: 1mm;
+    font-weight: 700;
+    font-size: 11pt;
+    top: -3pt;
+  }
+
+  .timeline {
+    background: #FAFAFA;
+    border: 1pt solid #E5E7EB;
+    padding: 2.5mm 4mm;
+    margin-bottom: 2mm;
+  }
+  .timeline-row {
+    display: table;
+    width: 100%;
+  }
+  .timeline-cell {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+  }
+  .timeline-days {
+    font-size: 15pt;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1;
+    display: block;
+  }
+  .timeline-days-sub {
+    font-size: 6.5pt;
+    color: #525864;
+    letter-spacing: 1pt;
+    font-weight: 500;
+    display: block;
+    margin-top: 1pt;
+  }
+  .timeline-stage {
+    font-size: 7.5pt;
+    color: #525864;
+    font-weight: 400;
+    margin-top: 1mm;
+    line-height: 1.25;
+  }
+  .timeline-arrow {
+    display: table-cell;
+    vertical-align: middle;
+    color: #B8BCC5;
+    font-size: 9pt;
+    width: 3mm;
+    font-weight: 400;
+  }
+  .timeline-total {
+    font-size: 7pt;
+    color: #525864;
+    margin-top: 1.5mm;
+    padding-top: 1.5mm;
+    border-top: 1pt solid #E5E7EB;
+    font-weight: 400;
+  }
+  .timeline-total b { color: var(--primary); font-weight: 700; }
+
+  .tag-grid {
+    margin-top: 1mm;
+  }
+  .tag-box {
+    display: inline-block;
+    border: 1pt solid #E5E7EB;
+    background: #FFFFFF;
+    padding: 1.5pt 6pt;
+    font-size: 7pt;
+    color: #14171C;
+    margin: 0 1.5pt 2pt 0;
+    font-weight: 400;
+  }
+
+  /* === Footer === */
+  .footer {
+    padding: 0 8mm;
+    display: table;
+    width: 100%;
+    font-size: 6.5pt;
+    color: #525864;
+    line-height: 1;
+    position: absolute;
+    bottom: 4mm;
+    left: 0;
+  }
+  .footer-left, .footer-right {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .footer-right {
+    text-align: right;
+    color: var(--footer-right-color);
+    font-weight: 800;
+    letter-spacing: 1pt;
+    font-size: 7.5pt;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <img class="logo-img" src="assets/fantech_logo/fantech_horizontal_for_dark.png" alt="FANTECH">
+      <span class="topbar-title">INTERNAL OFFERING</span>
+    </div>
+    <div class="topbar-right">Document Date<br><b>May 2026</b></div>
+  </div>
+
+  <!-- TITLE STRIP -->
+  <div class="title-strip">
+    <div class="title-left">
+      <span class="product-name">SUPER MAXFIT</span>
+      <span class="product-category">Wireless Mechanical Keyboard</span>
+    </div>
+    <div class="title-right">TRI-MODE · GASKET MOUNT · ACOUSTIC KNIT TOP · BLACK</div>
+  </div>
+
+  <!-- HERO BLOCK -->
+  <div class="hero-block">
+    <div class="hero-left">
+      <div>
+        <span class="scene-tag">APPLICATION SCENE</span>
+        <span class="scene-caption">Premium Desk &amp; Hybrid Workspace</span>
+      </div>
+      <div class="hero-img-placeholder">
+        <div class="img-inner">
+          <div class="label">HERO IMAGE</div>
+          <div class="hint">Lovart Prompt #HERO</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="features-title">PRODUCT UNIQUE FEATURES</div>
+      <div class="feature-item">
+        <div class="feature-name red">Acoustic Knit Top — A Keyboard That Belongs on a Premium Desk</div>
+        <div class="feature-desc">Fabric-finished top panel with embedded LED matrix display. <b>The signature visual language of SUPER MAXFIT</b> — premium texture where every other keyboard shows plastic.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-name">LED Matrix Display · 7×33 Pixels with Live Clock</div>
+        <div class="feature-desc">Built-in pixel display shows time by default, fully customizable via web driver — your desk gains a private information screen.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-name">Dual Smart Knobs · Volume + Mode</div>
+        <div class="feature-desc">Large knob for volume, small knob for device/mode switching. High-frequency actions become physical and instant.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-name">KTT Misty Blue Linear · 43gf · 50M Lifespan</div>
+        <div class="feature-desc">Light linear feel tuned for all-day typing and gaming. Misty blue / purple POM stems — even the switches look premium.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-name">8000 mAh · Up to 200-Hour Battery</div>
+        <div class="feature-desc">Largest battery in its class. Backlit gaming still lasts a full work week (40 hours); lights-off mode hits 200 hours.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-name">Gasket Mount + 4-Layer Sound Dampening</div>
+        <div class="feature-desc">Plate foam + IXPE + TPR + bottom foam, paired with gasket-floating mount for that deep "thock" — quality you can hear.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO FEATURE + SOFTWARE ROW -->
+  <div class="feature-row">
+   <div class="feature-row-inner">
+    <div class="fr-left">
+      <div>
+        <span class="feature-label">HERO FEATURE</span>
+        <span class="feature-headline">Acoustic Knit Top</span>
+      </div>
+      <div class="feature-sub">The keyboard's most visible surface is no longer cold plastic — it's a fabric-and-display composite. SUPER MAXFIT's signature look.</div>
+      <div class="mode-row">
+        <div class="mode-cell">
+          <div class="mode-card">
+            <div class="mode-tag">DETAIL 01</div>
+            <div class="mode-title">Knit Fabric Surface</div>
+            <div class="mode-img"><div class="img-inner">#DETAIL-01<br>Knit Top Macro</div></div>
+            <div class="mode-desc">Speaker-grade knit fabric across the top — a tactile, premium finish.</div>
+          </div>
+        </div>
+        <div class="mode-cell">
+          <div class="mode-card">
+            <div class="mode-tag">DETAIL 02</div>
+            <div class="mode-title">LED Matrix Display</div>
+            <div class="mode-img"><div class="img-inner">#DETAIL-02<br>Matrix Lit-Up</div></div>
+            <div class="mode-desc">7×33 pixels embedded beneath the fabric. Live clock + custom pixel art.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fr-right">
+      <div>
+        <span class="feature-label">SOFTWARE CONTROL</span>
+        <span class="feature-headline">Customize Everything in One App</span>
+      </div>
+      <div class="feature-sub">Web-based driver — no install required. Customize the matrix display, key mapping, and lighting modes from any browser.</div>
+      <div class="sw-editor-row">
+        <div class="sw-editor-cell">
+          <div class="sw-editor-card">
+            <div class="sw-editor-img"><div class="img-inner">#SW-01<br>Matrix Editor</div></div>
+            <div class="sw-editor-name">Matrix Display Editor</div>
+            <div class="sw-editor-desc">Pre-loaded animations + pixel art editor — design your own frame-by-frame patterns.</div>
+          </div>
+        </div>
+        <div class="sw-editor-cell">
+          <div class="sw-editor-card">
+            <div class="sw-editor-img"><div class="img-inner">#SW-02<br>Lighting Editor</div></div>
+            <div class="sw-editor-name">Lighting &amp; Keymap</div>
+            <div class="sw-editor-desc">19 ARGB modes, full key remapping, macro recording — all in one browser tab.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+   </div>
+  </div>
+
+  <!-- PRICE STRIP -->
+  <div class="price-strip">
+    <div class="price-cell">
+      <div class="price-label">EX-WORKS PRICE</div>
+      <div class="price-value red">¥ TBD</div>
+      <div class="price-suffix">RMB · Tax excl. · Full pkg</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">MOQ</div>
+      <div class="price-value">1,000 pcs</div>
+      <div class="price-suffix">Min. order qty</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">COLOR</div>
+      <div class="price-value">Black</div>
+      <div class="price-suffix">OEM colorway available</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">BOX SIZE</div>
+      <div class="price-value">TBD</div>
+      <div class="price-suffix">To be confirmed</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">CARTON QTY</div>
+      <div class="price-value">10 pcs</div>
+      <div class="price-suffix">Per master carton</div>
+    </div>
+  </div>
+
+  <!-- LOWER BLOCK -->
+  <div class="lower-block">
+    <div class="lower-left">
+      <div class="section-title">PAIN POINTS &amp; SOLUTIONS</div>
+
+      <div class="pain-item">
+        <div class="pain-num">1</div>
+        <div class="pain-problem">"Premium" keyboards still ship with cheap plastic tops — they ruin a thousand-dollar desk setup.</div>
+        <div class="pain-solution"><span class="sol-label">Solution:</span> <span class="sol-body">Acoustic knit fabric top — turns the most visible surface into a designed object that fits a premium desk.</span></div>
+      </div>
+
+      <div class="pain-item">
+        <div class="pain-num">2</div>
+        <div class="pain-problem">Switching between MacBook, iPad, and phone wastes minutes on Bluetooth re-pairing every time.</div>
+        <div class="pain-solution"><span class="sol-label">Solution:</span> <span class="sol-body">Side mode-knob + BT 5.3 with 3-device memory — twist once, one-second context switching, no Fn combos.</span></div>
+      </div>
+
+      <div class="pain-item">
+        <div class="pain-num">3</div>
+        <div class="pain-problem">Keycap legends fade after a year — your "premium" board ends up looking three years old.</div>
+        <div class="pain-solution"><span class="sol-label">Solution:</span> <span class="sol-body">PBT double-shot keycaps — legends molded through the cap, physically cannot fade. Arrow keys dye-sublimated in color.</span></div>
+      </div>
+
+      <div class="pain-item">
+        <div class="pain-num">4</div>
+        <div class="pain-problem">Mid-meeting volume, mute, and time-check all require Fn combos or removing hands from keys.</div>
+        <div class="pain-solution"><span class="sol-label">Solution:</span> <span class="sol-body">Dual knobs + LED matrix clock — three high-frequency desktop actions become physical and visual.</span></div>
+      </div>
+
+      <div class="pain-item">
+        <div class="pain-num">5</div>
+        <div class="pain-problem">Most wireless keyboards die in a day with RGB on — at that point, why bother going wireless?</div>
+        <div class="pain-solution"><span class="sol-label">Solution:</span> <span class="sol-body">8000 mAh — largest battery in its class. 40 hrs backlit, 200 hrs lights-off. A spec number that sells.</span></div>
+      </div>
+
+      <div class="pain-item">
+        <div class="pain-num">6</div>
+        <div class="pain-problem">Mechanical keyboards sound thin and hollow — cheap acoustics kill any premium feel.</div>
+        <div class="pain-solution"><span class="sol-label">Solution:</span> <span class="sol-body">Gasket mount + 4-layer dampening with KTT Misty Blue linear switches. Deep "thock" — quality you can hear.</span></div>
+      </div>
+    </div>
+
+    <div class="lower-right">
+      <div class="product-views">
+        <div class="pv-cell">
+          <div class="pv-img"><div class="img-inner">#TOP-VIEW</div></div>
+          <div class="pv-caption">TOP VIEW</div>
+        </div>
+        <div class="pv-cell">
+          <div class="pv-img"><div class="img-inner">#ANGLE-VIEW</div></div>
+          <div class="pv-caption">ANGLE VIEW</div>
+        </div>
+      </div>
+
+      <div class="info-block">
+        <div class="info-title">PAYMENT &amp; INVOICE TERMS</div>
+        <ul class="info-list">
+          <li>RMB &amp; USD both accepted</li>
+          <li>Buy-order customs clearance — factory handles full export declaration</li>
+          <li>VAT invoice at 10% · Split invoicing supported</li>
+          <li>Full balance settled before goods release</li>
+          <li>Full OEM / ODM custom branding on request</li>
+        </ul>
+      </div>
+
+      <div class="info-block">
+        <div class="info-title">PROJECT TIMELINE</div>
+        <div class="timeline">
+          <div class="timeline-row">
+            <div class="timeline-cell">
+              <span class="timeline-days">7</span>
+              <span class="timeline-days-sub">DAYS</span>
+              <div class="timeline-stage">Dev &amp; Sampling</div>
+            </div>
+            <div class="timeline-arrow">›</div>
+            <div class="timeline-cell">
+              <span class="timeline-days">30</span>
+              <span class="timeline-days-sub">DAYS</span>
+              <div class="timeline-stage">Artwork Setup</div>
+            </div>
+            <div class="timeline-arrow">›</div>
+            <div class="timeline-cell">
+              <span class="timeline-days">20</span>
+              <span class="timeline-days-sub">DAYS</span>
+              <div class="timeline-stage">Production Lead Time</div>
+            </div>
+          </div>
+          <div class="timeline-total">Total: <b>~57 Days</b> from order to shipment</div>
+        </div>
+      </div>
+
+      <div class="info-block-framed">
+        <div class="info-title">IDEAL PARTNER PROFILE</div>
+        <div class="tag-grid">
+          <span class="tag-box">OEM Brands</span>
+          <span class="tag-box">ODM Partners</span>
+          <span class="tag-box">Distributors</span>
+          <span class="tag-box">Channel Partners</span>
+          <span class="tag-box">Retail Chains</span>
+          <span class="tag-box">Office E-commerce</span>
+        </div>
+      </div>
+
+      <div class="info-block-framed">
+        <div class="info-title">WHAT'S IN THE BOX</div>
+        <div class="tag-grid">
+          <span class="tag-box">SUPER MAXFIT Keyboard</span>
+          <span class="tag-box">USB Dongle</span>
+          <span class="tag-box">USB-C Braided Cable 1.8m</span>
+          <span class="tag-box">Extra Switches × 2</span>
+          <span class="tag-box">Switch &amp; Keycap Puller</span>
+          <span class="tag-box">Quick Start Guide</span>
+          <span class="tag-box">Warranty Card</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-left">SUPER MAXFIT · Wireless Mechanical Keyboard · Black · FANTECH Internal Offering · Confidential — Not for Distribution</div>
+    <div class="footer-right">INTERNAL OFFERING — MAY 2026</div>
+  </div>
+
+</div>
+</body>
+</html>

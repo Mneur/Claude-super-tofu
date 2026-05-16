@@ -1,0 +1,89 @@
+{
+  "version": "1.0",
+  "locked_date": "2026-05-16",
+  "description": "Fantech Offering theme color system. ONLY these 3 themes allowed.",
+
+  "themes": {
+    "fantech-gaming": {
+      "trigger_words": ["fantech gaming", "gaming", "游戏", "fantech 红"],
+      "brand_name": "FANTECH",
+      "logo_file": "fantech_horizontal_for_dark.png",
+      "description": "红色游戏外设主题 · 键鼠 / 耳机 / 游戏外设",
+
+      "colors": {
+        "primary": "#E70012",
+        "primary_dark": "#B8000E",
+        "topbar_bg": "#14171C",
+        "price_strip_bg": "#1A1A1A",
+        "solution_label": "#5BA84A",
+        "footer_right_color": "#E70012"
+      },
+
+      "use_cases": ["mechanical keyboards", "gaming mice", "gaming headsets", "RGB peripherals", "esports gear"]
+    },
+
+    "office": {
+      "trigger_words": ["office", "办公", "商务", "minimal", "极简"],
+      "brand_name": "FANTECH",
+      "logo_file": "fantech_horizontal_for_dark.png",
+      "description": "极简灰黑主题 · 办公键鼠 / 商务产品 / 静音外设",
+
+      "colors": {
+        "primary": "#1A1A1A",
+        "primary_dark": "#000000",
+        "topbar_bg": "#1A1A1A",
+        "price_strip_bg": "#1A1A1A",
+        "solution_label": "#1A1A1A",
+        "footer_right_color": "#1A1A1A"
+      },
+
+      "use_cases": ["silent office keyboards", "wireless mice for work", "ergonomic accessories", "business peripherals"]
+    },
+
+    "finecoustic-audio": {
+      "trigger_words": ["audio", "音频", "finecoustic", "高端音频"],
+      "brand_name": "FINECOUSTIC",
+      "logo_file": "finecoustic_horizontal_for_dark.png",
+      "description": "Finecoustic 高端黄金主题 · 耳机 / 音箱 / 麦克风",
+
+      "colors": {
+        "primary": "#FFCC00",
+        "primary_dark": "#C29200",
+        "topbar_bg": "#1C1814",
+        "price_strip_bg": "#1A1A1A",
+        "solution_label": "#C29200",
+        "footer_right_color": "#FFCC00"
+      },
+
+      "note_for_audio_theme": "Primary color on topbar/price-strip black areas should use light text color for contrast. Solution label uses darker gold #C29200 for body text readability.",
+
+      "use_cases": ["high-end headphones", "studio monitors", "premium speakers", "audiophile microphones", "DACs / amplifiers"]
+    }
+  },
+
+  "fixed_colors": {
+    "comment": "These colors are FIXED across all 3 themes. Never change.",
+    "solution_body_gray": "#555555",
+    "ui_gray_text": "#525864",
+    "card_border": "#E5E7EB",
+    "card_background": "#FAFAFA",
+    "dark_text": "#14171C",
+    "placeholder_dashed_border": "#D0D5DC",
+    "placeholder_label_text": "#C8CDD3"
+  },
+
+  "typography": {
+    "primary_font": "Poppins",
+    "chinese_font_fallback": "Noto Sans CJK SC",
+    "base_font_size": "9pt",
+    "global_line_height": "1.35"
+  },
+
+  "page_specs": {
+    "width_mm": 264.6,
+    "height_mm": 396.9,
+    "width_pt": 750,
+    "height_pt": 1125,
+    "margin": "0 (full bleed)"
+  }
+}

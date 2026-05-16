@@ -1,0 +1,17 @@
+# Intermediate render files
+output/.tmp_*.html
+output/*_preview-*.png
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Editor
+.vscode/
+.idea/
+*.swp
