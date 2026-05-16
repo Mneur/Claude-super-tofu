@@ -25,7 +25,7 @@
     "office": {
       "trigger_words": ["office", "办公", "商务", "minimal", "极简"],
       "brand_name": "FANTECH",
-      "logo_file": "fantech_horizontal_for_dark.png",
+      "logo_file": "Office_for_dark.png",
       "description": "极简灰黑主题 · 办公键鼠 / 商务产品 / 静音外设",
 
       "colors": {
@@ -43,7 +43,7 @@
     "finecoustic-audio": {
       "trigger_words": ["audio", "音频", "finecoustic", "高端音频"],
       "brand_name": "FINECOUSTIC",
-      "logo_file": "finecoustic_horizontal_for_dark.png",
+      "logo_file": "F2_for_dark.png",
       "description": "Finecoustic 高端黄金主题 · 耳机 / 音箱 / 麦克风",
 
       "colors": {
