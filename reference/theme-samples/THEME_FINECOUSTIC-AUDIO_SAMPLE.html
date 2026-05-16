@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TEST-X · Internal Offering</title>
+<style>
+  :root {
+    --primary: #FFCC00;
+    --topbar-bg: #1C1814;
+    --solution-label: #C29200;
+    --footer-right-color: #FFCC00;
+    --solution-body: #555;
+    --ui-gray: #525864;
+    --card-border: #E5E7EB;
+    --card-bg: #FAFAFA;
+    --dark-text: #14171C;
+  }
+  @page { size: 264.6mm 396.9mm; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Poppins', 'Noto Sans CJK SC', sans-serif;
+    font-size: 9pt;
+    color: #14171C;
+    background: #FFFFFF;
+    line-height: 1.35;
+    font-weight: 400;
+  }
+  .page { width: 264.6mm; height: 396.9mm; padding: 0; position: relative; overflow: hidden; }
+
+  .topbar { background: var(--topbar-bg); color: #FFFFFF; padding: 4mm 8mm; display: table; width: 100%; }
+  .topbar-left, .topbar-right { display: table-cell; vertical-align: middle; }
+  .topbar-right { text-align: right; font-size: 7.5pt; color: #B8BCC5; line-height: 1.3; }
+  .topbar-right b { color: #FFFFFF; font-weight: 500; }
+  .logo-img { height: 7mm; vertical-align: middle; display: inline-block; }
+  .topbar-title { font-size: 10pt; font-weight: 500; letter-spacing: 2pt; color: #FFFFFF; vertical-align: middle; margin-left: 6mm; }
+
+  .title-strip { padding: 3.5mm 8mm; border-bottom: 1.5pt solid var(--primary); display: table; width: 100%; }
+  .title-left, .title-right { display: table-cell; vertical-align: middle; }
+  .product-name { font-size: 17pt; font-weight: 700; letter-spacing: -0.3pt; color: #14171C; vertical-align: middle; }
+  .product-category { display: inline-block; border: 1pt solid #E5E7EB; background: #FFFFFF; color: #525864; font-size: 7.5pt; padding: 1.5pt 5pt; margin-left: 6pt; vertical-align: middle; font-weight: 400; }
+  .title-right { text-align: right; font-size: 7pt; color: #525864; letter-spacing: 0.8pt; font-weight: 400; }
+
+  .hero-block { padding: 2mm 8mm 0; display: table; width: 100%; }
+  .hero-left, .hero-right { display: table-cell; vertical-align: top; }
+  .hero-left { width: 50%; padding-right: 4mm; }
+  .hero-right { width: 50%; padding-left: 4mm; }
+  .scene-tag { display: inline-block; background: var(--primary); color: #FFFFFF; font-size: 7.5pt; font-weight: 600; padding: 1.5pt 5pt; letter-spacing: 0.6pt; vertical-align: middle; }
+  .scene-caption { font-size: 9pt; font-weight: 500; color: #14171C; margin-left: 4pt; vertical-align: middle; }
+  .hero-img-placeholder { width: 100%; height: 50mm; background: #FFFFFF; border: 1pt dashed #D0D5DC; border-radius: 2pt; display: table; color: #B8BCC5; font-size: 8pt; margin-top: 2mm; }
+  .hero-img-placeholder .img-inner { display: table-cell; vertical-align: middle; text-align: center; }
+  .img-inner .label { font-weight: 600; color: #C8CDD3; letter-spacing: 1.2pt; font-size: 7.5pt; }
+  .img-inner .hint { font-size: 7pt; color: #D0D5DC; margin-top: 2pt; font-weight: 400; }
+  .features-title { font-size: 7.5pt; font-weight: 500; color: #525864; letter-spacing: 1.2pt; margin-bottom: 3mm; }
+  .feature-item { margin-bottom: 4mm; padding-left: 5mm; position: relative; }
+  .feature-item::before { content: ''; width: 1.8mm; height: 1.8mm; background: var(--primary); position: absolute; left: 0; top: 1.8mm; border-radius: 50%; }
+  .feature-name { font-size: 8.5pt; font-weight: 600; color: #14171C; margin-bottom: 0.8pt; line-height: 1.3; }
+  .feature-name.red { color: var(--primary); }
+  .feature-desc { font-size: 7.5pt; color: #525864; line-height: 1.35; font-weight: 400; }
+  .feature-desc b { color: #14171C; font-weight: 600; }
+
+  .feature-row { padding: 0 8mm; display: table; width: 100%; }
+  .feature-row-inner { padding-top: 3.5mm; display: table; width: 100%; }
+  .fr-left { border-top: 2pt solid var(--primary); padding-top: 4mm; }
+  .fr-right { border-top: 1pt solid #E5E7EB; padding-top: 4mm; }
+  .fr-left, .fr-right { display: table-cell; vertical-align: top; }
+  .fr-left { width: 50%; padding-right: 5mm; }
+  .fr-right { width: 50%; padding-left: 5mm; border-left: 1pt solid #E5E7EB; }
+  .feature-label-row { white-space: nowrap; display: block; }
+  .feature-label { display: inline-block; background: var(--primary); color: #FFFFFF; font-size: 6.5pt; font-weight: 600; padding: 1.5pt 4.5pt; letter-spacing: 0.5pt; vertical-align: middle; }
+  .feature-headline { display: inline-block; font-size: 9pt; font-weight: 700; color: #14171C; margin-left: 4pt; vertical-align: middle; white-space: nowrap; }
+  .feature-sub { font-size: 8pt; color: #525864; margin: 3mm 0 4mm; font-weight: 400; line-height: 1.35; }
+  .mode-row { display: table; width: 100%; margin-top: 3mm; }
+  .mode-cell { display: table-cell; padding-right: 2.5mm; vertical-align: top; width: 50%; }
+  .mode-cell:last-child { padding-right: 0; padding-left: 2.5mm; }
+  .mode-card { background: #FAFAFA; border: 1pt solid #E5E7EB; padding: 3mm 3.5mm 3mm; }
+  .mode-tag { font-size: 6.5pt; color: var(--primary); font-weight: 600; letter-spacing: 0.8pt; margin-bottom: 0.5pt; }
+  .mode-title { font-size: 9pt; font-weight: 700; color: #14171C; margin-bottom: 3mm; }
+  .mode-img { width: 100%; height: 28mm; background: #FFFFFF; border: 1pt dashed #D0D5DC; border-radius: 1pt; display: table; margin-bottom: 2.5mm; }
+  .mode-img .img-inner { display: table-cell; vertical-align: middle; text-align: center; color: #C8CDD3; font-size: 7pt; font-weight: 600; letter-spacing: 1pt; }
+  .mode-desc { font-size: 7.5pt; color: #525864; line-height: 1.35; font-weight: 400; text-align: center; padding: 0 2mm; }
+  .sw-editor-row { display: table; width: 100%; margin-top: 3mm; }
+  .sw-editor-cell { display: table-cell; padding-right: 2.5mm; vertical-align: top; width: 50%; }
+  .sw-editor-cell:last-child { padding-right: 0; padding-left: 2.5mm; }
+  .sw-editor-card { background: #FAFAFA; border: 1pt solid #E5E7EB; padding: 2.5mm 3mm 3mm; }
+  .sw-editor-img { width: 100%; height: 18mm; background: #FFFFFF; border: 1pt dashed #D0D5DC; border-radius: 1pt; display: table; margin-bottom: 2.5mm; }
+  .sw-editor-img .img-inner { display: table-cell; vertical-align: middle; text-align: center; color: #C8CDD3; font-size: 7pt; font-weight: 600; letter-spacing: 1pt; }
+  .sw-editor-name { font-size: 8.5pt; font-weight: 700; color: #14171C; margin-bottom: 1pt; }
+  .sw-editor-desc { font-size: 7.5pt; color: #525864; line-height: 1.3; font-weight: 400; }
+
+  .price-strip { background: #1A1A1A; margin-top: 4mm; display: table; width: 100%; table-layout: fixed; }
+  .price-cell { display: table-cell; padding: 3mm 4mm; vertical-align: top; border-right: 1pt solid #2A2D33; }
+  .price-cell:last-child { border-right: none; }
+  .price-label { font-size: 6.5pt; color: #B8BCC5; letter-spacing: 1pt; font-weight: 500; margin-bottom: 1mm; }
+  .price-value { font-size: 13pt; font-weight: 700; color: #FFFFFF; line-height: 1.1; }
+  .price-value.red { color: var(--primary); font-size: 15pt; }
+  .price-suffix { font-size: 7pt; color: #B8BCC5; margin-top: 1pt; font-weight: 400; }
+
+  .lower-block { padding: 1.5mm 8mm 10mm; display: table; width: 100%; }
+  .lower-left, .lower-right { display: table-cell; vertical-align: top; }
+  .lower-left { width: 52%; padding-right: 5mm; }
+  .lower-right { width: 48%; padding-left: 5mm; border-left: 1pt solid #E5E7EB; }
+  .section-title { font-size: 7.5pt; font-weight: 600; color: #14171C; letter-spacing: 1.2pt; margin-bottom: 3mm; }
+
+  .pain-item { margin-bottom: 5.5mm; padding-left: 6mm; position: relative; }
+  .pain-num { position: absolute; left: 0; top: 0.3mm; width: 4.2mm; height: 4.2mm; background: var(--primary); color: #FFFFFF; font-size: 7pt; font-weight: 600; text-align: center; line-height: 4.2mm; border-radius: 50%; }
+  .pain-problem { font-size: 7.8pt; font-weight: 600; color: #14171C; margin-bottom: 0.8mm; line-height: 1.3; }
+  .pain-solution { font-size: 7.5pt; line-height: 1.35; font-weight: 400; padding-left: 0; display: block; }
+  .pain-solution .sol-label { color: var(--solution-label); font-weight: 700; margin-right: 4pt; }
+  .pain-solution .sol-body { color: #555; font-weight: 400; }
+
+  .product-views { display: table; width: 100%; margin-bottom: 2mm; }
+  .pv-cell { display: table-cell; vertical-align: top; padding: 0 1.5mm; width: 50%; text-align: center; }
+  .pv-img { width: 100%; height: 22mm; background: #FFFFFF; border: 1pt solid #E5E7EB; border-radius: 2pt; display: table; color: #6B6F76; font-size: 7pt; overflow: hidden; }
+  .pv-img .img-inner { display: table-cell; vertical-align: middle; text-align: center; }
+  .pv-img img { max-width: 100%; max-height: 100%; vertical-align: middle; }
+  .pv-img.placeholder { border: 1pt dashed #D0D5DC; }
+  .pv-img.placeholder .img-inner { color: #C8CDD3; font-weight: 600; letter-spacing: 1pt; }
+  .pv-caption { font-size: 7pt; color: #525864; letter-spacing: 1pt; margin-top: 2pt; font-weight: 500; }
+
+  .info-block { margin-bottom: 1.5mm; }
+  .info-block-framed { border: 1pt solid #E5E7EB; padding: 1.5mm 3mm 0.8mm; margin-bottom: 1.5mm; }
+  .info-title { font-size: 7pt; font-weight: 600; color: #14171C; letter-spacing: 1.2pt; margin-bottom: 1.5mm; }
+  .info-list { list-style: none; padding-left: 0; }
+  .info-list li { font-size: 7.5pt; color: #14171C; padding: 0.3pt 0; padding-left: 4mm; position: relative; line-height: 1.3; font-weight: 400; }
+  .info-list li::before { content: '·'; color: var(--primary); position: absolute; left: 1mm; font-weight: 700; font-size: 11pt; top: -3pt; }
+
+  .timeline { background: #FAFAFA; border: 1pt solid #E5E7EB; padding: 2.5mm 4mm; margin-bottom: 2mm; }
+  .timeline-row { display: table; width: 100%; }
+  .timeline-cell { display: table-cell; text-align: center; vertical-align: middle; padding: 0; }
+  .timeline-days { font-size: 15pt; font-weight: 700; color: var(--primary); line-height: 1; display: block; }
+  .timeline-days-sub { font-size: 6.5pt; color: #525864; letter-spacing: 1pt; font-weight: 500; display: block; margin-top: 1pt; }
+  .timeline-stage { font-size: 7.5pt; color: #525864; font-weight: 400; margin-top: 1mm; line-height: 1.25; }
+  .timeline-arrow { display: table-cell; vertical-align: middle; color: #B8BCC5; font-size: 9pt; width: 3mm; font-weight: 400; }
+  .timeline-total { font-size: 7pt; color: #525864; margin-top: 1.5mm; padding-top: 1.5mm; border-top: 1pt solid #E5E7EB; font-weight: 400; }
+  .timeline-total b { color: var(--primary); font-weight: 700; }
+
+  .tag-grid { margin-top: 1mm; }
+  .tag-box { display: inline-block; border: 1pt solid #E5E7EB; background: #FFFFFF; padding: 1pt 5pt; font-size: 6.8pt; color: #14171C; margin: 0 1.5pt 1.5pt 0; font-weight: 400; }
+
+  .footer { padding: 0 8mm; display: table; width: 100%; font-size: 6.5pt; color: #525864; line-height: 1; position: absolute; bottom: 4mm; left: 0; }
+  .footer-left, .footer-right { display: table-cell; vertical-align: middle; }
+  .footer-right { text-align: right; color: var(--footer-right-color); font-weight: 800; letter-spacing: 1pt; font-size: 7.5pt; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <img class="logo-img" src="file:///home/user/Claude-super-tofu/brand-assets/logo/F2_for_dark.png" alt="FANTECH">
+      <span class="topbar-title">INTERNAL OFFERING</span>
+    </div>
+    <div class="topbar-right">Document Date<br><b>May 2026</b></div>
+  </div>
+
+  <div class="title-strip">
+    <div class="title-left">
+      <span class="product-name">TEST-X</span>
+      <span class="product-category">Wireless Mechanical Keyboard</span>
+    </div>
+    <div class="title-right">TRI-MODE WIRELESS · 5000 mAh · HOT-SWAP · PBT DOUBLE-SHOT</div>
+  </div>
+
+  <div class="hero-block">
+    <div class="hero-left">
+      <div>
+        <span class="scene-tag">APPLICATION SCENE</span>
+        <span class="scene-caption">Always-On Wireless Battlestation</span>
+      </div>
+      <div class="hero-img-placeholder">
+        <div class="img-inner">
+          <div class="label">HERO IMAGE</div>
+          <div class="hint">Lovart scene · pending (Phase 2)</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="features-title">PRODUCT UNIQUE FEATURES</div>
+      <div class="feature-item">
+        <div class="feature-name red">Tri-Mode, Zero Compromise</div>
+        <div class="feature-desc">BT 5.0 + 2.4 G + USB-C wired. Three radios in one board. <b>Pair phone, tablet, PC simultaneously</b> — hot-jump between them with Fn+1/2/3.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-name">5000 mAh · A Week Per Charge</div>
+        <div class="feature-desc">Largest cell in its ¥200 tier. <b>~200 hrs lights-off, ~40 hrs full RGB.</b> Plug in Monday, forget the cable until next weekend.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-name">Tool-Free Hot-Swap Sockets</div>
+        <div class="feature-desc">Pop in any 3/5-pin MX switch in 10 seconds. Linear today, tactile tomorrow. No solder, no warranty void.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-name">Genuine PBT Double-Shot Keycaps</div>
+        <div class="feature-desc">Sand-blasted matte texture that never shines, legends molded into the plastic — not painted on. Six months heavy use, still factory fresh.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-name">South-Facing Per-Key RGB</div>
+        <div class="feature-desc">16.8 M color SMD LEDs mounted south. Glow reads <b>through</b> the legend, not around it — clean under Cherry or OEM profile caps.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-name">1000 Hz on 2.4 G</div>
+        <div class="feature-desc">Wired-grade polling over the dongle. 1 ms response, sub-frame click-to-photon. The cable isn't faster anymore.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="feature-row">
+   <div class="feature-row-inner">
+    <div class="fr-left">
+      <div>
+        <span class="feature-label">HERO FEATURE</span>
+        <span class="feature-headline">5000 mAh — A Week Between Charges</span>
+      </div>
+      <div class="feature-sub">The biggest cell ever shipped in this category. 200 hrs lights-off, 40 hrs full-RGB max brightness, 1000+ charge cycles rated. Plug in Monday morning, forget the cable until next weekend.</div>
+      <div class="mode-row">
+        <div class="mode-cell">
+          <div class="mode-card">
+            <div class="mode-tag">DETAIL 01</div>
+            <div class="mode-title">Fast Charge over Type-C</div>
+            <div class="mode-img"><div class="img-inner">#DETAIL-01<br>Type-C Port Macro</div></div>
+            <div class="mode-desc">5 V / 2 A fast charge · 0 → 80 % in 90 minutes — top up between matches.</div>
+          </div>
+        </div>
+        <div class="mode-cell">
+          <div class="mode-card">
+            <div class="mode-tag">DETAIL 02</div>
+            <div class="mode-title">Battery Readout On Board</div>
+            <div class="mode-img"><div class="img-inner">#DETAIL-02<br>Side Indicator LED</div></div>
+            <div class="mode-desc">Side LED + Fn + B keystroke shows exact %. No app needed.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fr-right">
+      <div>
+        <span class="feature-label">SOFTWARE CONTROL</span>
+        <span class="feature-headline">FANTECH Drive — Tune Every Key</span>
+      </div>
+      <div class="feature-sub">Full-feature config app for Windows &amp; macOS. Remap every key, build 4 RGB profiles, record macros, schedule sleep timer. Saves on-board — settings travel with the keyboard.</div>
+      <div class="sw-editor-row">
+        <div class="sw-editor-cell">
+          <div class="sw-editor-card">
+            <div class="sw-editor-img"><div class="img-inner">#SW-01<br>RGB Editor</div></div>
+            <div class="sw-editor-name">Per-Key RGB Editor</div>
+            <div class="sw-editor-desc">18 preset patterns + per-key color picker. Build 4 profiles, swap with Fn + Space.</div>
+          </div>
+        </div>
+        <div class="sw-editor-cell">
+          <div class="sw-editor-card">
+            <div class="sw-editor-img"><div class="img-inner">#SW-02<br>Macro Recorder</div></div>
+            <div class="sw-editor-name">Macro &amp; Keymap</div>
+            <div class="sw-editor-desc">32 macro slots, full key remap, on-board memory — no driver needed on second PC.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="price-strip">
+    <div class="price-cell">
+      <div class="price-label">EX-WORKS PRICE</div>
+      <div class="price-value red">¥ 199</div>
+      <div class="price-suffix">RMB · Tax excl. · Full pkg</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">MOQ</div>
+      <div class="price-value">500 pcs</div>
+      <div class="price-suffix">Min. order qty</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">COLOR</div>
+      <div class="price-value">White</div>
+      <div class="price-suffix">Black · Pink avail.</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">BOX SIZE</div>
+      <div class="price-value">Color Box</div>
+      <div class="price-suffix">35 × 14 × 5 cm</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">CARTON QTY</div>
+      <div class="price-value">20 pcs</div>
+      <div class="price-suffix">Per master carton</div>
+    </div>
+  </div>
+
+  <div class="lower-block">
+    <div class="lower-left">
+      <div class="section-title">PAIN POINTS &amp; SOLUTIONS</div>
+
+      <div class="pain-item">
+        <div class="pain-num">1</div>
+        <div class="pain-problem">Wireless keyboards die mid-tournament — and the charging cable is always somewhere else.</div>
+        <div class="pain-solution"><span class="sol-label">Solution:</span> <span class="sol-body">5000 mAh cell + auto-fallback. 2.4 G drops, it switches to BT in 200 ms. Battery low, plug C-to-A and keep playing wired — zero downtime.</span></div>
+      </div>
+
+      <div class="pain-item">
+        <div class="pain-num">2</div>
+        <div class="pain-problem">Cheap ABS keycaps shine into mirrors after a month of heavy use.</div>
+        <div class="pain-solution"><span class="sol-label">Solution:</span> <span class="sol-body">Genuine PBT double-shot. Sand-blasted matte texture rated for 3 M+ keystrokes; legends are part of the plastic, can't wear off.</span></div>
+      </div>
+
+      <div class="pain-item">
+        <div class="pain-num">3</div>
+        <div class="pain-problem">One dead switch and the whole board becomes e-waste — no repair option for the buyer.</div>
+        <div class="pain-solution"><span class="sol-label">Solution:</span> <span class="sol-body">Tool-free hot-swap sockets. Lift cap, pull switch, push new one in — 10 seconds per key. 4 spare switches in the box.</span></div>
+      </div>
+
+      <div class="pain-item">
+        <div class="pain-num">4</div>
+        <div class="pain-problem">RGB looks cheap because north-facing LEDs leak around the keycap instead of through the legend.</div>
+        <div class="pain-solution"><span class="sol-label">Solution:</span> <span class="sol-body">South-facing per-key SMD LEDs. Reads cleanly through Cherry &amp; OEM keycap legends. No more "halo" leakage — premium feel at ¥199.</span></div>
+      </div>
+
+      <div class="pain-item">
+        <div class="pain-num">5</div>
+        <div class="pain-problem">2.4 G dongles always feel a beat behind wired — gamers refuse to commit.</div>
+        <div class="pain-solution"><span class="sol-label">Solution:</span> <span class="sol-body">1000 Hz polling RF + low-latency chip. Click-to-photon under 4 ms — indistinguishable from wired in blind A/B tests.</span></div>
+      </div>
+
+      <div class="pain-item">
+        <div class="pain-num">6</div>
+        <div class="pain-problem">Switching one keyboard between laptop, phone, and tablet means re-pairing every single time.</div>
+        <div class="pain-solution"><span class="sol-label">Solution:</span> <span class="sol-body">Tri-mode + 3 paired BT slots. Fn+1/2/3 snaps between three devices instantly. One board, the whole desk.</span></div>
+      </div>
+    </div>
+
+    <div class="lower-right">
+      <div class="product-views">
+        <div class="pv-cell">
+          <div class="pv-img"><div class="img-inner"><img src="file:///home/user/Claude-super-tofu/product-briefs/images/_chat_uploads/2026-05_TEST-X_top_view.png" alt="Top View"></div></div>
+          <div class="pv-caption">TOP VIEW</div>
+        </div>
+        <div class="pv-cell">
+          <div class="pv-img placeholder"><div class="img-inner">#ANGLE-VIEW<br><span style="font-weight:400;font-size:6.5pt;letter-spacing:0;">pending</span></div></div>
+          <div class="pv-caption">ANGLE VIEW</div>
+        </div>
+      </div>
+
+      <div class="info-block">
+        <div class="info-title">PAYMENT &amp; INVOICE TERMS</div>
+        <ul class="info-list">
+          <li>RMB &amp; USD both accepted</li>
+          <li>Buy-order customs clearance — factory handles full export declaration</li>
+          <li>VAT invoice at 10% · Split invoicing supported</li>
+          <li>Full balance settled before goods release</li>
+          <li>Full OEM / ODM custom branding on request</li>
+        </ul>
+      </div>
+
+      <div class="info-block">
+        <div class="info-title">PROJECT TIMELINE</div>
+        <div class="timeline">
+          <div class="timeline-row">
+            <div class="timeline-cell">
+              <span class="timeline-days">7</span>
+              <span class="timeline-days-sub">DAYS</span>
+              <div class="timeline-stage">Dev &amp; Sampling</div>
+            </div>
+            <div class="timeline-arrow">›</div>
+            <div class="timeline-cell">
+              <span class="timeline-days">25</span>
+              <span class="timeline-days-sub">DAYS</span>
+              <div class="timeline-stage">Artwork Setup</div>
+            </div>
+            <div class="timeline-arrow">›</div>
+            <div class="timeline-cell">
+              <span class="timeline-days">20</span>
+              <span class="timeline-days-sub">DAYS</span>
+              <div class="timeline-stage">Production Lead Time</div>
+            </div>
+          </div>
+          <div class="timeline-total">Total: <b>~52 Days</b> from order to shipment</div>
+        </div>
+      </div>
+
+      <div class="info-block-framed">
+        <div class="info-title">IDEAL PARTNER PROFILE</div>
+        <div class="tag-grid">
+          <span class="tag-box">OEM Brands</span>
+          <span class="tag-box">ODM Partners</span>
+          <span class="tag-box">Distributors</span>
+          <span class="tag-box">Gaming E-commerce</span>
+          <span class="tag-box">Retail Chains</span>
+          <span class="tag-box">Esports Clubs</span>
+        </div>
+      </div>
+
+      <div class="info-block-framed">
+        <div class="info-title">WHAT'S IN THE BOX</div>
+        <div class="tag-grid">
+          <span class="tag-box">TEST-X Keyboard</span>
+          <span class="tag-box">USB-C Braided Cable 1.8 m</span>
+          <span class="tag-box">2.4 G USB Receiver</span>
+          <span class="tag-box">Keycap &amp; Switch Puller</span>
+          <span class="tag-box">Spare Switches × 4</span>
+          <span class="tag-box">Quick Start Guide</span>
+          <span class="tag-box">Warranty Card</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-left">TEST-X · Wireless Mechanical Keyboard · White · FINECOUSTIC Internal Offering · Confidential — Not for Distribution</div>
+    <div class="footer-right">INTERNAL OFFERING — MAY 2026</div>
+  </div>
+
+</div>
+</body>
+</html>
