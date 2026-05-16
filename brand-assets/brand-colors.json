@@ -7,8 +7,7 @@
     "fantech-gaming": {
       "trigger_words": ["fantech gaming", "gaming", "游戏", "fantech 红"],
       "brand_name": "FANTECH",
-      "logo_file": "fantech_horizontal_for_dark.png",
-      "description": "红色游戏外设主题 · 键鼠 / 耳机 / 游戏外设",
+      "logo_file": "gaming2.png",
 
       "colors": {
         "primary": "#E70012",
