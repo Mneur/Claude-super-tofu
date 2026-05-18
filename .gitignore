@@ -1,6 +1,9 @@
 # Intermediate render files
 output/.tmp_*.html
 output/*_preview-*.png
+output/_highres/
+output/_topbar_*.png
+output/_themepreview_*
 
 # OS files
 .DS_Store
