@@ -46,20 +46,53 @@ What user does NOT provide at Phase 1:
 
 ---
 
-## What You Generate (the WHOLE Offering content)
+## What You Generate (CRAFT only)
 
-Based on minimal user input, YOU generate:
+You ONLY generate marketing copy. Based on user's facts, generate:
 
 1. **Application Scene title** (1 phrase based on product + theme)
 2. **6 Unique Features** — title + 1-2 sentence description each
-3. **Hero Feature section** — title + description + 2 detail card captions
-4. **Software Control section** — title + description + 2 editor card captions
+3. **Hero Feature section** — title + description + **1 OR 2 detail card captions** (see card-count rules below)
+4. **Software Control section** — title + description + **1 OR 2 editor card captions** (see card-count rules below)
 5. **6 Pain Points & Solutions** — real industry pain points + how product solves
-6. **Spec keywords** (3-4 short uppercase phrases)
-7. **What's in the Box** — sensible default contents
-8. **Price strip** — MOQ, Color, Carton Qty defaults if not specified
+6. **Spec keywords** (3-4 short uppercase phrases at top-right, e.g., "TRI-MODE · GASKET MOUNT · ACOUSTIC KNIT TOP · BLACK")
+
+### Card-count rules (Hero Feature & Software Control)
+
+The number of detail cards is NOT fixed at 2. It depends on the product:
+
+- Product has 1 standout feature worth highlighting in Hero Feature → use **1 card** (full width)
+- Product has 2 distinct sub-features worth showcasing → use **2 cards** (each 50% width)
+
+Same logic for Software Control:
+- 1 unified app / 1 type of editor → 1 card
+- 2 distinct editor types (e.g., DPI Editor + Lighting Editor) → 2 cards
+
+When using 1 card, the card spans full width (100%) of its half-column.
+When using 2 cards, they split 50/50 within the half-column.
+
+Default to 2 cards unless the product clearly only has 1 standout feature, OR user explicitly says "用 1 张卡" / "用单卡".
 
 The user provides FACTS. You write CRAFT.
+
+## What You MUST NEVER Generate (user-provided FACTS)
+
+These are commercial / factory facts. You CANNOT invent them. User must provide them:
+
+- **Ex-works Price** — factory's quote / production cost
+- **MOQ** — minimum order quantity (negotiated with factory)
+- **Color variant**
+- **Box Size**
+- **Carton Qty** — units per master carton
+- **Payment & Invoice Terms** (the 5 lines about RMB/USD, VAT, customs, etc)
+- **What's in the Box** — actual package contents confirmed by factory
+- **Project Timeline** (Dev/Artwork/Production days) — if user gives custom, use it; otherwise default 7/30/20 from v18 GOLDEN
+
+If user doesn't specify these, ASK before rendering. Do NOT use "industry defaults" or "sensible guesses". These are commercial commitments to clients — they must come from the user.
+
+Only safe defaults you may use:
+- Payment & Invoice Terms 5 lines: if user says "use default", copy verbatim from v18 GOLDEN reference
+- Project Timeline: if user says "use default", copy 7/30/20 from v18 GOLDEN
 
 ---
 
@@ -118,7 +151,7 @@ Generate:
 - Software Control section
 - 6 Pain Points + matching Solutions (based on category knowledge)
 - Spec keywords
-- What's in the Box (industry standard for product type)
+- What's in the Box (use what user provided; if user says "default", copy from v18 GOLDEN)
 
 ### Step 5: Show DRAFT copy to user FIRST
 
@@ -148,8 +181,6 @@ html = re.sub(r'(--primary:\s*)#[0-9A-Fa-f]+;', f"\\g<1>{colors['primary']};", h
 html = re.sub(r'(--topbar-bg:\s*)#[0-9A-Fa-f]+;', f"\\g<1>{colors['topbar_bg']};", html, count=1)
 html = re.sub(r'(--solution-label:\s*)#[0-9A-Fa-f]+;', f"\\g<1>{colors['solution_label']};", html, count=1)
 html = re.sub(r'(--footer-right-color:\s*)#[0-9A-Fa-f]+;', f"\\g<1>{colors['footer_right_color']};", html, count=1)
-
-html = html.replace('{{LOGO_FILE}}', f"../brand-assets/logo/{theme['logo_file']}")
 
 # Fill in approved content (product name, features, pain points, etc)
 
