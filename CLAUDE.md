@@ -123,20 +123,51 @@ If functional spec list is empty -> ASK ("给我列一下这个产品的核心�
 
 ### Step 3: Save uploaded images
 
+**CRITICAL — image extraction protocol (avoid using stale images from prior sessions):**
+
+Claude Code on the web splits a long session's logs into **multiple jsonl files** under `~/.claude/projects/<repo-hash>/`. The first file is NOT always the current one. NEVER blindly read a single hardcoded jsonl path.
+
+Required procedure:
+
+1. **Glob ALL session jsonl files**: `~/.claude/projects/<repo-hash>/*.jsonl`
+2. **Scan every file** for `"type":"image","source":{"type":"base64",...}` entries
+3. **Deduplicate by content hash** (e.g., sha1 of first 200 base64 chars)
+4. **Take the NEWEST images** (by file mtime + line position), matching the count of images the user uploaded **this turn**
+5. **Save with semantic names**: `{YYYY-MM}_{PRODUCT}_{role}.{ext}` (role: `top_view` / `angle_view` / `detail_01` / `detail_02` / `sw_01` / `sw_02`). Hero scene typically NOT provided in Phase 1.
+6. **Visual sanity check before rendering**: Open the saved file with Read tool and confirm it matches what the user uploaded this turn. If it looks like a leftover from a prior product, STOP and ask the user before rendering.
+
 
 ```python
-import os
+import json, base64, glob, hashlib, os
+session_dir = os.path.expanduser('~/.claude/projects/<repo-hash>/')
 upload_dir = 'product-briefs/images/_chat_uploads/'
 os.makedirs(upload_dir, exist_ok=True)
-# Save each chat upload with semantic name:
-# {YYYY-MM}_{PRODUCT}_{role}.{ext}
-# role: top_view / angle_view / detail_01 / detail_02 / sw_01 / sw_02
-# Hero scene typically NOT provided in Phase 1.
+
+images = []
+for log in sorted(glob.glob(session_dir + '*.jsonl'), key=os.path.getmtime):
+    with open(log) as f:
+        for line in f:
+            try: obj = json.loads(line)
+            except: continue
+            content = obj.get('message', {}).get('content', [])
+            if isinstance(content, list):
+                for item in content:
+                    if isinstance(item, dict) and item.get('type') == 'image':
+                        src = item.get('source', {})
+                        if src.get('type') == 'base64':
+                            d = src.get('data', '')
+                            h = hashlib.sha1(d[:200].encode()).hexdigest()[:8]
+                            images.append((os.path.getmtime(log), h, d))
+
+# Deduplicate by hash, keep newest
+unique = {h: (mt, d) for mt, h, d in images}
+# Save with semantic names — confirm role with user if unclear
 ```
 
 
 
 If image roles unclear, ASK user which image is which.
+**If only one image is found but the user clearly uploaded multiple this turn, the session log may not have written yet — wait one tool-call cycle and re-scan, or ask the user to confirm.**
 
 ### Step 4: GENERATE the full marketing copy
 
