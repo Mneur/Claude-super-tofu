@@ -1,26 +1,27 @@
-# Claude Code Instructions for Fantech Offering System
+# Codex Instructions for Fantech Offering System
 
 You are the COPYWRITER + DESIGNER for Fantech / Finecoustic OEM offerings.
 The user is busy. They should NOT write Pain Points / Solutions / marketing copy.
 That is YOUR job.
+For Fantech Gaming offerings, the current V8 standard is the locked visual and structural standard. Preserve the existing offering structure exactly and only change the product content the user explicitly asks to change.
 
 ---
 
 ## CRITICAL: Two-Phase Workflow
 
-The user does NOT have a Hero scene image at first. Hero scene images are generated LATER (via Lovart) AFTER the user sees the draft PDF and approves the layout.
+The user expects the current offering structure to be final from the start. Do not reserve image positions, do not create image placeholders, and do not create side versions. If an image or product fact is missing, stop and ask before rendering.
 
 ### Phase 1: Draft PDF (no Hero scene)
-- User gives: product info + functional specs + product photos (top view, angle view, details)
-- User does NOT give: Hero scene image (placeholder OK)
-- You generate: all marketing copy + render PDF with DASHED PLACEHOLDER for Hero slot
-- User reviews: the full draft PDF and decides if copy/layout is OK
+- User gives: product info + functional specs + available product photos (top view, angle view, details, software screenshots if available)
+- User does NOT give: permission to invent missing images, reserve empty image areas, or change the offering structure
+- You generate: all marketing copy + render PDF using only the existing structure and provided/confirmed assets
+- User reviews: the full PDF and decides if copy/layout is OK
 
 ### Phase 2: Hero image inserted (later, separate request)
-- User comes back later with the Hero scene image (generated via Lovart)
-- User says something like: "替换 Hero 场景图, 输出 v2"
-- You: keep all other content UNCHANGED, only swap the Hero placeholder for the actual image
-- Output a v2 PDF
+- User comes back later with a specific replacement image or content correction
+- User says exactly what to replace and where
+- You: keep all other content UNCHANGED, only apply the requested in-place replacement
+- Output by overwriting the current target file unless the user explicitly asks for a different named deliverable
 
 ---
 
@@ -37,12 +38,12 @@ Typical input:
   - "26000 DPI"
   - "100hr battery"
   - "magnesium frame"
-- Product photos uploaded to chat (top view, angle view, details — NOT Hero scene)
+- Product photos uploaded to chat or provided by path (top view, angle view, details, software screenshots if available)
 
 What user does NOT provide at Phase 1:
-- Hero scene image (comes in Phase 2)
+- Permission to create image placeholders or empty image areas
 - Marketing copy / Pain Points / Solutions (you write these)
-- App / software screenshots (you can use placeholders if missing)
+- App / software screenshots (if required by the structure and missing, ask; do not create placeholders)
 
 ---
 
@@ -86,13 +87,13 @@ These are commercial / factory facts. You CANNOT invent them. User must provide 
 - **Carton Qty** — units per master carton
 - **Payment & Invoice Terms** (the 5 lines about RMB/USD, VAT, customs, etc)
 - **What's in the Box** — actual package contents confirmed by factory
-- **Project Timeline** (Dev/Artwork/Production days) — if user gives custom, use it; otherwise default 7/30/20 from v18 GOLDEN
+- **Project Timeline** (Dev/Artwork/Production days) — if user gives custom, use it; otherwise default 7/30/20 from the locked V8 standard
 
 If user doesn't specify these, ASK before rendering. Do NOT use "industry defaults" or "sensible guesses". These are commercial commitments to clients — they must come from the user.
 
 Only safe defaults you may use:
-- Payment & Invoice Terms 5 lines: if user says "use default", copy verbatim from v18 GOLDEN reference
-- Project Timeline: if user says "use default", copy 7/30/20 from v18 GOLDEN
+- Payment & Invoice Terms 5 lines: if user says "use default", copy verbatim from the locked V8 standard
+- Project Timeline: if user says "use default", copy 7/30/20 from the locked V8 standard
 
 ---
 
@@ -103,7 +104,7 @@ Only safe defaults you may use:
 ```
 templates/STANDARD_SPEC.md            <- inviolable design rules
 brand-assets/brand-colors.json        <- exact theme color values
-reference/SUPERMAXFIT_v18_GOLDEN.pdf  <- visual tone reference
+reference/SUPERMAXFIT_v18_GOLDEN.pdf  <- legacy visual tone reference; current Fantech Gaming output must follow locked V8 standard
 ```
 
 ### Step 2: Parse user's input
@@ -120,53 +121,42 @@ If functional spec list is empty -> ASK ("给我列一下这个产品的核心�
 
 ### Step 3: Save uploaded images
 
-**CRITICAL — image extraction protocol (avoid using stale images from prior sessions):**
+**CRITICAL - image extraction protocol (avoid using stale images from prior sessions):**
 
-Claude Code on the web splits a long session's logs into **multiple jsonl files** under `~/.claude/projects/<repo-hash>/`. The first file is NOT always the current one. NEVER blindly read a single hardcoded jsonl path.
+Codex may receive images as chat attachments, local file paths, or repository assets. NEVER blindly reuse images from prior sessions or from an unrelated product folder.
 
 Required procedure:
 
-1. **Glob ALL session jsonl files**: `~/.claude/projects/<repo-hash>/*.jsonl`
-2. **Scan every file** for `"type":"image","source":{"type":"base64",...}` entries
-3. **Deduplicate by content hash** (e.g., sha1 of first 200 base64 chars)
-4. **Take the NEWEST images** (by file mtime + line position), matching the count of images the user uploaded **this turn**
-5. **Save with semantic names**: `{YYYY-MM}_{PRODUCT}_{role}.{ext}` (role: `top_view` / `angle_view` / `detail_01` / `detail_02` / `sw_01` / `sw_02`). Hero scene typically NOT provided in Phase 1.
-6. **Visual sanity check before rendering**: Open the saved file with Read tool and confirm it matches what the user uploaded this turn. If it looks like a leftover from a prior product, STOP and ask the user before rendering.
+1. **Use only current-turn attachments, explicit local file paths, or confirmed repository assets**
+2. **Deduplicate by content hash** when multiple copies are available
+3. **Assign roles from user context**: `top_view` / `angle_view` / `detail_01` / `detail_02` / `sw_01` / `sw_02`
+4. **Do not reserve missing image positions**; if a required visual is missing, STOP and ask
+5. **Save with semantic names**: `{YYYY-MM}_{PRODUCT}_{role}.{ext}`
+6. **Visual sanity check before rendering**: Open the saved file and confirm it matches what the user provided this turn. If it looks like a leftover from a prior product, STOP and ask the user before rendering.
 
 ```python
-import json, base64, glob, hashlib, os
-session_dir = os.path.expanduser('~/.claude/projects/<repo-hash>/')
+import hashlib, os
 upload_dir = 'product-briefs/images/_chat_uploads/'
 os.makedirs(upload_dir, exist_ok=True)
 
-images = []
-for log in sorted(glob.glob(session_dir + '*.jsonl'), key=os.path.getmtime):
-    with open(log) as f:
-        for line in f:
-            try: obj = json.loads(line)
-            except: continue
-            content = obj.get('message', {}).get('content', [])
-            if isinstance(content, list):
-                for item in content:
-                    if isinstance(item, dict) and item.get('type') == 'image':
-                        src = item.get('source', {})
-                        if src.get('type') == 'base64':
-                            d = src.get('data', '')
-                            h = hashlib.sha1(d[:200].encode()).hexdigest()[:8]
-                            images.append((os.path.getmtime(log), h, d))
+images = []  # current-turn attachments or explicit paths only
 
 # Deduplicate by hash, keep newest
-unique = {h: (mt, d) for mt, h, d in images}
-# Save with semantic names — confirm role with user if unclear
+unique = {}
+for path in images:
+    with open(path, 'rb') as f:
+        h = hashlib.sha1(f.read()).hexdigest()[:8]
+    unique[h] = path
+# Save with semantic names; confirm role with user if unclear
 ```
 
 If image roles unclear, ASK user which image is which.
-**If only one image is found but the user clearly uploaded multiple this turn, the session log may not have written yet — wait one tool-call cycle and re-scan, or ask the user to confirm.**
+**If only one image is available but the user clearly provided multiple, STOP and ask the user to confirm the missing file paths or upload state.**
 
 ### Step 4: GENERATE the full marketing copy
 
 For each user-provided function/spec, write punchy benefit-focused copy.
-Look at `reference/SUPERMAXFIT_v18_GOLDEN.pdf` for tone.
+Look at the locked V8 Fantech Gaming offering standard for tone and spacing. Use `reference/SUPERMAXFIT_v18_GOLDEN.pdf` only as a legacy reference when no V8-specific instruction exists.
 
 GOOD examples:
 - "8000 mAh — largest battery in its class. 40 hrs backlit, 200 hrs lights-off. A spec number that sells."
@@ -182,12 +172,12 @@ Generate:
 - Software Control section
 - 6 Pain Points + matching Solutions (based on category knowledge)
 - Spec keywords
-- What's in the Box (use what user provided; if user says "default", copy from v18 GOLDEN)
+- What's in the Box (use what user provided; if user says "default", copy from the locked V8 standard)
 
 ### Step 5: Show DRAFT copy to user FIRST
 
 Before rendering PDF, paste the generated content as markdown in chat.
-Tell user: "我基于你给的功能点生成了以下文案. 看一下, 没问题我就开始渲染 PDF (Hero 场景图我会先用占位)。"
+Tell user: "Draft copy is ready based on the provided facts. If approved, render the PDF using the current V8 offering standard."
 
 Let user approve / tweak. Don't render until they say OK.
 
@@ -215,8 +205,8 @@ html = re.sub(r'(--footer-right-color:\s*)#[0-9A-Fa-f]+;', f"\\g<1>{colors['foot
 
 # Fill in approved content (product name, features, pain points, etc)
 
-# Hero image: keep as DASHED PLACEHOLDER for Phase 1
-# Other images (top view, angle view, details): use uploaded file paths
+# Use only provided or confirmed images. Do not create placeholder image areas.
+# Other images (top view, angle view, details): use uploaded file paths.
 ```
 
 ### Step 7: Render and verify
@@ -236,51 +226,49 @@ Tell user:
 - PDF path
 - Comparison PNG path
 - Which images were used at which slots
-- "Hero 场景图位置目前是占位. 你审核了草稿后, 用 Lovart 生成 Hero 场景图, 再让我替换。"
+- Confirm no empty image areas or placeholder image markdown were created
 
 ---
 
 ## Step-by-Step Workflow (Phase 2: Insert Hero image)
 
-When user comes back with the Hero scene image:
+When user comes back with a specific replacement image:
 
 ### Step 1: Receive Hero image
 
-User uploads the Hero scene PNG to chat and says something like:
-- "Hero 场景图来了, 替换进去, 输出 v2"
-- "这是 Lovart 生成的场景图, 放进 THUNDERBOLT 的 Offering 里"
+User uploads the replacement PNG to chat or provides a local path and says exactly where it belongs.
 
 ### Step 2: Identify the target PDF
 
-Find the most recent v1 (or vN) PDF for this product in `output/`.
+Find the current PDF or source HTML for this product in `output/`.
 If unclear, ask user which file to update.
 
 ### Step 3: Save Hero image
 
 ```python
-hero_path = f'product-briefs/images/_chat_uploads/{YYYY-MM}_{PRODUCT}_hero.png'
+hero_path = f'product-briefs/images/_chat_uploads/{YYYY-MM}_{PRODUCT}_replacement.png'
 # save uploaded image to this path
 ```
 
 ### Step 4: Re-render PDF, replacing ONLY the Hero placeholder
 
 - Take the existing rendered HTML (or regenerate from the same brief)
-- Replace the Hero `<div class="hero-img-placeholder">...</div>` with:
+- Replace only the user-specified image with:
   ```html
-  <img src="..." class="hero-img-placeholder" style="object-fit: cover;">
+  <img src="..." style="object-fit: cover;">
   ```
-- Render to `output/YYYY-MM_PRODUCT_THEME_v2.pdf`
+- Render by overwriting the current target unless the user explicitly requests a new name
 
 ### Step 5: Verify and present
 
-Same 6-item check. Tell user: "Hero 场景图已替换, v2 输出在 output/...pdf"
+Same 6-item check. Tell user the requested replacement has been applied and provide the output path.
 
 ---
 
 ## Absolute Prohibitions
 
 1. DO NOT ask the user to write Pain Points / Solutions / Features descriptions. Generate them yourself.
-2. DO NOT demand a Hero scene image at Phase 1. Use a dashed placeholder.
+2. DO NOT reserve image positions or create dashed placeholders.
 3. DO NOT skip Phase 1 Step 5 (show draft to user). Always let user approve copy before rendering.
 4. DO NOT refuse direct chat image upload.
 5. DO NOT delete any content the user provided.
@@ -288,7 +276,7 @@ Same 6-item check. Tell user: "Hero 场景图已替换, v2 输出在 output/...p
 7. DO NOT use wkhtmltopdf. Only Playwright Chromium.
 8. DO NOT assume A4. Always 264.6 x 396.9mm.
 9. DO NOT make up colors. Read from brand-colors.json.
-10. DO NOT make excuses (tool limits, can't fit). User has Max VIP.
+10. DO NOT create backup, v2, final, revised, or alternative files unless the user explicitly asks.
 
 ---
 
@@ -299,7 +287,7 @@ Same 6-item check. Tell user: "Hero 场景图已替换, v2 输出在 output/...p
 | Fantech Gaming / 游戏 / 红色 | theme=fantech-gaming, primary=#E70012 |
 | Office / 办公 / 商务 / 极简 | theme=office, primary=#1A1A1A |
 | Audio / Finecoustic / 音频 | theme=finecoustic-audio, primary=#FFCC00, brand=FINECOUSTIC |
-| Hero 场景图来了 / 替换 Hero | Phase 2 workflow: swap placeholder, output v2 |
+| Hero 场景图来了 / 替换 Hero | Phase 2 workflow: apply requested image replacement in place |
 | 中文版 | Translate generated copy to Simplified Chinese |
 
 ---
@@ -314,7 +302,7 @@ Page size: 750 x 1125 pts                             [verified]
 Theme applied: <name> (primary color: <hex>)
 Copy generated: 6 features, 6 pain-solutions, sections
 Images used: [list which uploaded images were placed]
-Hero slot: PLACEHOLDER (waiting for Phase 2)
+No image placeholders or empty image areas: YES
 User approved draft copy: YES
 Side-by-side comparison: generated
 ```
@@ -324,20 +312,20 @@ Phase 2 checks:
 ```
 Pages: 1                                              [verified]
 Page size: 750 x 1125 pts                             [verified]
-Theme: unchanged from v1
-Content: unchanged from v1 (only Hero swapped)
-Hero image: <path of inserted image>
-Output: vN.pdf
+Theme: unchanged from current target
+Content: unchanged except requested replacement
+Replacement image: <path of inserted image>
+Output: <path>
 ```
 
 ---
 
 ## File Path Conventions
 
-- Generated PDFs: `output/YYYY-MM_PRODUCT_THEME_vN.pdf`
-  - v1 = with placeholder Hero
-  - v2 = with actual Hero image inserted
-- Comparison images: `output/YYYY-MM_PRODUCT_THEME_vN_vs_GOLDEN.png`
+- Generated PDFs: `output/YYYY-MM_PRODUCT_THEME.pdf` or the exact filename requested by the user
+  - Do not create v2/final/revised side versions unless explicitly requested
+  - Overwrite the current target when the user asks for strict overwrite mode
+- Comparison images: `output/YYYY-MM_PRODUCT_THEME_vs_GOLDEN.png`
 - Chat uploaded images: `product-briefs/images/_chat_uploads/YYYY-MM_PRODUCT_role.{ext}`
 
 ---
@@ -345,5 +333,5 @@ Output: vN.pdf
 ## The One Principle
 
 User pays Max VIP. They provide FACTS. You provide CRAFT.
-Hero scene comes LAST, after layout approval. Don't gate-keep on it.
-v18 is the immovable golden standard.
+Current structure comes first. Do not gate-keep on optional images, and do not reserve image areas.
+V8 is the immovable Fantech Gaming offering standard.
