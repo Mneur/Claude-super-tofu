@@ -1261,5 +1261,14 @@ async function generatePdfInBrowser(filled) {
   mount.remove();
 }
 
+function fileSafeProductName(value) {
+  const cleaned = String(value || "PRODUCT")
+    .trim()
+    .replace(/\s+/g, "_")
+    .replace(/[^A-Za-z0-9_-]/g, "")
+    .toUpperCase();
+  return cleaned || "PRODUCT";
+}
+
 updateStaticText();
 renderApp();
