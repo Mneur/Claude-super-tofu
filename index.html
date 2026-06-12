@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offering Intake Builder</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="intro">
+      <div class="intro-top">
+        <img class="brand-logo" src="assets/logo/gaming2.png" alt="FANTECH Gaming">
+      </div>
+      <h1 id="pageTitle">Offering Builder</h1>
+      <p class="lede" id="pageLede">
+        Fill product facts, upload images, and generate a new Internal Offering.
+      </p>
+      <div class="status-card">
+        <div>
+          <span class="status-label" id="themesLabel">Allowed themes</span>
+          <strong>Fantech Gaming / Office / Audio</strong>
+        </div>
+        <div>
+          <span class="status-label" id="pageSizeLabel">Locked page size</span>
+          <strong>264.6 x 396.9 mm</strong>
+        </div>
+        <div>
+          <span class="status-label" id="modeLabel">Current mode</span>
+          <strong id="validationSummary">Waiting for input</strong>
+        </div>
+      </div>
+      <div class="action-stack">
+        <button id="loadSampleBtn" class="secondary">Load Demo</button>
+        <button id="generateFilesBtn" class="primary">Generate Offering</button>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <section class="panel">
+        <div class="panel-head">
+          <h2 id="intakeTitle">Structured Intake</h2>
+          <p id="intakeLede">Fill product facts only. The system generates the offering copy around them.</p>
+        </div>
+        <div class="mode-bar">
+          <div class="lang-switch">
+            <button id="langEnBtn" class="lang-btn active" type="button">EN</button>
+            <button id="langZhBtn" class="lang-btn" type="button">中文</button>
+          </div>
+          <button id="toggleAdvancedBtn" class="secondary mode-toggle" type="button">Show Manual Override</button>
+        </div>
+        <form id="offeringForm">
+          <div id="formSections" class="form-sections"></div>
+        </form>
+      </section>
+
+      <section class="panel preview-panel">
+        <div class="panel-head">
+          <h2 id="previewTitle">Generated Output Preview</h2>
+          <p id="previewLede">The preview updates as you type.</p>
+        </div>
+        <div class="preview-tabs">
+          <button class="tab active" data-tab="previewMarkdown" id="markdownTab">Brief Markdown</button>
+          <button class="tab" data-tab="previewChecks" id="validationTab">Validation</button>
+        </div>
+        <pre id="previewMarkdown" class="preview active"></pre>
+        <div id="previewChecks" class="preview checklist"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</body>
+</html>
