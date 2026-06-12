@@ -918,14 +918,14 @@ function deriveSoftwareControl(data) {
   if (productType.includes("headset")) {
     generated = {
       sectionTitle: "Tune Every Session in Software",
-      leadDescription: "Useful driver support gives this headset a stronger premium story at retail. It lets users shape both communication clarity and sound character instead of relying on one fixed default.",
+      leadDescription: "Useful driver support gives this headset a stronger premium story at retail. It lets users shape both communication clarity and sound behavior from one place instead of relying on one fixed default.",
       card1: {
         title: "MIC EFFECT / AI ENC CONTROL",
-        description: "Adjust microphone noise reduction, voice effects, and communication settings for clearer voice chat and more controlled team communication.",
+        description: "Adjust microphone pickup, noise reduction, and voice effects for clearer team chat. Ideal for gaming, voice chat, and streaming use.",
       },
       card2: {
         title: "EQ + SURROUND CONTROL",
-        description: "Switch EQ, surround behavior, and playback presets so the headset feels better tuned for gaming, music, movies, and everyday listening.",
+        description: "Customize EQ profiles and surround behavior for different content types. Switch sound signatures quickly for gaming, music, movies, and daily use.",
       },
     };
   } else if (productType.includes("keyboard")) {
@@ -1018,13 +1018,13 @@ function descriptionFromSpec(spec) {
   if (lower.includes("tri-mode")) return "Flexible wired and wireless switching makes the product fit more setups without extra friction. That versatility helps both users and retailers get more value from one SKU.";
   if (lower.includes("battery")) return "A stronger battery story improves real daily usability and gives the product a more confident wireless positioning. It is easier to sell when users do not worry about constant charging.";
   if (lower.includes("gasket")) return "A softer, more premium typing feel helps the product stand out when buyers compare comfort and sound quality side by side. It makes the product feel more refined, not just more technical.";
-  if (lower.includes("software") || lower.includes("driver")) return "Dedicated software support unlocks deeper personalization and gives the product a clearer premium feature story. It also helps retailers explain long-term value beyond the hardware itself.";
+  if (lower.includes("software") || lower.includes("driver")) return "Software support extends the product beyond basic hardware use and gives buyers a clearer long-term value story.";
   if (lower.includes("rgb")) return "Lighting customization adds stronger desktop presence and makes the product more visually demonstrable in retail and creator content. It helps the product look more alive on first impression.";
   if (lower.includes("knob")) return "Dedicated physical control reduces friction in frequent daily actions and makes the product feel more intentional in use. It is the kind of tactile feature buyers notice immediately in demos.";
   if (lower.includes("matrix") || lower.includes("display")) return "An integrated display creates immediate visual differentiation and gives the product a more memorable identity on the desk. It helps retailers show something customers notice at first glance.";
   if (lower.includes("ai enc")) return "AI-assisted noise reduction improves voice clarity in team chat and helps the product feel more premium in real multiplayer use. It directly supports clearer communication where it matters most.";
   if (lower.includes("surround")) return "Virtual surround support adds a stronger gaming value story for buyers who expect positional audio without stepping up in price. It makes the headset easier to place as a gaming-first option.";
-  return `${shortenFeatureTitle(spec)} improves the real user experience while giving retailers a clearer reason to sell the feature, not just list it.`;
+  return `${shortenFeatureTitle(spec)} makes the product easier to explain, easier to demo, and easier for buyers to appreciate in real use.`;
 }
 
 function shortenFeatureTitle(value) {
@@ -1076,14 +1076,21 @@ function uniqueStrings(items) {
 
 function ensureUniqueFeatureCards(features) {
   const seenTitles = new Set();
-  const seenDescs = new Set();
+  const seenRoots = new Set();
   return features.map((item, index) => {
     let title = item.title;
     let description = item.description;
-    if (seenTitles.has(title)) title = `${title} ${index + 1}`;
-    if (seenDescs.has(description)) description = `${description} It gives this product a different angle to sell in real buyer conversations.`;
-    seenTitles.add(title);
-    seenDescs.add(description);
+    const titleKey = String(title || "").trim().toLowerCase();
+    const rootKey = titleKey
+      .replace(/\s+\d+$/g, "")
+      .replace(/support/gi, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (seenTitles.has(titleKey) || seenRoots.has(rootKey)) {
+      return { ...item, title: "", description: "" };
+    }
+    seenTitles.add(titleKey);
+    seenRoots.add(rootKey);
     return { ...item, title, description };
   });
 }
@@ -1307,6 +1314,31 @@ async function buildMasterOfferingHtml(data) {
   const hero = data.heroFeature || {};
   const hasSoftware = data.hasSoftware !== "no";
   const featureItems = data.uniqueFeatures.filter((item) => item.title);
+
+  html = replaceFirst(
+    /<\/style>/s,
+    `img { max-width: 100%; height: auto; }
+.hero-fit,
+.mode-fit,
+.sw-fit {
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  object-position: center center !important;
+}
+.hero-img-placeholder,
+.mode-img,
+.sw-editor-img {
+  overflow: hidden !important;
+}
+.product-view-img,
+.product-view-dark,
+.product-view-light {
+  transform: none !important;
+}
+</style>`,
+    html
+  );
 
   html = replaceFirst(/<title>.*?<\/title>/s, `<title>${productName} ${productModel} · Internal Offering</title>`, html);
   html = replaceFirst(/<img class="logo-img" src=".*?" alt="FANTECH">/s, `<img class="logo-img" src="assets/logo/gaming2.png" alt="FANTECH">`, html);
