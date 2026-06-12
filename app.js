@@ -1219,7 +1219,7 @@ async function generatePdfInBrowser(filled) {
     throw new Error("PDF export libraries did not load.");
   }
 
-  const html = buildOfferingHtml(filled);
+  const html = await buildMasterOfferingHtml(filled);
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
   const page = doc.querySelector(".page");
@@ -1277,6 +1277,165 @@ async function generatePdfInBrowser(filled) {
     runtimeStyle.remove();
     mount.remove();
   }
+}
+
+let masterTemplateCache = null;
+
+async function loadMasterTemplate() {
+  if (masterTemplateCache) return masterTemplateCache;
+  const response = await fetch("master-template.html");
+  if (!response.ok) throw new Error("Master template failed to load.");
+  masterTemplateCache = await response.text();
+  return masterTemplateCache;
+}
+
+async function buildMasterOfferingHtml(data) {
+  let html = await loadMasterTemplate();
+  const monthLabel = formatMonthLabel(data.documentMonth);
+  const footerMonth = monthLabel.toUpperCase();
+  const productName = escapeHtml(data.productName);
+  const productModel = escapeHtml(data.productModel);
+  const productType = escapeHtml(data.productType);
+  const colorVariant = escapeHtml(data.colorVariant);
+  const keywords = escapeHtml(data.specKeywords);
+  const sceneTitle = escapeHtml(data.sceneTitle);
+  const hero = data.heroFeature || {};
+  const hasSoftware = data.hasSoftware !== "no";
+  const featureItems = data.uniqueFeatures.filter((item) => item.title);
+
+  html = replaceFirst(/<title>.*?<\/title>/s, `<title>${productName} ${productModel} · Internal Offering</title>`, html);
+  html = replaceFirst(/<img class="logo-img" src=".*?" alt="FANTECH">/s, `<img class="logo-img" src="assets/logo/gaming2.png" alt="FANTECH">`, html);
+  html = replaceFirst(/(<div class="topbar-right">Document Date<br><b>)(.*?)(<\/b><\/div>)/s, `$1${monthLabel}$3`, html);
+  html = replaceFirst(/(<span class="product-name">)(.*?)(<\/span>)/s, `$1${productName} ${productModel}$3`, html);
+  html = replaceFirst(/(<span class="product-category">)(.*?)(<\/span>)/s, `$1${productType}$3`, html);
+  html = replaceFirst(/(<div class="title-right">)(.*?)(<\/div>)/s, `$1${keywords}$3`, html);
+  html = replaceFirst(/(<span class="scene-caption">)(.*?)(<\/span>)/s, `$1${sceneTitle}$3`, html);
+  html = replaceFirst(/<img class="hero-fit" src=".*?" alt="MAXFIT86 hero">/s, `<img class="hero-fit" src="${getImageSrc(data.heroImage, "HERO IMAGE", data.heroPrompt)}" alt="hero image">`, html);
+
+  const featuresHtml = featureItems.map((item, index) => {
+    const cls = item.highlight || index === 0 ? "feature-name red" : "feature-name";
+    return `<div class="feature-item"><div class="${cls}">${escapeHtml(item.title)}</div><div class="feature-desc">${escapeHtml(item.description)}</div></div>`;
+  }).join("\n      ");
+  html = replaceFirst(/<div class="features-title">PRODUCT UNIQUE FEATURES<\/div>.*?<\/div>\s*<\/div>\s*<\/div>\s*<div class="feature-row">/s, `<div class="features-title">PRODUCT UNIQUE FEATURES</div>\n      ${featuresHtml}\n    </div>\n  </div>\n\n  <div class="feature-row">`, html);
+
+  html = replaceFirst(/(<span class="feature-headline">)(.*?)(<\/span>)/s, `$1${escapeHtml(hero.sectionTitle || "")}$3`, html);
+  html = replaceFirst(/(<div class="feature-sub">)(.*?)(<\/div>\s*<div class="mode-row">)/s, `$1${escapeHtml(hero.leadDescription || "")}$3`, html);
+
+  const showcaseHtml = data.showcaseType === "MODE_SHOWCASE"
+    ? `
+        <div class="mode-cell">
+          <div class="mode-card">
+            <div class="mode-tag">MODE 01</div>
+            <div class="mode-title">${escapeHtml(hero.detail1Name || "")}</div>
+            <div class="mode-img"><img class="mode-fit" src="${getImageSrc(hero.detail1Image, "MODE 01", "")}" alt="mode 01"></div>
+            <div class="mode-desc">${escapeHtml(hero.detail1Caption || "")}</div>
+          </div>
+        </div>
+        <div class="mode-cell">
+          <div class="mode-card">
+            <div class="mode-tag">MODE 02</div>
+            <div class="mode-title">${escapeHtml(hero.detail2Name || "")}</div>
+            <div class="mode-img"><img class="mode-fit" src="${getImageSrc(hero.detail2Image, "MODE 02", "")}" alt="mode 02"></div>
+            <div class="mode-desc">${escapeHtml(hero.detail2Caption || "")}</div>
+          </div>
+        </div>
+      `
+    : `
+        <div class="mode-cell">
+          <div class="mode-card simple-view">
+            <div class="mode-tag">TOP VIEW</div>
+            <div class="mode-title"></div>
+            <div class="mode-img"><img class="mode-fit product-view-img product-view-dark" src="${getImageSrc(hero.detail1Image, "TOP VIEW", "")}" alt="top view"></div>
+          </div>
+        </div>
+        <div class="mode-cell">
+          <div class="mode-card simple-view">
+            <div class="mode-tag">ANGLE VIEW</div>
+            <div class="mode-title"></div>
+            <div class="mode-img"><img class="mode-fit product-view-img product-view-light" src="${getImageSrc(hero.detail2Image, "ANGLE VIEW", "")}" alt="angle view"></div>
+          </div>
+        </div>
+      `;
+  html = replaceFirst(/<div class="mode-row">.*?<\/div>\s*<\/div>\s*<div class="fr-right">/s, `<div class="mode-row">${showcaseHtml}\n      </div>\n    </div>\n    <div class="fr-right">`, html);
+
+  if (hasSoftware) {
+    const sw = data.softwareControl || {};
+    const softwareHtml = `
+    <div class="fr-right">
+      <div class="feature-header">
+        <span class="feature-label">SOFTWARE CONTROL</span>
+        <span class="feature-headline">${escapeHtml(sw.sectionTitle || "")}</span>
+      </div>
+      <div class="feature-sub">${escapeHtml(sw.leadDescription || "")}</div>
+      <div class="sw-editor-row">
+        <div class="sw-editor-cell">
+          <div class="sw-editor-card">
+            <div class="sw-editor-img"><img class="sw-fit" src="${getImageSrc(sw.editor1Image, "SOFTWARE 01", "")}" alt="software 01"></div>
+            <div class="sw-editor-name">${escapeHtml(sw.editor1Name || "")}</div>
+            <div class="sw-editor-desc">${escapeHtml(sw.editor1Caption || "")}</div>
+          </div>
+        </div>
+        <div class="sw-editor-cell">
+          <div class="sw-editor-card">
+            <div class="sw-editor-img"><img class="sw-fit" src="${getImageSrc(sw.editor2Image, "SOFTWARE 02", "")}" alt="software 02"></div>
+            <div class="sw-editor-name">${escapeHtml(sw.editor2Name || "")}</div>
+            <div class="sw-editor-desc">${escapeHtml(sw.editor2Caption || "")}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    `;
+    html = replaceFirst(/<div class="fr-right">.*?<\/div>\s*<\/div>\s*<\/div>\s*<\/div>\s*<div class="price-strip">/s, `${softwareHtml}\n   </div>\n  </div>\n\n  <div class="price-strip">`, html);
+  } else {
+    html = replaceFirst(/\.feature-row-inner\s*\{/s, `.feature-row-inner {\n    grid-template-columns: minmax(0, 1fr);`, html);
+    html = replaceFirst(/<div class="fr-right">.*?<\/div>\s*<\/div>\s*<\/div>\s*<\/div>\s*<div class="price-strip">/s, `\n   </div>\n  </div>\n\n  <div class="price-strip">`, html);
+  }
+
+  const price = data.priceStrip || {};
+  const priceLabel = escapeHtml(price.priceLabel || "PRICE");
+  const priceHtml = `
+  <div class="price-strip">
+    <div class="price-cell">
+      <div class="price-label">${priceLabel}</div>
+      <div class="price-value red">${escapeHtml(price.price || "")}</div>
+      <div class="price-suffix">${escapeHtml(price.priceSub || "")}</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">MOQ</div>
+      <div class="price-value">${escapeHtml(price.moq || "")}</div>
+      <div class="price-suffix">${escapeHtml(price.moqSub || "")}</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">COLOR</div>
+      <div class="price-value">${escapeHtml(price.color || "")}</div>
+      <div class="price-suffix">${escapeHtml(price.colorSub || "")}</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">BOX SIZE</div>
+      <div class="price-value">${escapeHtml(price.boxSize || "")}</div>
+      <div class="price-suffix">${escapeHtml(price.boxSizeSub || "")}</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">CARTON QTY</div>
+      <div class="price-value">${escapeHtml(price.cartonQty || "")}</div>
+      <div class="price-suffix">${escapeHtml(price.cartonQtySub || "")}</div>
+    </div>
+  </div>`;
+  html = replaceFirst(/<div class="price-strip">.*?<\/div>\s*<div class="footer">/s, `${priceHtml}\n  <div class="footer">`, html);
+  html = replaceFirst(/(<div class="footer-left">)(.*?)(<\/div>)/s, `$1${productName} ${productModel} · ${productType} · ${colorVariant} · FANTECH Internal Offering · Confidential — Not for Distribution$3`, html);
+  html = replaceFirst(/(<div class="footer-right">)(.*?)(<\/div>)/s, `$1INTERNAL OFFERING — ${footerMonth}$3`, html);
+  return html;
+}
+
+function replaceFirst(pattern, replacement, input) {
+  return input.replace(pattern, replacement);
+}
+
+function getImageSrc(value, label, hint) {
+  if (String(value || "").startsWith("data:image/")) return value;
+  const safeLabel = encodeURIComponent(label);
+  const safeHint = encodeURIComponent(hint || "Image Pending");
+  return `data:image/svg+xml;charset=utf-8,${`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="100%" height="100%" fill="white"/><rect x="8" y="8" width="1184" height="784" fill="none" stroke="%23D0D5DC" stroke-dasharray="12 8" stroke-width="4"/><text x="50%" y="46%" text-anchor="middle" fill="%23B8BCC5" font-family="Arial, sans-serif" font-size="28">${safeLabel}</text><text x="50%" y="54%" text-anchor="middle" fill="%23D0D5DC" font-family="Arial, sans-serif" font-size="20">${safeHint}</text></svg>`}`;
 }
 
 function fileSafeProductName(value) {
