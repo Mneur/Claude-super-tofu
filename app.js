@@ -1219,6 +1219,8 @@ async function generatePdfInBrowser(filled) {
     throw new Error("PDF export libraries did not load.");
   }
 
+  const PAGE_WIDTH_PX = 1000;
+  const PAGE_HEIGHT_PX = 1500;
   const html = await buildMasterOfferingHtml(filled);
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
@@ -1232,8 +1234,8 @@ async function generatePdfInBrowser(filled) {
   mount.style.position = "absolute";
   mount.style.left = "0";
   mount.style.top = "0";
-  mount.style.width = "264.6mm";
-  mount.style.height = "396.9mm";
+  mount.style.width = `${PAGE_WIDTH_PX}px`;
+  mount.style.height = `${PAGE_HEIGHT_PX}px`;
   mount.style.background = "#fff";
   mount.style.opacity = "1";
   mount.style.pointerEvents = "none";
@@ -1242,7 +1244,10 @@ async function generatePdfInBrowser(filled) {
   mount.id = "pdf-export-mount";
 
   const runtimeStyle = document.createElement("style");
-  runtimeStyle.textContent = styleTag.textContent;
+  runtimeStyle.textContent = `${styleTag.textContent}
+  .page { width: ${PAGE_WIDTH_PX}px !important; height: ${PAGE_HEIGHT_PX}px !important; }
+  html, body { margin: 0 !important; padding: 0 !important; }
+  `;
   runtimeStyle.id = "pdf-export-style";
 
   document.head.appendChild(runtimeStyle);
@@ -1253,15 +1258,15 @@ async function generatePdfInBrowser(filled) {
 
   try {
     const canvas = await window.html2canvas(mount.firstElementChild, {
-      scale: 2,
+      scale: 1,
       useCORS: true,
       backgroundColor: "#ffffff",
       scrollX: 0,
       scrollY: 0,
-      width: mount.firstElementChild.scrollWidth,
-      height: mount.firstElementChild.scrollHeight,
-      windowWidth: mount.firstElementChild.scrollWidth,
-      windowHeight: mount.firstElementChild.scrollHeight,
+      width: PAGE_WIDTH_PX,
+      height: PAGE_HEIGHT_PX,
+      windowWidth: PAGE_WIDTH_PX,
+      windowHeight: PAGE_HEIGHT_PX,
     });
 
     const imageData = canvas.toDataURL("image/jpeg", 0.98);
