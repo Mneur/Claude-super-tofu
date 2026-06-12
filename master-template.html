@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MAXFIT 86 WMK702 · Internal Offering</title>
+<style>
+  :root {
+    --primary: #E70012;
+    --topbar-bg: #14171C;
+    --solution-label: #5BA84A;
+    --footer-right-color: #E70012;
+    --solution-body: #555;
+    --ui-gray: #525864;
+    --card-border: #E5E7EB;
+    --card-bg: #FAFAFA;
+    --dark-text: #14171C;
+  }
+  @page { size: 264.6mm 396.9mm; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Poppins', 'Noto Sans CJK SC', sans-serif;
+    font-size: 9pt;
+    color: #14171C;
+    background: #FFFFFF;
+    line-height: 1.25;
+    font-weight: 400;
+  }
+  .page {
+    width: 264.6mm;
+    height: 396.9mm;
+    padding: 0;
+    position: relative;
+  }
+
+  .topbar {
+    background: var(--topbar-bg);
+    color: #FFFFFF;
+    padding: 4mm 8mm;
+    display: table;
+    width: 100%;
+  }
+  .topbar-left, .topbar-right {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .topbar-right { text-align: right; font-size: 7.5pt; color: #B8BCC5; line-height: 1.3; }
+  .topbar-right b { color: #FFFFFF; font-weight: 500; }
+  .logo-img {
+    height: 7mm;
+    vertical-align: middle;
+    display: inline-block;
+  }
+  .topbar-title {
+    font-size: 10pt;
+    font-weight: 500;
+    letter-spacing: 2pt;
+    color: #FFFFFF;
+    vertical-align: middle;
+    margin-left: 6mm;
+  }
+
+  .title-strip {
+    padding: 2.8mm 8mm;
+    border-bottom: 1.5pt solid var(--primary);
+    display: table;
+    width: 100%;
+  }
+  .title-left, .title-right {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .product-name {
+    font-size: 17pt;
+    font-weight: 700;
+    letter-spacing: -0.3pt;
+    color: #14171C;
+    vertical-align: middle;
+  }
+  .product-category {
+    display: inline-block;
+    border: 1pt solid #E5E7EB;
+    background: #FFFFFF;
+    color: #525864;
+    font-size: 7.5pt;
+    padding: 1.5pt 5pt;
+    margin-left: 6pt;
+    vertical-align: middle;
+    font-weight: 400;
+  }
+  .title-right {
+    text-align: right;
+    font-size: 7pt;
+    color: #525864;
+    letter-spacing: 0.8pt;
+    font-weight: 400;
+  }
+
+  .hero-block {
+    padding: 1.5mm 8mm 0;
+    display: table;
+    width: 100%;
+  }
+  .hero-left, .hero-right {
+    display: table-cell;
+    vertical-align: top;
+  }
+  .hero-left { width: 50%; padding-right: 4mm; }
+  .hero-right { width: 50%; padding-left: 4mm; }
+  .scene-tag {
+    display: inline-block;
+    background: var(--primary);
+    color: #FFFFFF;
+    font-size: 7.5pt;
+    font-weight: 600;
+    padding: 1.5pt 5pt;
+    letter-spacing: 0.6pt;
+    vertical-align: middle;
+  }
+  .scene-caption {
+    font-size: 9pt;
+    font-weight: 500;
+    color: #14171C;
+    margin-left: 4pt;
+    vertical-align: middle;
+  }
+  .hero-img-placeholder {
+    width: 100%;
+    height: 90mm;
+    background: #FFFFFF;
+    border: 1pt dashed #D0D5DC;
+    border-radius: 2pt;
+    display: table;
+    color: #B8BCC5;
+    font-size: 8pt;
+    margin-top: 2mm;
+    overflow: hidden;
+  }
+  .hero-fit, .mode-fit, .sw-fit {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: #FFFFFF;
+  }
+  .hero-fit { object-fit: cover; object-position: center center; }
+  .mode-fit, .sw-fit { object-fit: contain; }
+  .hero-img-placeholder .img-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+  }
+  .img-inner .label {
+    font-weight: 600;
+    color: #C8CDD3;
+    letter-spacing: 1.2pt;
+    font-size: 7.5pt;
+  }
+  .img-inner .hint {
+    font-size: 7pt;
+    color: #D0D5DC;
+    margin-top: 2pt;
+    font-weight: 400;
+  }
+  .features-title {
+    font-size: 7.5pt;
+    font-weight: 500;
+    color: #525864;
+    letter-spacing: 1.2pt;
+    margin-bottom: 2mm;
+  }
+  .feature-item {
+    margin-bottom: 3.2mm;
+    padding-left: 5mm;
+    position: relative;
+  }
+  .feature-item::before {
+    content: '';
+    width: 1.8mm;
+    height: 1.8mm;
+    background: var(--primary);
+    position: absolute;
+    left: 0;
+    top: 1.8mm;
+    border-radius: 50%;
+  }
+  .feature-name {
+    font-size: 8.5pt;
+    font-weight: 600;
+    color: #14171C;
+    margin-bottom: 0.8pt;
+    line-height: 1.3;
+  }
+  .feature-name.red { color: var(--primary); }
+  .feature-desc {
+    font-size: 7pt;
+    color: #525864;
+    line-height: 1.42;
+    font-weight: 400;
+  }
+  .feature-desc b { color: #14171C; font-weight: 600; }
+
+  .feature-row {
+    padding: 0 8mm;
+    width: 100%;
+  }
+  .feature-row-inner {
+    padding-top: 2.5mm;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch;
+    width: 100%;
+  }
+  .fr-left {
+    border-top: 2pt solid var(--primary);
+    padding-top: 3mm;
+  }
+  .fr-right {
+    border-top: 1pt solid #E5E7EB;
+    padding-top: 3mm;
+  }
+  .fr-left, .fr-right {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .fr-left { padding-right: 5mm; }
+  .fr-right { padding-left: 5mm; border-left: 1pt solid #E5E7EB; }
+  .feature-header {
+    display: flex;
+    align-items: center;
+    gap: 4pt;
+    min-height: 6.5mm;
+  }
+  .feature-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary);
+    color: #FFFFFF;
+    font-size: 6.5pt;
+    font-weight: 600;
+    padding: 1.5pt 4.5pt;
+    letter-spacing: 0.5pt;
+    min-height: 4.8mm;
+    line-height: 1;
+    text-align: center;
+    flex: 0 0 auto;
+  }
+  .feature-headline {
+    display: inline-flex;
+    align-items: center;
+    font-size: 9pt;
+    font-weight: 700;
+    color: #14171C;
+    min-height: 4.8mm;
+    white-space: nowrap;
+  }
+  .feature-sub {
+    font-size: 8pt;
+    color: #525864;
+    margin: 2mm 0 2.5mm;
+    font-weight: 400;
+    line-height: 1.35;
+  }
+  .mode-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 5mm;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 2mm;
+    align-items: start;
+  }
+  .mode-cell {
+    min-width: 0;
+  }
+  .mode-card {
+    background: #FAFAFA;
+    border: 1pt solid #E5E7EB;
+    padding: 2mm 2.5mm 2mm;
+    display: flex;
+    flex-direction: column;
+  }
+  .mode-tag {
+    font-size: 6.5pt;
+    color: var(--primary);
+    font-weight: 600;
+    letter-spacing: 0.8pt;
+    margin-bottom: 1mm;
+    min-height: 3mm;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+  }
+  .mode-title {
+    font-size: 9pt;
+    font-weight: 700;
+    color: #14171C;
+    margin-bottom: 2mm;
+    min-height: 10pt;
+    display: flex;
+    align-items: flex-start;
+  }
+  .mode-img {
+    width: 100%;
+    height: 38mm;
+    background: #FFFFFF;
+    border-radius: 1pt;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    flex: 0 0 38mm;
+    margin-bottom: 1.5mm;
+    overflow: hidden;
+  }
+  .mode-img .img-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #6B6F76;
+    font-size: 7pt;
+  }
+  .mode-card.simple-view .mode-title { display: none; }
+  .mode-card.simple-view .mode-img {
+    flex-basis: 82mm;
+    height: 82mm;
+    margin-bottom: 0;
+  }
+  .mode-fit { align-self: flex-end; }
+  .product-view-img {
+    transform-origin: center bottom;
+  }
+  .product-view-dark {
+    transform: scale(0.98);
+  }
+  .product-view-light {
+    transform: scale(1.24) translateY(0.8mm);
+  }
+  .mode-desc {
+    font-size: 6.8pt;
+    color: #525864;
+    line-height: 1.25;
+    font-weight: 400;
+    text-align: center;
+    padding: 0 1mm;
+    min-height: 10mm;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .sw-editor-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 5mm;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 2mm;
+    align-items: start;
+  }
+  .sw-editor-cell {
+    min-width: 0;
+  }
+  .sw-editor-card {
+    background: #FAFAFA;
+    border: 1pt solid #E5E7EB;
+    padding: 2mm 2mm 2mm;
+    display: flex;
+    flex-direction: column;
+  }
+  .sw-editor-img {
+    width: 100%;
+    height: 52mm;
+    background: #FFFFFF;
+    border-radius: 1pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 52mm;
+    margin-bottom: 1.5mm;
+    overflow: hidden;
+  }
+  .sw-editor-img .img-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #6B6F76;
+    font-size: 7pt;
+  }
+  .sw-editor-name {
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #14171C;
+    margin-bottom: 1pt;
+    min-height: 7mm;
+    display: flex;
+    align-items: flex-start;
+  }
+  .sw-editor-desc {
+    font-size: 7pt;
+    color: #525864;
+    line-height: 1.25;
+    font-weight: 400;
+  }
+
+  .price-strip {
+    background: #1A1A1A;
+    margin-top: 2mm;
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  .price-cell {
+    display: table-cell;
+    padding: 2.2mm 4mm;
+    vertical-align: top;
+    border-right: 1pt solid #2A2D33;
+  }
+  .price-cell:last-child { border-right: none; }
+  .price-label {
+    font-size: 6.5pt;
+    color: #B8BCC5;
+    letter-spacing: 1pt;
+    font-weight: 500;
+    margin-bottom: 1mm;
+  }
+  .price-value {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1.1;
+  }
+  .price-value.red { color: var(--primary); font-size: 15pt; }
+  .price-suffix {
+    font-size: 7pt;
+    color: #B8BCC5;
+    margin-top: 1pt;
+    font-weight: 400;
+  }
+
+  .lower-block {
+    padding: 1.5mm 8mm 8mm;
+    display: table;
+    width: 100%;
+  }
+  .lower-left, .lower-right {
+    display: table-cell;
+    vertical-align: top;
+  }
+  .lower-left { width: 52%; padding-right: 5mm; }
+  .lower-right { width: 48%; padding-left: 5mm; border-left: 1pt solid #E5E7EB; }
+
+  .section-title {
+    font-size: 7.5pt;
+    font-weight: 600;
+    color: #14171C;
+    letter-spacing: 1.2pt;
+    margin-bottom: 3mm;
+  }
+  .pain-item {
+    margin-bottom: 6mm;
+    padding-left: 6mm;
+    position: relative;
+  }
+  .pain-num {
+    position: absolute;
+    left: 0;
+    top: 0.3mm;
+    width: 4.2mm;
+    height: 4.2mm;
+    background: var(--primary);
+    color: #FFFFFF;
+    font-size: 7pt;
+    font-weight: 600;
+    text-align: center;
+    line-height: 4.2mm;
+    border-radius: 50%;
+  }
+  .pain-problem {
+    font-size: 7.8pt;
+    font-weight: 600;
+    color: #14171C;
+    margin-bottom: 0.8mm;
+    line-height: 1.3;
+  }
+  .pain-solution {
+    font-size: 7.5pt;
+    line-height: 1.35;
+    font-weight: 400;
+    padding-left: 0;
+    display: block;
+  }
+  .pain-solution .sol-label {
+    color: var(--solution-label);
+    font-weight: 700;
+    margin-right: 4pt;
+  }
+  .pain-solution .sol-body {
+    color: #555;
+    font-weight: 400;
+  }
+
+  .product-views {
+    display: table;
+    width: 100%;
+    margin-bottom: 2mm;
+  }
+  .pv-cell {
+    display: table-cell;
+    vertical-align: top;
+    padding: 0 1.5mm;
+    width: 50%;
+    text-align: center;
+  }
+  .pv-img {
+    width: 100%;
+    height: 42mm;
+    background: #FFFFFF;
+    border-radius: 2pt;
+    display: table;
+    color: #6B6F76;
+    font-size: 7pt;
+    overflow: hidden;
+  }
+  .pv-img .img-inner { display: table-cell; vertical-align: middle; text-align: center; }
+  .pv-caption {
+    font-size: 7pt;
+    color: #525864;
+    letter-spacing: 1pt;
+    margin-top: 2pt;
+    font-weight: 500;
+  }
+
+  .info-block {
+    margin-bottom: 1mm;
+  }
+  .info-block-framed {
+    border: 1pt solid #E5E7EB;
+    padding: 1.5mm 2mm 0.8mm;
+    margin-bottom: 1mm;
+  }
+  .info-title {
+    font-size: 7pt;
+    font-weight: 600;
+    color: #14171C;
+    letter-spacing: 1.2pt;
+    margin-bottom: 1mm;
+  }
+  .info-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  .info-list li {
+    font-size: 7pt;
+    color: #14171C;
+    padding: 0.3pt 0;
+    padding-left: 4mm;
+    position: relative;
+    line-height: 1.25;
+    font-weight: 400;
+  }
+  .info-list li::before {
+    content: '·';
+    color: var(--primary);
+    position: absolute;
+    left: 1mm;
+    font-weight: 700;
+    font-size: 11pt;
+    top: -3pt;
+  }
+
+  .timeline {
+    background: #FAFAFA;
+    border: 1pt solid #E5E7EB;
+    padding: 1.8mm 3mm;
+    margin-bottom: 2mm;
+  }
+  .timeline-row {
+    display: table;
+    width: 100%;
+  }
+  .timeline-cell {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+  }
+  .timeline-days {
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1;
+    display: block;
+  }
+  .timeline-days-sub {
+    font-size: 6.5pt;
+    color: #525864;
+    letter-spacing: 1pt;
+    font-weight: 500;
+    display: block;
+    margin-top: 1pt;
+  }
+  .timeline-stage {
+    font-size: 7.5pt;
+    color: #525864;
+    font-weight: 400;
+    margin-top: 1mm;
+    line-height: 1.25;
+  }
+  .timeline-arrow {
+    display: table-cell;
+    vertical-align: middle;
+    color: #B8BCC5;
+    font-size: 9pt;
+    width: 3mm;
+    font-weight: 400;
+  }
+  .timeline-total {
+    font-size: 7pt;
+    color: #525864;
+    margin-top: 1.5mm;
+    padding-top: 1.5mm;
+    border-top: 1pt solid #E5E7EB;
+    font-weight: 400;
+  }
+  .timeline-total b { color: var(--primary); font-weight: 700; }
+
+  .tag-grid {
+    margin-top: 1mm;
+  }
+  .tag-box {
+    display: inline-block;
+    border: 1pt solid #E5E7EB;
+    background: #FFFFFF;
+    padding: 1.5pt 6pt;
+    font-size: 6.5pt;
+    color: #14171C;
+    margin: 0 1.5pt 2pt 0;
+    font-weight: 400;
+  }
+
+  .footer {
+    padding: 0 8mm;
+    display: table;
+    width: 100%;
+    font-size: 6.5pt;
+    color: #525864;
+    line-height: 1;
+    position: absolute;
+    bottom: 4mm;
+    left: 0;
+  }
+  .footer-left, .footer-right {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .footer-right {
+    text-align: right;
+    color: var(--footer-right-color);
+    font-weight: 800;
+    letter-spacing: 1pt;
+    font-size: 7.5pt;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <img class="logo-img" src="E:/GitHub/github_repo/brand-assets/logo/gaming2.png" alt="FANTECH">
+      <span class="topbar-title">INTERNAL OFFERING</span>
+    </div>
+    <div class="topbar-right">Document Date<br><b>May 2026</b></div>
+  </div>
+
+  <div class="title-strip">
+    <div class="title-left">
+      <span class="product-name">MAXFIT 86 WMK702</span>
+      <span class="product-category">TKL Wireless Mechanical Keyboard</span>
+    </div>
+    <div class="title-right">TRI-MODE · GASKET MOUNT · ACOUSTIC KNIT TOP · BLACK</div>
+  </div>
+
+  <div class="hero-block">
+    <div class="hero-left">
+      <div>
+        <span class="scene-tag">APPLICATION SCENE</span>
+        <span class="scene-caption">Premium Desk &amp; Hybrid Workspace</span>
+      </div>
+      <div class="hero-img-placeholder">
+        <img class="hero-fit" src="E:/GitHub/github_repo/output/MAXFIT86_hero.png" alt="MAXFIT86 hero">
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="features-title">PRODUCT UNIQUE FEATURES</div>
+      <div class="feature-item">
+        <div class="feature-name red">Acoustic Knit Top — A Keyboard That Belongs on a Premium Desk</div>
+        <div class="feature-desc">Fabric-finished top panel with embedded LED matrix display. <b>The signature visual language of MAXFIT 86</b> — premium texture where every other keyboard shows plastic.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-name">LED Matrix Display · 7×33 Pixels with Live Clock</div>
+        <div class="feature-desc">Built-in pixel display shows time by default, fully customizable via web driver — your desk gains a private information screen.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-name">Dual Smart Knobs · Volume + Mode</div>
+        <div class="feature-desc">Large knob for volume, small knob for device/mode switching. High-frequency actions become physical and instant.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-name">KTT Misty Blue Linear · 43gf · 50M Lifespan</div>
+        <div class="feature-desc">Light linear feel tuned for all-day typing and gaming. Misty blue / purple POM stems — even the switches look premium.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-name">8000 mAh · Up to 200-Hour Battery</div>
+        <div class="feature-desc">Largest battery in its class. Backlit gaming still lasts a full work week (40 hours); lights-off mode hits 200 hours.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-name">Gasket Mount + 4-Layer Sound Dampening</div>
+        <div class="feature-desc">Plate foam + IXPE + TPR + bottom foam, paired with gasket-floating mount for that deep "thock" — quality you can hear.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="feature-row">
+   <div class="feature-row-inner">
+    <div class="fr-left">
+      <div class="feature-header">
+        <span class="feature-label">HERO FEATURE</span>
+        <span class="feature-headline">Acoustic Knit Top</span>
+      </div>
+      <div class="feature-sub">The keyboard's most visible surface is no longer cold plastic — it's a fabric-and-display composite. MAXFIT 86's signature look.</div>
+      <div class="mode-row">
+        <div class="mode-cell">
+          <div class="mode-card">
+            <div class="mode-tag">DETAIL 01</div>
+            <div class="mode-title">Knit Fabric Surface</div>
+            <div class="mode-img"><img class="mode-fit" src="E:/GitHub/github_repo/output/MAXFIT86_detail_01.png" alt="MAXFIT86 detail 01"></div>
+            <div class="mode-desc">Speaker-grade knit fabric across the top — a tactile, premium finish.</div>
+          </div>
+        </div>
+        <div class="mode-cell">
+          <div class="mode-card">
+            <div class="mode-tag">DETAIL 02</div>
+            <div class="mode-title">LED Matrix Display</div>
+            <div class="mode-img"><img class="mode-fit" src="E:/GitHub/github_repo/output/MAXFIT86_detail_02.png" alt="MAXFIT86 detail 02"></div>
+            <div class="mode-desc">7×33 pixels embedded beneath the fabric. Live clock + custom pixel art.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fr-right">
+      <div class="feature-header">
+        <span class="feature-label">SOFTWARE CONTROL</span>
+        <span class="feature-headline">Customize Everything in One App</span>
+      </div>
+      <div class="feature-sub">Web-based driver — no install required. Customize the matrix display, key mapping, and lighting modes from any browser.</div>
+      <div class="sw-editor-row">
+        <div class="sw-editor-cell">
+          <div class="sw-editor-card">
+            <div class="sw-editor-img"><img class="sw-fit" src="E:/GitHub/github_repo/output/MAXFIT86_sw_01.png" alt="MAXFIT86 software 01"></div>
+            <div class="sw-editor-name">Matrix Display Editor</div>
+            <div class="sw-editor-desc">Pre-loaded animations + pixel art editor — design your own frame-by-frame patterns.</div>
+          </div>
+        </div>
+        <div class="sw-editor-cell">
+          <div class="sw-editor-card">
+            <div class="sw-editor-img"><img class="sw-fit" src="E:/GitHub/github_repo/output/MAXFIT86_sw_02.png" alt="MAXFIT86 software 02"></div>
+            <div class="sw-editor-name">Lighting &amp; Keymap</div>
+            <div class="sw-editor-desc">19 ARGB modes, full key remapping, macro recording — all in one browser tab.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="price-strip">
+    <div class="price-cell">
+      <div class="price-label">MSRP</div>
+      <div class="price-value red">$104.80</div>
+      <div class="price-suffix">Suggested retail price</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">MOQ</div>
+      <div class="price-value">1,000 pcs</div>
+      <div class="price-suffix">Min. order qty</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">COLOR</div>
+      <div class="price-value">Black</div>
+      <div class="price-suffix">OEM colorway available</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">BOX SIZE</div>
+      <div class="price-value">TBD</div>
+      <div class="price-suffix">To be confirmed</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">CARTON QTY</div>
+      <div class="price-value">10 pcs</div>
+      <div class="price-suffix">Per master carton</div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-left">MAXFIT 86 WMK702 · TKL Wireless Mechanical Keyboard · Black · FANTECH Internal Offering · Confidential — Not for Distribution</div>
+    <div class="footer-right">INTERNAL OFFERING — MAY 2026</div>
+  </div>
+
+</div>
+</body>
+</html>
