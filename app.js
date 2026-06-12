@@ -1215,8 +1215,8 @@ function escapeAttribute(value) {
 }
 
 async function generatePdfInBrowser(filled) {
-  if (!window.html2pdf) {
-    throw new Error("html2pdf library did not load.");
+  if (!window.html2canvas || !(window.jspdf && window.jspdf.jsPDF)) {
+    throw new Error("PDF export libraries did not load.");
   }
 
   const html = buildOfferingHtml(filled);
@@ -1229,13 +1229,13 @@ async function generatePdfInBrowser(filled) {
   }
 
   const mount = document.createElement("div");
-  mount.style.position = "fixed";
+  mount.style.position = "absolute";
   mount.style.left = "0";
   mount.style.top = "0";
   mount.style.width = "264.6mm";
   mount.style.height = "396.9mm";
   mount.style.background = "#fff";
-  mount.style.opacity = "0.01";
+  mount.style.opacity = "1";
   mount.style.pointerEvents = "none";
   mount.style.zIndex = "-1";
   mount.style.overflow = "hidden";
@@ -1252,16 +1252,27 @@ async function generatePdfInBrowser(filled) {
   const filename = `${filled.documentMonth}_${fileSafeProductName(filled.productName)}_${filled.themeId}.pdf`;
 
   try {
-    await window.html2pdf()
-      .set({
-        filename,
-        margin: 0,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff", scrollX: 0, scrollY: 0 },
-        jsPDF: { unit: "mm", format: [264.6, 396.9], orientation: "portrait" },
-      })
-      .from(mount.firstElementChild)
-      .save();
+    const canvas = await window.html2canvas(mount.firstElementChild, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      scrollX: 0,
+      scrollY: 0,
+      width: mount.firstElementChild.scrollWidth,
+      height: mount.firstElementChild.scrollHeight,
+      windowWidth: mount.firstElementChild.scrollWidth,
+      windowHeight: mount.firstElementChild.scrollHeight,
+    });
+
+    const imageData = canvas.toDataURL("image/jpeg", 0.98);
+    const pdf = new window.jspdf.jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: [264.6, 396.9],
+      compress: true,
+    });
+    pdf.addImage(imageData, "JPEG", 0, 0, 264.6, 396.9);
+    pdf.save(filename);
   } finally {
     runtimeStyle.remove();
     mount.remove();
