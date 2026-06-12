@@ -1230,10 +1230,15 @@ async function generatePdfInBrowser(filled) {
 
   const mount = document.createElement("div");
   mount.style.position = "fixed";
-  mount.style.left = "-99999px";
+  mount.style.left = "0";
   mount.style.top = "0";
   mount.style.width = "264.6mm";
+  mount.style.height = "396.9mm";
   mount.style.background = "#fff";
+  mount.style.opacity = "0.01";
+  mount.style.pointerEvents = "none";
+  mount.style.zIndex = "-1";
+  mount.style.overflow = "hidden";
   mount.id = "pdf-export-mount";
 
   const runtimeStyle = document.createElement("style");
@@ -1246,19 +1251,21 @@ async function generatePdfInBrowser(filled) {
 
   const filename = `${filled.documentMonth}_${fileSafeProductName(filled.productName)}_${filled.themeId}.pdf`;
 
-  await window.html2pdf()
-    .set({
-      filename,
-      margin: 0,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
-      jsPDF: { unit: "mm", format: [264.6, 396.9], orientation: "portrait" },
-    })
-    .from(mount.firstElementChild)
-    .save();
-
-  runtimeStyle.remove();
-  mount.remove();
+  try {
+    await window.html2pdf()
+      .set({
+        filename,
+        margin: 0,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff", scrollX: 0, scrollY: 0 },
+        jsPDF: { unit: "mm", format: [264.6, 396.9], orientation: "portrait" },
+      })
+      .from(mount.firstElementChild)
+      .save();
+  } finally {
+    runtimeStyle.remove();
+    mount.remove();
+  }
 }
 
 function fileSafeProductName(value) {
