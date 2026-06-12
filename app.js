@@ -882,7 +882,7 @@ function deriveUniqueFeatures(data) {
       highlight: typeof manual.highlight === "boolean" ? manual.highlight : highlight,
     };
   });
-  return ensureUniqueFeatureCards(generated);
+  return ensureUniqueFeatureCards(generated).filter((item) => item.title);
 }
 
 function deriveHeroFeature(data, features) {
@@ -918,27 +918,27 @@ function deriveSoftwareControl(data) {
   if (productType.includes("headset")) {
     generated = {
       sectionTitle: "Tune Every Session in Software",
-      leadDescription: "Useful driver support gives retailers a stronger premium talking point while helping users tune both communication quality and playback character for different scenarios.",
+      leadDescription: "Useful driver support gives this headset a stronger premium story at retail. It lets users shape both communication clarity and sound character instead of relying on one fixed default.",
       card1: {
         title: "MIC EFFECT / AI ENC CONTROL",
-        description: "Adjust microphone noise reduction, voice effects, and communication settings directly in software. Fine-tune voice pickup strength and background noise filtering for clearer team communication. Ideal for gaming, voice chat, and streaming scenarios.",
+        description: "Adjust microphone noise reduction, voice effects, and communication settings for clearer voice chat and more controlled team communication.",
       },
       card2: {
         title: "EQ + SURROUND CONTROL",
-        description: "Customize EQ profiles, surround behavior, and playback presets based on different content types. Switch between gaming, music, movie, and daily-use sound signatures in seconds. Gives users greater control over how the headset sounds in every scenario.",
+        description: "Switch EQ, surround behavior, and playback presets so the headset feels better tuned for gaming, music, movies, and everyday listening.",
       },
     };
   } else if (productType.includes("keyboard")) {
     generated = {
       sectionTitle: "Customize Everything in One App",
-      leadDescription: "A strong control app extends the product story beyond the first unboxing and gives sellers a much stronger personalization angle.",
+      leadDescription: "A strong control app extends the product story beyond the first unboxing. It gives users more control over personalization and gives sellers a clearer upgrade angle.",
       card1: {
         title: "MATRIX DISPLAY EDITOR",
-        description: "Upload animations, pixel art, or brand visuals directly to the matrix display editor. Control what the keyboard shows and keep the product visually fresh after purchase. It makes the display more personal, more brandable, and more eye-catching in demos.",
+        description: "Upload animations, pixel art, or brand visuals to keep the display more personal and more eye-catching in demos.",
       },
       card2: {
         title: "KEYMAP + LIGHTING CONTROL",
-        description: "Remap keys, build macros, and fine-tune ARGB lighting from one control panel. Users can tailor both productivity shortcuts and gaming behavior without extra tools. That flexibility gives the keyboard a stronger enthusiast-level value story.",
+        description: "Remap keys, build macros, and fine-tune ARGB lighting from one panel for a more complete enthusiast setup.",
       },
     };
   } else {
@@ -946,14 +946,14 @@ function deriveSoftwareControl(data) {
     const second = softwareSpecs[1] || "Advanced Control";
     generated = {
       sectionTitle: "Customize Everything in One App",
-      leadDescription: "Software control adds another premium layer to the product and gives retailers more than one reason to sell the upgrade story.",
+      leadDescription: "Software control adds another premium layer to the product. It gives users more control in real use and gives retailers another reason to sell the upgrade story.",
       card1: {
         title: shortenFeatureTitle(titleFromSpec(first)),
-        description: `${descriptionFromSpec(first)} Users can make more precise adjustments in software instead of relying on one fixed default. This helps the product feel more adaptable in everyday use.`,
+        description: `${descriptionFromSpec(first)} Users can make more precise adjustments instead of relying on one fixed default.`,
       },
       card2: {
         title: shortenFeatureTitle(titleFromSpec(second)),
-        description: `${descriptionFromSpec(second)} It also gives sellers a clearer upgrade conversation when comparing against simpler products with fewer controls.`,
+        description: `${descriptionFromSpec(second)} It also gives sellers a clearer upgrade conversation against simpler competing products.`,
       },
     };
   }
@@ -1012,19 +1012,19 @@ function titleFromSpec(spec) {
 
 function descriptionFromSpec(spec) {
   const lower = spec.toLowerCase();
-  if (lower.includes("retractable microphone")) return "A retractable mic keeps communication ready when needed while preserving a cleaner everyday look when voice chat is off.";
-  if (lower.includes("quad-mode")) return "More connection options reduce compatibility friction and make the product easier to position across gaming, mobile, and desktop use.";
-  if (lower.includes("hot swappable")) return "Lets users change switches without soldering, making the product easier to customize and more attractive to enthusiast buyers.";
-  if (lower.includes("tri-mode")) return "Supports flexible device switching across wireless and wired scenarios, making the product easier to sell across more user setups.";
-  if (lower.includes("battery")) return "A stronger battery story improves real daily usability and gives the product a more confident wireless positioning.";
-  if (lower.includes("gasket")) return "A softer, more premium typing feel helps the product stand out beyond raw spec comparison alone.";
-  if (lower.includes("software") || lower.includes("driver")) return "Dedicated software support unlocks deeper personalization and creates a clearer premium feature story.";
-  if (lower.includes("rgb")) return "Lighting customization adds stronger desktop presence and makes the product more visually demonstrable in content and retail.";
-  if (lower.includes("knob")) return "Dedicated physical control reduces friction in frequent daily actions and makes the product feel more intentional in use.";
-  if (lower.includes("matrix") || lower.includes("display")) return "An integrated display creates stronger visual differentiation and gives the product a more memorable identity on the desk.";
-  if (lower.includes("ai enc")) return "AI-assisted noise reduction improves voice clarity in team chat and helps the product feel more premium in real multiplayer use.";
-  if (lower.includes("surround")) return "Virtual surround support adds a stronger gaming value story for buyers who expect more positional audio without stepping up in price.";
-  return `${shortenFeatureTitle(spec)} gives users a more practical daily advantage and gives retailers a clearer story to sell.`;
+  if (lower.includes("retractable microphone")) return "A retractable mic keeps communication ready when needed while preserving a cleaner everyday look when voice chat is off. That makes the headset easier to use across both gaming and daily listening.";
+  if (lower.includes("quad-mode")) return "More connection options reduce compatibility friction and make the product easier to position across gaming, mobile, and desktop use. It gives retailers a broader sell-in angle with one model.";
+  if (lower.includes("hot swappable")) return "Users can change switches without soldering, which makes the keyboard easier to customize and much more attractive to enthusiast buyers. It also gives sellers a stronger mod-friendly story.";
+  if (lower.includes("tri-mode")) return "Flexible wired and wireless switching makes the product fit more setups without extra friction. That versatility helps both users and retailers get more value from one SKU.";
+  if (lower.includes("battery")) return "A stronger battery story improves real daily usability and gives the product a more confident wireless positioning. It is easier to sell when users do not worry about constant charging.";
+  if (lower.includes("gasket")) return "A softer, more premium typing feel helps the product stand out when buyers compare comfort and sound quality side by side. It makes the product feel more refined, not just more technical.";
+  if (lower.includes("software") || lower.includes("driver")) return "Dedicated software support unlocks deeper personalization and gives the product a clearer premium feature story. It also helps retailers explain long-term value beyond the hardware itself.";
+  if (lower.includes("rgb")) return "Lighting customization adds stronger desktop presence and makes the product more visually demonstrable in retail and creator content. It helps the product look more alive on first impression.";
+  if (lower.includes("knob")) return "Dedicated physical control reduces friction in frequent daily actions and makes the product feel more intentional in use. It is the kind of tactile feature buyers notice immediately in demos.";
+  if (lower.includes("matrix") || lower.includes("display")) return "An integrated display creates immediate visual differentiation and gives the product a more memorable identity on the desk. It helps retailers show something customers notice at first glance.";
+  if (lower.includes("ai enc")) return "AI-assisted noise reduction improves voice clarity in team chat and helps the product feel more premium in real multiplayer use. It directly supports clearer communication where it matters most.";
+  if (lower.includes("surround")) return "Virtual surround support adds a stronger gaming value story for buyers who expect positional audio without stepping up in price. It makes the headset easier to place as a gaming-first option.";
+  return `${shortenFeatureTitle(spec)} improves the real user experience while giving retailers a clearer reason to sell the feature, not just list it.`;
 }
 
 function shortenFeatureTitle(value) {
@@ -1081,7 +1081,7 @@ function ensureUniqueFeatureCards(features) {
     let title = item.title;
     let description = item.description;
     if (seenTitles.has(title)) title = `${title} ${index + 1}`;
-    if (seenDescs.has(description)) description = `${description} It also creates a distinct selling angle for a different buyer need.`;
+    if (seenDescs.has(description)) description = `${description} It gives this product a different angle to sell in real buyer conversations.`;
     seenTitles.add(title);
     seenDescs.add(description);
     return { ...item, title, description };
