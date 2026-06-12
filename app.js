@@ -1345,14 +1345,14 @@ async function buildMasterOfferingHtml(data) {
           <div class="mode-card simple-view">
             <div class="mode-tag">TOP VIEW</div>
             <div class="mode-title"></div>
-            <div class="mode-img"><img class="mode-fit product-view-img product-view-dark" src="${getImageSrc(hero.detail1Image, "TOP VIEW", "")}" alt="top view"></div>
+            <div class="mode-img"><img class="mode-fit" src="${getImageSrc(hero.detail1Image, "TOP VIEW", "")}" alt="top view"></div>
           </div>
         </div>
         <div class="mode-cell">
           <div class="mode-card simple-view">
             <div class="mode-tag">ANGLE VIEW</div>
             <div class="mode-title"></div>
-            <div class="mode-img"><img class="mode-fit product-view-img product-view-light" src="${getImageSrc(hero.detail2Image, "ANGLE VIEW", "")}" alt="angle view"></div>
+            <div class="mode-img"><img class="mode-fit" src="${getImageSrc(hero.detail2Image, "ANGLE VIEW", "")}" alt="angle view"></div>
           </div>
         </div>
       `;
