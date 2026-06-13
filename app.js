@@ -870,7 +870,10 @@ function deriveSpecKeywords(data) {
 }
 
 function deriveUniqueFeatures(data) {
-  const specs = combineSpecsIfNeeded(parseSpecLines(data.specSellingPointsText));
+  let specs = parseSpecLines(data.specSellingPointsText);
+  if (specs.length > 6) {
+    specs = mergeFeatureSpecs(specs);
+  }
   const normalizedMain = String(data.mainSellingPoint || "").trim().toLowerCase();
   const generated = specs.slice(0, 6).map((spec, index) => {
     const auto = featureFromSpec(spec);
@@ -882,7 +885,7 @@ function deriveUniqueFeatures(data) {
       highlight: typeof manual.highlight === "boolean" ? manual.highlight : highlight,
     };
   });
-  return ensureUniqueFeatureCards(generated).filter((item) => item.title);
+  return ensureUniqueFeatureCards(generated).filter((item) => item.title).slice(0, 6);
 }
 
 function deriveHeroFeature(data, features) {
@@ -987,6 +990,52 @@ function combineSpecsIfNeeded(specs) {
     combined.push(right ? `${left} + ${right}` : left);
   }
   return combined.slice(0, 6);
+}
+
+function mergeFeatureSpecs(specs) {
+  const pool = [...specs];
+  const take = (pattern) => {
+    const index = pool.findIndex((spec) => pattern.test(spec));
+    if (index === -1) return null;
+    return pool.splice(index, 1)[0];
+  };
+
+  const mic = take(/microphone|mic/i);
+  const aiEnc = take(/ai enc|enc/i);
+  const surround = take(/surround/i);
+  const eq = take(/\beq\b/i);
+  const connection = take(/tri-mode|quad-mode/i);
+  const platform = take(/platform/i);
+  const battery = take(/battery/i);
+  const software = take(/software|driver|custom/i);
+
+  const merged = [];
+  if (mic && aiEnc) merged.push("Retractable Mic + AI ENC Communication");
+  else {
+    if (mic) merged.push(mic);
+    if (aiEnc) merged.push(aiEnc);
+  }
+
+  if (surround && eq) merged.push("7.1 Surround + Built-In EQ");
+  else {
+    if (surround) merged.push(surround);
+    if (eq) merged.push(eq);
+  }
+
+  if (connection && platform) merged.push("Multi-Platform Quad-Mode Connection");
+  else {
+    if (connection) merged.push(connection);
+    if (platform) merged.push(platform);
+  }
+
+  if (battery) merged.push("Long-Life Battery + Wireless Freedom");
+  if (software) merged.push("Software Customization Control");
+
+  while (pool.length && merged.length < 6) {
+    merged.push(pool.shift());
+  }
+
+  return merged.slice(0, 6);
 }
 
 function featureFromSpec(spec) {
@@ -1285,6 +1334,40 @@ async function generatePdfInBrowser(filled) {
   .mode-card .mode-img,
   .sw-editor-img {
     align-items: center !important;
+  }
+  .logo-img {
+    height: 7mm !important;
+    width: auto !important;
+    max-width: none !important;
+    object-fit: contain !important;
+  }
+  .topbar {
+    padding: 4mm 8mm !important;
+  }
+  .topbar-left {
+    display: table-cell !important;
+    vertical-align: middle !important;
+    white-space: nowrap !important;
+  }
+  .topbar-title {
+    display: inline-block !important;
+    vertical-align: middle !important;
+    margin-left: 6mm !important;
+  }
+  .sw-editor-row {
+    margin-top: 4mm !important;
+    padding-top: 0 !important;
+    align-items: stretch !important;
+  }
+  .sw-editor-card {
+    min-height: 78mm !important;
+  }
+  .sw-editor-img {
+    height: 52mm !important;
+    flex: 0 0 52mm !important;
+  }
+  .sw-editor-desc {
+    line-height: 1.25 !important;
   }
   `;
   runtimeStyle.id = "pdf-export-style";
