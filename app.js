@@ -1239,7 +1239,7 @@ document.getElementById("generateFilesBtn").addEventListener("click", async () =
 
   try {
     const filled = withAutoDerivedFields(state);
-    await generatePdfInBrowser(filled);
+    await generatePptxInBrowser(filled);
   } catch (error) {
     alert(currentLang === "zh" ? `生成失败：${error.message}` : `Generation failed: ${error.message}`);
   } finally {
@@ -1268,6 +1268,127 @@ function escapeHtml(value) {
 
 function escapeAttribute(value) {
   return escapeHtml(value);
+}
+
+async function generatePptxInBrowser(filled) {
+  const PptxGenJS = window.PptxGenJS || window.pptxgen || window.pptxgenjs;
+  if (!PptxGenJS) {
+    throw new Error("PPTX export library did not load.");
+  }
+
+  const pptx = new PptxGenJS();
+  pptx.layout = "LAYOUT_WIDE";
+  pptx.defineLayout({ name: "MAXFIT86", width: 10.417, height: 15.626 });
+  pptx.layout = "MAXFIT86";
+  pptx.author = "Codex";
+  pptx.company = "FANTECH";
+  pptx.subject = "Internal Offering";
+  pptx.title = `${filled.productName} ${filled.productModel} Internal Offering`;
+
+  const slide = pptx.addSlide();
+  slide.background = { color: "FFFFFF" };
+
+  const red = "E70012";
+  const black = "14171C";
+  const gray = "525864";
+  const lightGray = "E5E7EB";
+  const white = "FFFFFF";
+
+  // Header
+  slide.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: 10.417, h: 0.48, line: { color: black, transparency: 100 }, fill: { color: black } });
+  slide.addImage({ path: "assets/logo/gaming2.png", x: 0.24, y: 0.11, h: 0.28, w: 1.4, sizing: { type: "contain", x: 0.24, y: 0.11, w: 1.4, h: 0.28 } });
+  slide.addText("INTERNAL OFFERING", { x: 1.72, y: 0.13, w: 2.1, h: 0.18, fontFace: "Poppins", fontSize: 10, color: white, breakLine: false, bold: false, margin: 0 });
+  slide.addText("Document Date", { x: 8.95, y: 0.10, w: 1.0, h: 0.12, fontFace: "Poppins", fontSize: 6.5, color: "B8BCC5", align: "right", margin: 0 });
+  slide.addText(formatMonthLabel(filled.documentMonth), { x: 8.95, y: 0.22, w: 1.0, h: 0.14, fontFace: "Poppins", fontSize: 8, color: white, align: "right", bold: true, margin: 0 });
+
+  // Title strip
+  slide.addText(`${filled.productName} ${filled.productModel}`, { x: 0.30, y: 0.62, w: 2.45, h: 0.26, fontFace: "Poppins", fontSize: 18, bold: true, color: black, margin: 0 });
+  slide.addText(filled.productType, { x: 0.30, y: 0.93, w: 1.55, h: 0.20, fontFace: "Poppins", fontSize: 7.5, color: gray, border: { pt: 1, color: lightGray }, margin: 0.03 });
+  slide.addText(shortenKeywordLine(filled.specKeywords), { x: 5.6, y: 0.88, w: 4.3, h: 0.18, fontFace: "Poppins", fontSize: 6.8, color: gray, align: "right", margin: 0 });
+  slide.addShape(pptx.ShapeType.line, { x: 0.0, y: 1.22, w: 10.417, h: 0, line: { color: red, pt: 1.2 } });
+
+  // Hero block
+  slide.addText("APPLICATION SCENE", { x: 0.30, y: 1.32, w: 0.98, h: 0.16, fontFace: "Poppins", fontSize: 6.5, color: white, fill: { color: red }, margin: 0.02, bold: true });
+  slide.addText(filled.sceneTitle, { x: 1.34, y: 1.32, w: 2.5, h: 0.16, fontFace: "Poppins", fontSize: 8.5, color: black, bold: true, margin: 0 });
+  if (filled.heroImage) {
+    slide.addImage({ data: filled.heroImage, x: 0.30, y: 1.54, w: 4.38, h: 3.37, sizing: { type: "contain", x: 0.30, y: 1.54, w: 4.38, h: 3.37 } });
+  } else {
+    slide.addShape(pptx.ShapeType.rect, { x: 0.30, y: 1.54, w: 4.38, h: 3.37, line: { color: "D0D5DC", pt: 1, dash: "dash" }, fill: { color: "FFFFFF", transparency: 100 } });
+  }
+
+  slide.addText("PRODUCT UNIQUE FEATURES", { x: 5.08, y: 1.30, w: 2.0, h: 0.14, fontFace: "Poppins", fontSize: 7, color: gray, margin: 0 });
+  const features = filled.uniqueFeatures.filter((item) => item.title).slice(0, 6);
+  let featureY = 1.52;
+  features.forEach((item, index) => {
+    slide.addText("•", { x: 5.08, y: featureY, w: 0.12, h: 0.16, fontFace: "Poppins", fontSize: 10, color: red, margin: 0 });
+    slide.addText(item.title, { x: 5.23, y: featureY, w: 3.95, h: 0.16, fontFace: "Poppins", fontSize: 8, bold: true, color: index === 0 ? red : black, margin: 0 });
+    slide.addText(item.description, { x: 5.23, y: featureY + 0.12, w: 4.25, h: 0.32, fontFace: "Poppins", fontSize: 6.6, color: gray, margin: 0 });
+    featureY += 0.58;
+  });
+
+  // Mid row
+  slide.addShape(pptx.ShapeType.line, { x: 0.30, y: 5.02, w: 4.58, h: 0, line: { color: red, pt: 1.2 } });
+  slide.addText("HERO FEATURE", { x: 0.30, y: 5.08, w: 0.95, h: 0.16, fontFace: "Poppins", fontSize: 6.5, color: white, fill: { color: red }, margin: 0.02, bold: true });
+  slide.addText(filled.heroFeature.sectionTitle, { x: 1.30, y: 5.08, w: 2.2, h: 0.16, fontFace: "Poppins", fontSize: 8.5, bold: true, color: black, margin: 0 });
+  slide.addText(filled.heroFeature.leadDescription, { x: 0.30, y: 5.38, w: 4.55, h: 0.48, fontFace: "Poppins", fontSize: 6.8, color: gray, margin: 0 });
+
+  const leftCardY = 6.06;
+  const leftCardH = 3.45;
+  slide.addShape(pptx.ShapeType.rect, { x: 0.30, y: leftCardY, w: 1.86, h: leftCardH, line: { color: lightGray, pt: 1 }, fill: { color: "FAFAFA" } });
+  slide.addShape(pptx.ShapeType.rect, { x: 2.34, y: leftCardY, w: 1.86, h: leftCardH, line: { color: lightGray, pt: 1 }, fill: { color: "FAFAFA" } });
+  slide.addText(filled.showcaseType === "VIEW_SHOWCASE" ? "TOP VIEW" : "MODE 01", { x: 0.38, y: 6.14, w: 0.9, h: 0.14, fontFace: "Poppins", fontSize: 6.1, color: red, bold: true, margin: 0 });
+  slide.addText(filled.showcaseType === "VIEW_SHOWCASE" ? "ANGLE VIEW" : "MODE 02", { x: 2.42, y: 6.14, w: 0.9, h: 0.14, fontFace: "Poppins", fontSize: 6.1, color: red, bold: true, margin: 0 });
+  if (filled.heroFeature.detail1Image) slide.addImage({ data: filled.heroFeature.detail1Image, x: 0.46, y: 6.50, w: 1.55, h: 2.55, sizing: { type: "contain", x: 0.46, y: 6.50, w: 1.55, h: 2.55 } });
+  if (filled.heroFeature.detail2Image) slide.addImage({ data: filled.heroFeature.detail2Image, x: 2.50, y: 6.50, w: 1.55, h: 2.55, sizing: { type: "contain", x: 2.50, y: 6.50, w: 1.55, h: 2.55 } });
+  if (filled.showcaseType !== "VIEW_SHOWCASE") {
+    slide.addText(filled.heroFeature.detail1Caption, { x: 0.38, y: 8.95, w: 1.70, h: 0.35, fontFace: "Poppins", fontSize: 6.5, color: gray, margin: 0, align: "center" });
+    slide.addText(filled.heroFeature.detail2Caption, { x: 2.42, y: 8.95, w: 1.70, h: 0.35, fontFace: "Poppins", fontSize: 6.5, color: gray, margin: 0, align: "center" });
+  }
+
+  if (filled.hasSoftware !== "no") {
+    slide.addShape(pptx.ShapeType.line, { x: 5.10, y: 5.02, w: 4.58, h: 0, line: { color: "E5E7EB", pt: 1 } });
+    slide.addText("SOFTWARE CONTROL", { x: 5.10, y: 5.08, w: 1.15, h: 0.16, fontFace: "Poppins", fontSize: 6.5, color: white, fill: { color: red }, margin: 0.02, bold: true });
+    slide.addText(filled.softwareControl.sectionTitle, { x: 6.33, y: 5.08, w: 2.6, h: 0.16, fontFace: "Poppins", fontSize: 8.5, bold: true, color: black, margin: 0 });
+    slide.addText(filled.softwareControl.leadDescription, { x: 5.10, y: 5.38, w: 4.50, h: 0.48, fontFace: "Poppins", fontSize: 6.8, color: gray, margin: 0 });
+
+    const rightCardY = 6.06;
+    const rightCardH = 3.45;
+    slide.addShape(pptx.ShapeType.rect, { x: 5.10, y: rightCardY, w: 2.10, h: rightCardH, line: { color: lightGray, pt: 1 }, fill: { color: "FAFAFA" } });
+    slide.addShape(pptx.ShapeType.rect, { x: 7.42, y: rightCardY, w: 2.10, h: rightCardH, line: { color: lightGray, pt: 1 }, fill: { color: "FAFAFA" } });
+    if (filled.softwareControl.editor1Image) slide.addImage({ data: filled.softwareControl.editor1Image, x: 5.22, y: 6.30, w: 1.86, h: 1.95, sizing: { type: "contain", x: 5.22, y: 6.30, w: 1.86, h: 1.95 } });
+    if (filled.softwareControl.editor2Image) slide.addImage({ data: filled.softwareControl.editor2Image, x: 7.54, y: 6.30, w: 1.86, h: 1.95, sizing: { type: "contain", x: 7.54, y: 6.30, w: 1.86, h: 1.95 } });
+    slide.addText(filled.softwareControl.editor1Name, { x: 5.22, y: 8.35, w: 1.86, h: 0.18, fontFace: "Poppins", fontSize: 6.9, bold: true, color: black, margin: 0 });
+    slide.addText(filled.softwareControl.editor2Name, { x: 7.54, y: 8.35, w: 1.86, h: 0.18, fontFace: "Poppins", fontSize: 6.9, bold: true, color: black, margin: 0 });
+    slide.addText(filled.softwareControl.editor1Caption, { x: 5.22, y: 8.56, w: 1.86, h: 0.48, fontFace: "Poppins", fontSize: 6.3, color: gray, margin: 0 });
+    slide.addText(filled.softwareControl.editor2Caption, { x: 7.54, y: 8.56, w: 1.86, h: 0.48, fontFace: "Poppins", fontSize: 6.3, color: gray, margin: 0 });
+  }
+
+  // Price strip
+  slide.addShape(pptx.ShapeType.rect, { x: 0, y: 14.27, w: 10.417, h: 0.95, line: { color: black, transparency: 100 }, fill: { color: black } });
+  const price = filled.priceStrip || {};
+  const labels = [
+    [price.priceLabel || "PRICE", price.price || "", price.priceSub || ""],
+    ["MOQ", price.moq || "", price.moqSub || ""],
+    ["COLOR", price.color || "", price.colorSub || ""],
+    ["BOX SIZE", price.boxSize || "", price.boxSizeSub || ""],
+    ["CARTON QTY", price.cartonQty || "", price.cartonQtySub || ""],
+  ];
+  const cellW = 10.417 / 5;
+  labels.forEach((cell, index) => {
+    const x = index * cellW;
+    if (index > 0) {
+      slide.addShape(pptx.ShapeType.line, { x1: x, y1: 14.27, x2: x, y2: 15.22, line: { color: "2A2D33", pt: 1 } });
+    }
+    slide.addText(cell[0], { x: x + 0.10, y: 14.38, w: cellW - 0.2, h: 0.12, fontFace: "Poppins", fontSize: 6.2, color: "B8BCC5", margin: 0 });
+    slide.addText(cell[1], { x: x + 0.10, y: 14.56, w: cellW - 0.2, h: 0.18, fontFace: "Poppins", fontSize: index === 0 ? 14 : 12, bold: true, color: index === 0 ? red : white, margin: 0 });
+    slide.addText(cell[2], { x: x + 0.10, y: 14.80, w: cellW - 0.2, h: 0.12, fontFace: "Poppins", fontSize: 6.2, color: "B8BCC5", margin: 0 });
+  });
+
+  slide.addText(`${filled.productName} ${filled.productModel} · ${filled.colorVariant} · FANTECH Internal Offering`, { x: 0.25, y: 15.32, w: 5.0, h: 0.12, fontFace: "Poppins", fontSize: 6.2, color: gray, margin: 0 });
+  slide.addText(`INTERNAL OFFERING — ${formatMonthLabel(filled.documentMonth).toUpperCase()}`, { x: 7.25, y: 15.32, w: 2.8, h: 0.12, fontFace: "Poppins", fontSize: 7.0, bold: true, color: red, align: "right", margin: 0 });
+
+  const filename = `${filled.documentMonth}_${fileSafeProductName(filled.productName)}_${filled.themeId}.pptx`;
+  await pptx.writeFile({ fileName: filename });
 }
 
 async function generatePdfInBrowser(filled) {
