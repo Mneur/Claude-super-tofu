@@ -1263,14 +1263,15 @@ async function generatePdfInBrowser(filled) {
   .hero-fit,
   .mode-fit,
   .sw-fit {
-    width: 100% !important;
-    height: 100% !important;
+    width: auto !important;
+    height: auto !important;
     max-width: 100% !important;
     max-height: 100% !important;
     object-fit: contain !important;
     object-position: center center !important;
     transform: none !important;
     align-self: center !important;
+    justify-self: center !important;
   }
   .hero-img-placeholder,
   .mode-img,
@@ -1279,6 +1280,11 @@ async function generatePdfInBrowser(filled) {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+  }
+  .mode-card.simple-view .mode-img,
+  .mode-card .mode-img,
+  .sw-editor-img {
+    align-items: center !important;
   }
   `;
   runtimeStyle.id = "pdf-export-style";
