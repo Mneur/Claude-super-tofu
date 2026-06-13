@@ -1355,17 +1355,20 @@ async function generatePdfInBrowser(filled) {
     margin-left: 6mm !important;
   }
   .sw-editor-row {
-    margin-top: 4mm !important;
+    margin-top: 2mm !important;
     padding-top: 0 !important;
     align-items: stretch !important;
   }
   .fr-right {
     display: flex !important;
     flex-direction: column !important;
-    justify-content: space-between !important;
+    justify-content: flex-start !important;
+  }
+  .fr-right .feature-sub {
+    margin: 2mm 0 2mm !important;
   }
   .sw-editor-card {
-    min-height: 78mm !important;
+    min-height: 82mm !important;
     height: 100% !important;
   }
   .sw-editor-img {
