@@ -1359,8 +1359,14 @@ async function generatePdfInBrowser(filled) {
     padding-top: 0 !important;
     align-items: stretch !important;
   }
+  .fr-right {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
   .sw-editor-card {
     min-height: 78mm !important;
+    height: 100% !important;
   }
   .sw-editor-img {
     height: 52mm !important;
