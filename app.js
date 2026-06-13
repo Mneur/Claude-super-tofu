@@ -918,7 +918,7 @@ function deriveSoftwareControl(data) {
   if (productType.includes("headset")) {
     generated = {
       sectionTitle: "Tune Every Session in Software",
-      leadDescription: "Useful driver support gives this headset a stronger premium story at retail. It lets users shape both communication clarity and sound behavior from one place instead of relying on one fixed default.",
+      leadDescription: "Useful driver support gives this headset a stronger premium story at retail. Users can manage communication clarity, sound behavior, and listening profiles from one place instead of relying on a fixed default experience.",
       card1: {
         title: "MIC EFFECT / AI ENC CONTROL",
         description: "Adjust microphone pickup, noise reduction, and voice effects for clearer team chat. Ideal for gaming, voice chat, and streaming use.",
@@ -1018,7 +1018,7 @@ function descriptionFromSpec(spec) {
   if (lower.includes("tri-mode")) return "Flexible wired and wireless switching makes the product fit more setups without extra friction. That versatility helps both users and retailers get more value from one SKU.";
   if (lower.includes("battery")) return "A stronger battery story improves real daily usability and gives the product a more confident wireless positioning. It is easier to sell when users do not worry about constant charging.";
   if (lower.includes("gasket")) return "A softer, more premium typing feel helps the product stand out when buyers compare comfort and sound quality side by side. It makes the product feel more refined, not just more technical.";
-  if (lower.includes("software") || lower.includes("driver")) return "Software support extends the product beyond basic hardware use and gives buyers a clearer long-term value story.";
+  if (lower.includes("software") || lower.includes("driver")) return "Software support extends the product beyond basic hardware use and gives buyers a clearer long-term value story. It also gives retailers a stronger premium feature story to sell.";
   if (lower.includes("rgb")) return "Lighting customization adds stronger desktop presence and makes the product more visually demonstrable in retail and creator content. It helps the product look more alive on first impression.";
   if (lower.includes("knob")) return "Dedicated physical control reduces friction in frequent daily actions and makes the product feel more intentional in use. It is the kind of tactile feature buyers notice immediately in demos.";
   if (lower.includes("matrix") || lower.includes("display")) return "An integrated display creates immediate visual differentiation and gives the product a more memorable identity on the desk. It helps retailers show something customers notice at first glance.";
@@ -1226,8 +1226,10 @@ async function generatePdfInBrowser(filled) {
     throw new Error("PDF export libraries did not load.");
   }
 
-  const PAGE_WIDTH_PX = 1000;
-  const PAGE_HEIGHT_PX = 1500;
+  const PAGE_WIDTH_PX = 1200;
+  const PAGE_HEIGHT_PX = 1800;
+  const PDF_WIDTH_MM = 264.6;
+  const PDF_HEIGHT_MM = 396.9;
   const html = await buildMasterOfferingHtml(filled);
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
@@ -1254,6 +1256,30 @@ async function generatePdfInBrowser(filled) {
   runtimeStyle.textContent = `${styleTag.textContent}
   .page { width: ${PAGE_WIDTH_PX}px !important; height: ${PAGE_HEIGHT_PX}px !important; }
   html, body { margin: 0 !important; padding: 0 !important; }
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  .hero-fit,
+  .mode-fit,
+  .sw-fit {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    transform: none !important;
+    align-self: center !important;
+  }
+  .hero-img-placeholder,
+  .mode-img,
+  .sw-editor-img {
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
   `;
   runtimeStyle.id = "pdf-export-style";
 
@@ -1264,8 +1290,10 @@ async function generatePdfInBrowser(filled) {
   const filename = `${filled.documentMonth}_${fileSafeProductName(filled.productName)}_${filled.themeId}.pdf`;
 
   try {
+    console.log("canvas-target", PAGE_WIDTH_PX, PAGE_HEIGHT_PX, PAGE_WIDTH_PX / PAGE_HEIGHT_PX);
+    console.log("pdf-target", PDF_WIDTH_MM, PDF_HEIGHT_MM, PDF_WIDTH_MM / PDF_HEIGHT_MM);
     const canvas = await window.html2canvas(mount.firstElementChild, {
-      scale: 1,
+      scale: 2,
       useCORS: true,
       backgroundColor: "#ffffff",
       scrollX: 0,
@@ -1276,14 +1304,15 @@ async function generatePdfInBrowser(filled) {
       windowHeight: PAGE_HEIGHT_PX,
     });
 
-    const imageData = canvas.toDataURL("image/jpeg", 0.98);
+    console.log("canvas-actual", canvas.width, canvas.height, canvas.width / canvas.height);
+    const imageData = canvas.toDataURL("image/png");
     const pdf = new window.jspdf.jsPDF({
       orientation: "portrait",
       unit: "mm",
-      format: [264.6, 396.9],
+      format: [PDF_WIDTH_MM, PDF_HEIGHT_MM],
       compress: true,
     });
-    pdf.addImage(imageData, "JPEG", 0, 0, 264.6, 396.9);
+    pdf.addImage(imageData, "PNG", 0, 0, PDF_WIDTH_MM, PDF_HEIGHT_MM);
     pdf.save(filename);
   } finally {
     runtimeStyle.remove();
