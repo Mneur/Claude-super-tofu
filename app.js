@@ -875,22 +875,35 @@ function deriveUniqueFeatures(data) {
     specs = mergeFeatureSpecs(specs);
   }
   const normalizedMain = String(data.mainSellingPoint || "").trim().toLowerCase();
-  const generated = specs.slice(0, 6).map((spec, index) => {
+  let generated = specs.slice(0, 6).map((spec, index) => {
     const auto = featureFromSpec(spec);
     const manual = data.uniqueFeatures[index] || {};
-    const highlight = normalizedMain ? spec.toLowerCase().includes(normalizedMain) : index === 0;
     return {
+      spec,
       title: manual.title || auto.title,
       description: manual.description || auto.description,
-      highlight: typeof manual.highlight === "boolean" ? manual.highlight : highlight,
+      highlight: typeof manual.highlight === "boolean" ? manual.highlight : false,
     };
   });
-  return ensureUniqueFeatureCards(generated).filter((item) => item.title).slice(0, 6);
+
+  if (normalizedMain) {
+    generated.sort((left, right) => scoreMainSellingPointMatch(right, normalizedMain) - scoreMainSellingPointMatch(left, normalizedMain));
+  }
+
+  generated = generated.map((item, index) => ({
+    ...item,
+    highlight: normalizedMain ? index === 0 && scoreMainSellingPointMatch(item, normalizedMain) > 0 : index === 0,
+  }));
+
+  return ensureUniqueFeatureCards(generated)
+    .filter((item) => item.title)
+    .map(({ spec, ...item }) => item)
+    .slice(0, 6);
 }
 
 function deriveHeroFeature(data, features) {
   const normalizedMain = String(data.mainSellingPoint || "").trim().toLowerCase();
-  const primary = features.find((item) => normalizedMain && item.title.toLowerCase().includes(normalizedMain))
+  const primary = features.find((item) => normalizedMain && scoreMainSellingPointMatch(item, normalizedMain) > 0)
     || features.find((item) => item.highlight)
     || features[0]
     || { title: "", description: "" };
@@ -1142,6 +1155,35 @@ function ensureUniqueFeatureCards(features) {
     seenRoots.add(rootKey);
     return { ...item, title, description };
   });
+}
+
+function scoreMainSellingPointMatch(item, normalizedMain) {
+  const main = normalizeMatchText(normalizedMain);
+  const bag = normalizeMatchText([
+    item?.spec,
+    item?.title,
+    item?.description,
+  ].filter(Boolean).join(" "));
+  if (!main || !bag) return 0;
+  if (bag.includes(main)) return 100 + main.length;
+
+  const mainTokens = new Set(main.split(" ").filter(Boolean));
+  const bagTokens = new Set(bag.split(" ").filter(Boolean));
+  let score = 0;
+  for (const token of mainTokens) {
+    if (bagTokens.has(token)) score += 10;
+  }
+  return score;
+}
+
+function normalizeMatchText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\bmic\b/g, "microphone")
+    .replace(/\benc\b/g, "ai enc")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function buildHeroLead(title, productType, mainSellingPoint) {
@@ -1432,8 +1474,12 @@ async function generatePdfInBrowser(filled) {
   .sw-fit {
     width: 100% !important;
     height: 100% !important;
+    display: block !important;
     object-fit: contain !important;
     object-position: center center !important;
+    align-self: center !important;
+    justify-self: center !important;
+    margin: auto !important;
     transform: none !important;
   }
   .hero-img-placeholder,
@@ -1443,6 +1489,12 @@ async function generatePdfInBrowser(filled) {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+  }
+  .mode-card.simple-view .mode-img,
+  .mode-card .mode-img,
+  .sw-editor-img,
+  .hero-img-placeholder {
+    align-items: center !important;
   }
   .logo-img {
     height: 7mm !important;
@@ -1687,13 +1739,26 @@ img:not(.logo-img) { max-width: 100%; height: auto; }
 .sw-fit {
   width: 100%;
   height: 100%;
+  display: block !important;
   object-fit: contain !important;
   object-position: center center !important;
+  align-self: center !important;
+  justify-self: center !important;
+  margin: auto !important;
 }
 .hero-img-placeholder,
 .mode-img,
 .sw-editor-img {
   overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.mode-card.simple-view .mode-img,
+.mode-card .mode-img,
+.sw-editor-img,
+.hero-img-placeholder {
+  align-items: center !important;
 }
 .product-view-img,
 .product-view-dark,
