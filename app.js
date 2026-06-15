@@ -1239,7 +1239,7 @@ document.getElementById("generateFilesBtn").addEventListener("click", async () =
 
   try {
     const filled = withAutoDerivedFields(state);
-    await generatePptxInBrowser(filled);
+    await generatePdfInBrowser(filled);
   } catch (error) {
     alert(currentLang === "zh" ? `生成失败：${error.message}` : `Generation failed: ${error.message}`);
   } finally {
@@ -1396,11 +1396,11 @@ async function generatePdfInBrowser(filled) {
     throw new Error("PDF export libraries did not load.");
   }
 
-  const PAGE_WIDTH_PX = 1200;
-  const PAGE_HEIGHT_PX = 1800;
+  const PAGE_WIDTH_PX = 1440;
+  const PAGE_HEIGHT_PX = 2160;
   const PDF_WIDTH_MM = 264.6;
   const PDF_HEIGHT_MM = 396.9;
-  const html = await buildMasterOfferingHtml(filled);
+  const html = await buildMasterOfferingHtmlStable(filled);
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
   const page = doc.querySelector(".page");
@@ -1426,22 +1426,15 @@ async function generatePdfInBrowser(filled) {
   runtimeStyle.textContent = `${styleTag.textContent}
   .page { width: ${PAGE_WIDTH_PX}px !important; height: ${PAGE_HEIGHT_PX}px !important; }
   html, body { margin: 0 !important; padding: 0 !important; }
-  img {
-    max-width: 100% !important;
-    height: auto !important;
-  }
+  img:not(.logo-img) { max-width: 100% !important; height: auto !important; }
   .hero-fit,
   .mode-fit,
   .sw-fit {
-    width: auto !important;
-    height: auto !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
+    width: 100% !important;
+    height: 100% !important;
     object-fit: contain !important;
     object-position: center center !important;
     transform: none !important;
-    align-self: center !important;
-    justify-self: center !important;
   }
   .hero-img-placeholder,
   .mode-img,
@@ -1451,53 +1444,11 @@ async function generatePdfInBrowser(filled) {
     align-items: center !important;
     justify-content: center !important;
   }
-  .mode-card.simple-view .mode-img,
-  .mode-card .mode-img,
-  .sw-editor-img {
-    align-items: center !important;
-  }
   .logo-img {
     height: 7mm !important;
     width: auto !important;
     max-width: none !important;
     object-fit: contain !important;
-  }
-  .topbar {
-    padding: 4mm 8mm !important;
-  }
-  .topbar-left {
-    display: table-cell !important;
-    vertical-align: middle !important;
-    white-space: nowrap !important;
-  }
-  .topbar-title {
-    display: inline-block !important;
-    vertical-align: middle !important;
-    margin-left: 6mm !important;
-  }
-  .sw-editor-row {
-    margin-top: 2mm !important;
-    padding-top: 0 !important;
-    align-items: stretch !important;
-  }
-  .fr-right {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-  }
-  .fr-right .feature-sub {
-    margin: 2mm 0 2mm !important;
-  }
-  .sw-editor-card {
-    min-height: 82mm !important;
-    height: 100% !important;
-  }
-  .sw-editor-img {
-    height: 52mm !important;
-    flex: 0 0 52mm !important;
-  }
-  .sw-editor-desc {
-    line-height: 1.25 !important;
   }
   `;
   runtimeStyle.id = "pdf-export-style";
@@ -1512,7 +1463,7 @@ async function generatePdfInBrowser(filled) {
     console.log("canvas-target", PAGE_WIDTH_PX, PAGE_HEIGHT_PX, PAGE_WIDTH_PX / PAGE_HEIGHT_PX);
     console.log("pdf-target", PDF_WIDTH_MM, PDF_HEIGHT_MM, PDF_WIDTH_MM / PDF_HEIGHT_MM);
     const canvas = await window.html2canvas(mount.firstElementChild, {
-      scale: 2,
+      scale: 3,
       useCORS: true,
       backgroundColor: "#ffffff",
       scrollX: 0,
@@ -1710,6 +1661,169 @@ async function buildMasterOfferingHtml(data) {
   html = replaceFirst(/(<div class="footer-left">)(.*?)(<\/div>)/s, `$1${productName} ${productModel} · ${productType} · ${colorVariant} · FANTECH Internal Offering · Confidential — Not for Distribution$3`, html);
   html = replaceFirst(/(<div class="footer-right">)(.*?)(<\/div>)/s, `$1INTERNAL OFFERING — ${footerMonth}$3`, html);
   return html;
+}
+
+async function buildMasterOfferingHtmlStable(data) {
+  const html = await loadMasterTemplate();
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+  const monthLabel = formatMonthLabel(data.documentMonth);
+  const footerMonth = monthLabel.toUpperCase();
+  const productName = String(data.productName || "").trim();
+  const productModel = String(data.productModel || "").trim();
+  const productType = String(data.productType || "").trim();
+  const colorVariant = String(data.colorVariant || "").trim();
+  const keywords = String(data.specKeywords || "").trim();
+  const sceneTitle = String(data.sceneTitle || "").trim();
+  const hero = data.heroFeature || {};
+  const hasSoftware = data.hasSoftware !== "no";
+  const featureItems = data.uniqueFeatures.filter((item) => item.title);
+
+  const hardeningStyle = doc.createElement("style");
+  hardeningStyle.textContent = `
+img:not(.logo-img) { max-width: 100%; height: auto; }
+.hero-fit,
+.mode-fit,
+.sw-fit {
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  object-position: center center !important;
+}
+.hero-img-placeholder,
+.mode-img,
+.sw-editor-img {
+  overflow: hidden !important;
+}
+.product-view-img,
+.product-view-dark,
+.product-view-light {
+  transform: none !important;
+}
+`;
+  doc.head.appendChild(hardeningStyle);
+
+  const setText = (selector, value) => {
+    const node = doc.querySelector(selector);
+    if (node) node.textContent = value;
+  };
+
+  const setImage = (containerSelector, className, src, alt, fallbackLabel, fallbackHint) => {
+    const container = doc.querySelector(containerSelector);
+    if (!container) return;
+    container.innerHTML = `<img class="${className}" src="${getImageSrc(src, fallbackLabel, fallbackHint)}" alt="${escapeAttribute(alt)}">`;
+  };
+
+  doc.title = `${productName} ${productModel}`.trim() || "Internal Offering";
+  const logo = doc.querySelector(".logo-img");
+  if (logo) {
+    logo.setAttribute("src", "assets/logo/gaming2.png");
+    logo.setAttribute("alt", "FANTECH");
+  }
+
+  setText(".topbar-right b", monthLabel);
+  setText(".product-name", `${productName} ${productModel}`.trim());
+  setText(".product-category", productType);
+  setText(".title-right", keywords);
+  setText(".scene-caption", sceneTitle);
+  setImage(".hero-img-placeholder", "hero-fit", data.heroImage, "hero image", "HERO IMAGE", data.heroPrompt);
+
+  const heroRight = doc.querySelector(".hero-right");
+  if (heroRight) {
+    heroRight.querySelectorAll(".feature-item").forEach((node) => node.remove());
+    const featuresTitle = heroRight.querySelector(".features-title");
+    if (featuresTitle) {
+      const featuresHtml = featureItems.map((item, index) => {
+        const cls = item.highlight || index === 0 ? "feature-name red" : "feature-name";
+        return `<div class="feature-item"><div class="${cls}">${escapeHtml(item.title)}</div><div class="feature-desc">${escapeHtml(item.description)}</div></div>`;
+      }).join("");
+      featuresTitle.insertAdjacentHTML("afterend", featuresHtml);
+    }
+  }
+
+  setText(".fr-left .feature-headline", String(hero.sectionTitle || "").trim());
+  setText(".fr-left .feature-sub", String(hero.leadDescription || "").trim());
+
+  const showcaseHtml = data.showcaseType === "MODE_SHOWCASE"
+    ? `
+        <div class="mode-cell">
+          <div class="mode-card">
+            <div class="mode-tag">MODE 01</div>
+            <div class="mode-title">${escapeHtml(hero.detail1Name || "")}</div>
+            <div class="mode-img"><img class="mode-fit" src="${getImageSrc(hero.detail1Image, "MODE 01", "")}" alt="mode 01"></div>
+            <div class="mode-desc">${escapeHtml(hero.detail1Caption || "")}</div>
+          </div>
+        </div>
+        <div class="mode-cell">
+          <div class="mode-card">
+            <div class="mode-tag">MODE 02</div>
+            <div class="mode-title">${escapeHtml(hero.detail2Name || "")}</div>
+            <div class="mode-img"><img class="mode-fit" src="${getImageSrc(hero.detail2Image, "MODE 02", "")}" alt="mode 02"></div>
+            <div class="mode-desc">${escapeHtml(hero.detail2Caption || "")}</div>
+          </div>
+        </div>
+      `
+    : `
+        <div class="mode-cell">
+          <div class="mode-card simple-view">
+            <div class="mode-tag">TOP VIEW</div>
+            <div class="mode-title"></div>
+            <div class="mode-img"><img class="mode-fit" src="${getImageSrc(hero.detail1Image, "TOP VIEW", "")}" alt="top view"></div>
+          </div>
+        </div>
+        <div class="mode-cell">
+          <div class="mode-card simple-view">
+            <div class="mode-tag">ANGLE VIEW</div>
+            <div class="mode-title"></div>
+            <div class="mode-img"><img class="mode-fit" src="${getImageSrc(hero.detail2Image, "ANGLE VIEW", "")}" alt="angle view"></div>
+          </div>
+        </div>
+      `;
+  const modeRow = doc.querySelector(".fr-left .mode-row");
+  if (modeRow) modeRow.innerHTML = showcaseHtml;
+
+  if (hasSoftware) {
+    const sw = data.softwareControl || {};
+    setText(".fr-right .feature-headline", String(sw.sectionTitle || "").trim());
+    setText(".fr-right .feature-sub", String(sw.leadDescription || "").trim());
+    setImage(".fr-right .sw-editor-cell:nth-child(1) .sw-editor-img", "sw-fit", sw.editor1Image, "software 01", "SOFTWARE 01", "");
+    setImage(".fr-right .sw-editor-cell:nth-child(2) .sw-editor-img", "sw-fit", sw.editor2Image, "software 02", "SOFTWARE 02", "");
+    setText(".fr-right .sw-editor-cell:nth-child(1) .sw-editor-name", String(sw.editor1Name || "").trim());
+    setText(".fr-right .sw-editor-cell:nth-child(1) .sw-editor-desc", String(sw.editor1Caption || "").trim());
+    setText(".fr-right .sw-editor-cell:nth-child(2) .sw-editor-name", String(sw.editor2Name || "").trim());
+    setText(".fr-right .sw-editor-cell:nth-child(2) .sw-editor-desc", String(sw.editor2Caption || "").trim());
+  } else {
+    const featureRowInner = doc.querySelector(".feature-row-inner");
+    const frLeft = doc.querySelector(".fr-left");
+    const frRight = doc.querySelector(".fr-right");
+    if (featureRowInner) featureRowInner.style.gridTemplateColumns = "minmax(0, 1fr)";
+    if (frLeft) frLeft.style.paddingRight = "0";
+    if (frRight) frRight.remove();
+  }
+
+  const price = data.priceStrip || {};
+  const priceCells = doc.querySelectorAll(".price-strip .price-cell");
+  const priceEntries = [
+    [String(price.priceLabel || "PRICE"), String(price.price || ""), String(price.priceSub || "")],
+    ["MOQ", String(price.moq || ""), String(price.moqSub || "")],
+    ["COLOR", String(price.color || ""), String(price.colorSub || "")],
+    ["BOX SIZE", String(price.boxSize || ""), String(price.boxSizeSub || "")],
+    ["CARTON QTY", String(price.cartonQty || ""), String(price.cartonQtySub || "")],
+  ];
+  priceCells.forEach((cell, index) => {
+    const [label, value, suffix] = priceEntries[index] || ["", "", ""];
+    const labelNode = cell.querySelector(".price-label");
+    const valueNode = cell.querySelector(".price-value");
+    const suffixNode = cell.querySelector(".price-suffix");
+    if (labelNode) labelNode.textContent = label;
+    if (valueNode) valueNode.textContent = value;
+    if (suffixNode) suffixNode.textContent = suffix;
+  });
+
+  setText(".footer-left", `${productName} ${productModel} 路 ${productType} 路 ${colorVariant} 路 FANTECH Internal Offering 路 Confidential - Not for Distribution`);
+  setText(".footer-right", `INTERNAL OFFERING - ${footerMonth}`);
+
+  return `<!DOCTYPE html>\n${doc.documentElement.outerHTML}`;
 }
 
 function replaceFirst(pattern, replacement, input) {
