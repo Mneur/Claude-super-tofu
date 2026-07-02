@@ -706,9 +706,9 @@ function buildOfferingHtml(data) {
   .section-chip { display: inline-block; background: var(--primary); color: #FFF; font-size: 6.5pt; padding: 1.4pt 5pt; letter-spacing: 0.8pt; font-weight: 700; }
   .section-title-inline { display: inline-block; margin-left: 4pt; font-size: 8.5pt; font-weight: 700; color: #14171C; }
   .hero-media, .detail-media, .editor-media { width: 100%; border-radius: 2pt; overflow: hidden; background: #F4F4F4; border: 1pt solid #E5E7EB; display: table; }
-  .hero-media { height: 52mm; margin-top: 2mm; }
-  .detail-media { height: 24mm; margin-bottom: 2mm; }
-  .editor-media { height: 20mm; margin-bottom: 2mm; }
+  .hero-media { height: 95mm; margin-top: 2mm; }
+  .detail-media { height: 55mm; margin-bottom: 2mm; }
+  .editor-media { height: 60mm; margin-bottom: 2mm; }
   .media-inner { display: table-cell; vertical-align: middle; text-align: center; color: #AAB0B8; font-size: 7pt; padding: 4mm; }
   .media-inner img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .features-title { font-size: 7pt; color: #6A7280; letter-spacing: 1pt; margin-bottom: 2.5mm; font-weight: 700; }
@@ -804,7 +804,14 @@ function buildOfferingHtml(data) {
           </div>
         </div>
       </div>
-    </div>` : ""}
+    </div>` : (() => {
+        const extraFeatures = features.slice(6);
+        if (extraFeatures.length === 0) return "";
+        return `<div class="fr-right">
+      <div class="features-title">ADDITIONAL HIGHLIGHTS</div>
+      ${extraFeatures.map(f => `<div class="feature-item"><div class="feature-name">${escapeHtml(f.title)}</div><div class="feature-desc">${escapeHtml(f.description)}</div></div>`).join("")}
+    </div>`;
+      })()}
   </div>
   <div class="price-strip">
     ${priceCell("EX-WORKS PRICE", data.priceStrip.price, data.priceStrip.priceSub, true)}
@@ -1675,8 +1682,26 @@ async function buildMasterOfferingHtml(data) {
     `;
     html = replaceFirst(/<div class="fr-right">.*?<\/div>\s*<\/div>\s*<\/div>\s*<\/div>\s*<div class="price-strip">/s, `${softwareHtml}\n   </div>\n  </div>\n\n  <div class="price-strip">`, html);
   } else {
-    html = replaceFirst(/\.feature-row-inner\s*\{/s, `.feature-row-inner {\n    grid-template-columns: minmax(0, 1fr);`, html);
-    html = replaceFirst(/<div class="fr-right">.*?<\/div>\s*<\/div>\s*<\/div>\s*<\/div>\s*<div class="price-strip">/s, `\n   </div>\n  </div>\n\n  <div class="price-strip">`, html);
+    const highlights = featureItems.length > 6 ? featureItems.slice(6) : [];
+    if (highlights.length > 0) {
+      const highlightItemsHtml = highlights.map(item =>
+        `<div class="feature-item"><div class="feature-name">${escapeHtml(item.title)}</div><div class="feature-desc">${escapeHtml(item.description)}</div></div>`
+      ).join("");
+      const noSwHtml = `
+    <div class="fr-right">
+      <div class="feature-header">
+        <span class="feature-label">ADDITIONAL HIGHLIGHTS</span>
+      </div>
+      <div class="highlight-list">
+        ${highlightItemsHtml}
+      </div>
+    </div>
+    `;
+      html = replaceFirst(/<div class="fr-right">.*?<\/div>\s*<\/div>\s*<\/div>\s*<\/div>\s*<div class="price-strip">/s, `${noSwHtml}\n   </div>\n  </div>\n\n  <div class="price-strip">`, html);
+    } else {
+      html = replaceFirst(/\.feature-row-inner\s*\{/s, `.feature-row-inner {\n    grid-template-columns: minmax(0, 1fr);`, html);
+      html = replaceFirst(/<div class="fr-right">.*?<\/div>\s*<\/div>\s*<\/div>\s*<\/div>\s*<div class="price-strip">/s, `\n   </div>\n  </div>\n\n  <div class="price-strip">`, html);
+    }
   }
 
   const price = data.priceStrip || {};
@@ -1858,12 +1883,22 @@ img:not(.logo-img) { max-width: 100%; height: auto; }
     setText(".fr-right .sw-editor-cell:nth-child(2) .sw-editor-name", String(sw.editor2Name || "").trim());
     setText(".fr-right .sw-editor-cell:nth-child(2) .sw-editor-desc", String(sw.editor2Caption || "").trim());
   } else {
-    const featureRowInner = doc.querySelector(".feature-row-inner");
-    const frLeft = doc.querySelector(".fr-left");
     const frRight = doc.querySelector(".fr-right");
-    if (featureRowInner) featureRowInner.style.gridTemplateColumns = "minmax(0, 1fr)";
-    if (frLeft) frLeft.style.paddingRight = "0";
-    if (frRight) frRight.remove();
+    if (!frRight) return;
+    // Replace SOFTWARE CONTROL with ADDITIONAL HIGHLIGHTS vertical feature list
+    const highlights = featureItems.length > 6 ? featureItems.slice(6) : [];
+    const highlightLabel = highlights.length > 0 ? "ADDITIONAL HIGHLIGHTS" : "";
+    const highlightItemsHtml = highlights.map(item =>
+      `<div class="feature-item"><div class="feature-name">${escapeHtml(item.title)}</div><div class="feature-desc">${escapeHtml(item.description)}</div></div>`
+    ).join("");
+    frRight.innerHTML = `
+      <div class="feature-header">
+        <span class="feature-label">${highlightLabel}</span>
+      </div>
+      <div class="highlight-list">
+        ${highlightItemsHtml}
+      </div>`;
+    if (highlights.length === 0) frRight.remove();
   }
 
   const price = data.priceStrip || {};
