@@ -319,7 +319,7 @@
     background: #FFFFFF;
     border-radius: 1pt;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
     flex: 0 0 55mm;
     margin-bottom: 1.5mm;
@@ -349,14 +349,14 @@
   }
 
   /* ── VIEW cards (TOP VIEW / ANGLE VIEW — label only, no title/desc) ── */
-  .mode-card.view-card .mode-title { display: none; }
-  .mode-card.view-card .mode-desc { display: none; }
-  .mode-card.view-card .mode-img {
+  .mode-card.simple-view .mode-title { display: none; }
+  .mode-card.simple-view .mode-desc { display: none; }
+  .mode-card.simple-view .mode-img {
     flex-basis: 55mm;
     height: 55mm;
     margin-bottom: 0;
   }
-  .mode-card.view-card .mode-tag {
+  .mode-card.simple-view .mode-tag {
     margin-bottom: 0;
     justify-content: center;
   }
