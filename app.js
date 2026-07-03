@@ -710,7 +710,7 @@ function buildOfferingHtml(data) {
   .detail-media { height: 55mm; margin-bottom: 2mm; }
   .editor-media { height: 60mm; margin-bottom: 2mm; }
   .media-inner { display: table-cell; vertical-align: middle; text-align: center; color: #AAB0B8; font-size: 7pt; padding: 4mm; }
-  .media-inner img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .media-inner img { width: 100%; height: 100%; object-fit: contain; display: block; }
   .features-title { font-size: 7pt; color: #6A7280; letter-spacing: 1pt; margin-bottom: 2.5mm; font-weight: 700; }
   .feature-item { margin-bottom: 3.4mm; padding-left: 4.5mm; position: relative; }
   .feature-item::before { content: ''; width: 1.7mm; height: 1.7mm; background: var(--primary); border-radius: 50%; position: absolute; left: 0; top: 1.8mm; }
