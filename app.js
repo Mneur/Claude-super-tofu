@@ -59,6 +59,9 @@ const I18N = {
     mainSellingPoint: "Main Selling Point",
     mainSellingPointHelp: "Tell the system which spec is your biggest story. Leave blank to let it choose.",
     hasSoftware: "Has Software / Driver",
+    showcaseType: "Showcase Type",
+    showcaseMode: "MODE 01/02 (functional states)",
+    showcaseView: "TOP VIEW / ANGLE VIEW (angles only)",
     specSellingPoints: "Spec Selling Points",
     specSellingPointsHelp: "Enter raw specs only, one per line. Example: 5-PIN hot swappable",
     specKeywords: "Spec Keywords",
@@ -70,10 +73,14 @@ const I18N = {
     heroPrompt: "Hero Prompt Fallback",
     heroPromptHelp: "Optional. Use only when you do not upload a hero image.",
     imagesTitle: "Images",
-    imagesNote: "Upload images directly into the matching slots. By default the two product PNGs are treated as TOP VIEW and ANGLE VIEW unless you explicitly provide real mode-state differences.",
+    imagesNote: "Upload images for the matching slots. Choose MODE or VIEW above to switch between functional-state cards and simple angle labels.",
     heroImage: "Hero Image",
     bottomLeftImage: "Bottom Left Image",
     bottomRightImage: "Bottom Right Image",
+    mode01Image: "MODE 01 Image",
+    mode02Image: "MODE 02 Image",
+    topViewImage: "TOP VIEW Image",
+    angleViewImage: "ANGLE VIEW Image",
     driverImage1: "Driver Image 1",
     driverImage2: "Driver Image 2",
     imageHelp: "Upload an image directly here.",
@@ -141,6 +148,9 @@ const I18N = {
     mainSellingPoint: "最大卖点",
     mainSellingPointHelp: "告诉系统哪个规格是你的最大卖点。留空的话，我会自己判断。",
     hasSoftware: "是否有软件 / 驱动",
+    showcaseType: "展示类型",
+    showcaseMode: "MODE 01/02（功能状态差异）",
+    showcaseView: "TOP VIEW / ANGLE VIEW（仅不同角度）",
     specSellingPoints: "规格卖点",
     specSellingPointsHelp: "只填原始规格，一行一个。例如：5-PIN hot swappable",
     specKeywords: "关键词",
@@ -152,10 +162,14 @@ const I18N = {
     heroPrompt: "主图提示词备用",
     heroPromptHelp: "可选。只有没上传主图时才会用到。",
     imagesTitle: "图片上传",
-    imagesNote: "直接把图片上传到对应位置，不需要再手动填写图片路径。默认情况下，两张产品 PNG 会按 TOP VIEW 和 ANGLE VIEW 处理，除非你明确提供的是模式变化图。",
+    imagesNote: "把图片上传到对应的位置。在上方选择 MODE 或 VIEW 来切换功能状态卡或纯角度标签。",
     heroImage: "主图",
     bottomLeftImage: "左下图",
     bottomRightImage: "右下图",
+    mode01Image: "MODE 01 图",
+    mode02Image: "MODE 02 图",
+    topViewImage: "TOP VIEW 图",
+    angleViewImage: "ANGLE VIEW 图",
     driverImage1: "驱动图 1",
     driverImage2: "驱动图 2",
     imageHelp: "直接在这里上传图片。",
@@ -210,6 +224,7 @@ const defaultData = {
   productType: "",
   colorVariant: "",
   mainSellingPoint: "",
+  showcaseType: "VIEW_SHOWCASE",
   hasSoftware: "yes",
   specSellingPointsText: "",
   specKeywords: "",
@@ -260,6 +275,7 @@ const sampleData = {
   colorVariant: "Gray",
   mainSellingPoint: "LED Matrix Display",
   hasSoftware: "yes",
+  showcaseType: "MODE_SHOWCASE",
   specSellingPointsText: [
     "Tri-Mode Connectivity",
     "5-PIN Hot Swappable",
@@ -301,6 +317,15 @@ function renderApp() {
         options: [
           { value: "yes", label: t("yes") },
           { value: "no", label: t("no") },
+        ],
+      },
+      {
+        path: "showcaseType",
+        label: t("showcaseType"),
+        type: "select",
+        options: [
+          { value: "VIEW_SHOWCASE", label: t("showcaseView") },
+          { value: "MODE_SHOWCASE", label: t("showcaseMode") },
         ],
       },
       { path: "specSellingPointsText", label: t("specSellingPoints"), type: "textarea", full: true, help: t("specSellingPointsHelp") },
@@ -390,8 +415,8 @@ function buildImageSection() {
     </div>
     <div class="field-grid">
       ${buildImageField("heroImage", t("heroImage"))}
-      ${buildImageField("heroFeature.detail1Image", t("bottomLeftImage"))}
-      ${buildImageField("heroFeature.detail2Image", t("bottomRightImage"))}
+      ${buildImageField("heroFeature.detail1Image", state.showcaseType === "MODE_SHOWCASE" ? t("mode01Image") : t("topViewImage"))}
+      ${buildImageField("heroFeature.detail2Image", state.showcaseType === "MODE_SHOWCASE" ? t("mode02Image") : t("angleViewImage"))}
       ${state.hasSoftware !== "no" ? buildImageField("softwareControl.editor1Image", t("driverImage1")) : ""}
       ${state.hasSoftware !== "no" ? buildImageField("softwareControl.editor2Image", t("driverImage2")) : ""}
     </div>
@@ -857,7 +882,7 @@ function withAutoDerivedFields(data) {
 }
 
 function determineShowcaseType(data) {
-  return "VIEW_SHOWCASE";
+  return data.showcaseType || "VIEW_SHOWCASE";
 }
 
 function deriveSceneTitle(data) {
