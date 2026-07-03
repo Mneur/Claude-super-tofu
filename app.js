@@ -1446,9 +1446,8 @@ async function generatePdfInBrowser(filled) {
   }
 
   const isMobileDevice = window.matchMedia('(max-width: 760px)').matches;
-  const PAGE_WIDTH_PX = isMobileDevice ? 720 : 1440;
-  const PAGE_HEIGHT_PX = isMobileDevice ? 1080 : 2160;
-  const SCALE = isMobileDevice ? 2 : 3;
+  const PAGE_WIDTH_PX = 1440;
+  const PAGE_HEIGHT_PX = 2160;
   const PDF_WIDTH_MM = 264.6;
   const PDF_HEIGHT_MM = 396.9;
   const html = await buildMasterOfferingHtmlStable(filled);
@@ -1524,7 +1523,7 @@ async function generatePdfInBrowser(filled) {
     console.log("canvas-target", PAGE_WIDTH_PX, PAGE_HEIGHT_PX, PAGE_WIDTH_PX / PAGE_HEIGHT_PX);
     console.log("pdf-target", PDF_WIDTH_MM, PDF_HEIGHT_MM, PDF_WIDTH_MM / PDF_HEIGHT_MM);
     const canvas = await window.html2canvas(mount.firstElementChild, {
-      scale: SCALE,
+      scale: 3,
       useCORS: true,
       backgroundColor: "#ffffff",
       scrollX: 0,
