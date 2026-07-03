@@ -686,58 +686,58 @@ function buildOfferingHtml(data) {
     --price-strip-bg: ${theme.colors.priceStripBg};
     --footer-right-color: ${theme.colors.footerRightColor};
   }
-  @page { size: 264.6mm 396.9mm; margin: 0; }
+  @page { size: 210mm 297mm; margin: 0; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { font-family: 'Poppins', 'Segoe UI', sans-serif; font-size: 9pt; color: #14171C; background: #FFF; line-height: 1.35; }
-  .page { width: 264.6mm; height: 396.9mm; position: relative; }
-  .topbar { background: var(--topbar-bg); color: #FFF; padding: 4mm 8mm 3mm; width: 100%; display: table; }
+  .page { width: 210mm; height: 297mm; position: relative; }
+  .topbar { background: var(--topbar-bg); color: #FFF; padding: 3.5mm 7mm 2.5mm; width: 100%; display: table; }
   .topbar-left, .topbar-right, .title-left, .title-right, .hero-left, .hero-right, .fr-left, .fr-right, .price-cell, .footer-left, .footer-right { display: table-cell; vertical-align: top; }
   .topbar-right { text-align: right; font-size: 7pt; color: #BEC3CB; }
   .brand-chip { display: inline-block; color: #FFF; font-weight: 700; letter-spacing: 0.8pt; margin-right: 6pt; }
   .topbar-title { display: inline-block; color: #FFF; font-size: 7pt; letter-spacing: 1.4pt; }
-  .model-line { padding: 3mm 8mm 2mm; display: table; width: 100%; border-bottom: 1.4pt solid var(--primary); }
+  .model-line { padding: 2.5mm 7mm 1.5mm; display: table; width: 100%; border-bottom: 1.4pt solid var(--primary); }
   .product-name { font-size: 16pt; font-weight: 700; color: #14171C; }
   .product-model { display: block; font-size: 8pt; color: #6A7280; margin-top: 0.6mm; }
   .product-type { display: inline-block; border: 1pt solid #E5E7EB; color: #525864; font-size: 7pt; padding: 1pt 5pt; margin-top: 1.5mm; }
   .title-right { text-align: right; font-size: 6.8pt; color: #525864; vertical-align: middle; letter-spacing: 0.6pt; }
-  .hero-block { width: 100%; display: table; padding: 2mm 8mm 0; }
-  .hero-left { width: 49%; padding-right: 4mm; }
-  .hero-right { width: 51%; padding-left: 4mm; }
+  .hero-block { width: 100%; display: table; padding: 1.5mm 7mm 0; }
+  .hero-left { width: 49%; padding-right: 3mm; }
+  .hero-right { width: 51%; padding-left: 3mm; }
   .section-chip { display: inline-block; background: var(--primary); color: #FFF; font-size: 6.5pt; padding: 1.4pt 5pt; letter-spacing: 0.8pt; font-weight: 700; }
   .section-title-inline { display: inline-block; margin-left: 4pt; font-size: 8.5pt; font-weight: 700; color: #14171C; }
   .hero-media, .detail-media, .editor-media { width: 100%; border-radius: 2pt; overflow: hidden; background: #F4F4F4; border: 1pt solid #E5E7EB; display: table; }
-  .hero-media { height: 95mm; margin-top: 2mm; }
-  .detail-media { height: 55mm; margin-bottom: 2mm; }
-  .editor-media { height: 60mm; margin-bottom: 2mm; }
+  .hero-media { height: 80mm; margin-top: 2mm; }
+  .detail-media { height: 48mm; margin-bottom: 2mm; }
+  .editor-media { height: 50mm; margin-bottom: 2mm; }
   .media-inner { display: table-cell; vertical-align: middle; text-align: center; color: #AAB0B8; font-size: 7pt; padding: 4mm; }
   .media-inner img { width: 100%; height: 100%; object-fit: contain; display: block; }
-  .features-title { font-size: 7pt; color: #6A7280; letter-spacing: 1pt; margin-bottom: 2.5mm; font-weight: 700; }
+  .features-title { font-size: 7pt; color: #6A7280; letter-spacing: 1pt; margin-bottom: 2mm; font-weight: 700; }
   .feature-item { margin-bottom: 3.4mm; padding-left: 4.5mm; position: relative; }
   .feature-item::before { content: ''; width: 1.7mm; height: 1.7mm; background: var(--primary); border-radius: 50%; position: absolute; left: 0; top: 1.8mm; }
   .feature-name { font-size: 8.2pt; font-weight: 700; color: #14171C; line-height: 1.28; margin-bottom: 0.6mm; }
   .feature-name.red { color: var(--primary); }
   .feature-desc { font-size: 7.2pt; color: #566171; line-height: 1.34; }
-  .feature-row { width: 100%; display: table; padding: 2mm 8mm 0; }
+  .feature-row { width: 100%; display: table; padding: 1.5mm 7mm 0; }
   .fr-left, .fr-right { vertical-align: top; }
-  .fr-left { width: ${hasSoftware ? "50%" : "100%"}; padding-right: ${hasSoftware ? "5mm" : "0"}; border-top: 2pt solid var(--primary); padding-top: 3mm; }
-  .fr-right { width: 50%; padding-left: 5mm; border-top: 1pt solid #E5E7EB; border-left: 1pt solid #E5E7EB; padding-top: 3mm; }
-  .feature-sub { font-size: 7.2pt; color: #566171; margin: 2mm 0 3mm; }
+  .fr-left { width: ${hasSoftware ? "50%" : "100%"}; padding-right: ${hasSoftware ? "5mm" : "0"}; border-top: 2pt solid var(--primary); padding-top: 2.5mm; }
+  .fr-right { width: 50%; padding-left: 4mm; border-top: 1pt solid #E5E7EB; border-left: 1pt solid #E5E7EB; padding-top: 2.5mm; }
+  .feature-sub { font-size: 7.2pt; color: #566171; margin: 1.5mm 0 2.5mm; }
   .card-row { width: 100%; display: table; }
   .card-cell { width: 50%; display: table-cell; vertical-align: top; }
   .card-cell:first-child { padding-right: 2.5mm; }
   .card-cell:last-child { padding-left: 2.5mm; }
-  .card { background: #FAFAFA; border: 1pt solid #E5E7EB; padding: 2.5mm 3mm; }
+  .card { background: #FAFAFA; border: 1pt solid #E5E7EB; padding: 2mm 2.5mm; }
   .card-tag { font-size: 6.1pt; color: var(--primary); letter-spacing: 0.8pt; font-weight: 700; margin-bottom: 0.6mm; }
   .card-title { font-size: 8pt; font-weight: 700; color: #14171C; margin-bottom: 2mm; line-height: 1.25; }
   .card-desc { font-size: 7pt; color: #566171; line-height: 1.32; text-align: center; }
-  .price-strip { position: absolute; left: 0; right: 0; bottom: 9mm; background: var(--price-strip-bg); display: table; width: 100%; table-layout: fixed; }
-  .price-cell { padding: 3mm 4mm; border-right: 1pt solid #2A2D33; }
+  .price-strip { position: absolute; left: 0; right: 0; bottom: 8mm; background: var(--price-strip-bg); display: table; width: 100%; table-layout: fixed; }
+  .price-cell { padding: 2mm 2.5mm; border-right: 1pt solid #2A2D33; }
   .price-cell:last-child { border-right: none; }
-  .price-label { font-size: 6.2pt; color: #B8BCC5; letter-spacing: 0.9pt; margin-bottom: 1mm; }
+  .price-label { font-size: 6.2pt; color: #B8BCC5; letter-spacing: 0.9pt; margin-bottom: 0.8mm; }
   .price-value { font-size: 12pt; font-weight: 700; color: #FFF; line-height: 1.08; }
   .price-value.red { color: var(--primary); font-size: 14pt; }
   .price-suffix { font-size: 6.5pt; color: #B8BCC5; margin-top: 0.7mm; }
-  .footer { position: absolute; left: 0; right: 0; bottom: 3mm; padding: 0 8mm; width: 100%; display: table; font-size: 6.3pt; color: #6A7280; }
+  .footer { position: absolute; left: 0; right: 0; bottom: 2.5mm; padding: 0 7mm; width: 100%; display: table; font-size: 6.3pt; color: #6A7280; }
   .footer-right { text-align: right; color: var(--footer-right-color); font-weight: 800; letter-spacing: 0.8pt; }
 </style>
 </head>
@@ -1446,10 +1446,10 @@ async function generatePdfInBrowser(filled) {
   }
 
   const isMobileDevice = window.matchMedia('(max-width: 760px)').matches;
-  const PAGE_WIDTH_PX = 1440;
-  const PAGE_HEIGHT_PX = 2160;
-  const PDF_WIDTH_MM = 264.6;
-  const PDF_HEIGHT_MM = 396.9;
+  const PAGE_WIDTH_PX = 1190;
+  const PAGE_HEIGHT_PX = 1683;
+  const PDF_WIDTH_MM = 210;
+  const PDF_HEIGHT_MM = 297;
   const html = await buildMasterOfferingHtmlStable(filled);
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
