@@ -408,17 +408,38 @@ pre.preview {
     padding: 16px;
   }
 
+  .intro {
+    position: static;
+    height: auto;
+    padding: 12px 16px;
+  }
+
+  .intro h1 {
+    font-size: 22px;
+    margin: 6px 0;
+  }
+
+  .intro .lede {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
   .intro-top {
     display: block;
   }
 
   .brand-logo {
-    width: 128px;
-    max-width: 128px;
+    width: 110px;
+    max-width: 110px;
   }
 
-  .intro h1 {
-    font-size: 24px;
+  .action-stack {
+    gap: 8px;
+  }
+
+  .status-card {
+    gap: 8px;
+    font-size: 12px;
   }
 
   .field-grid {
@@ -428,5 +449,35 @@ pre.preview {
   .panel {
     padding: 18px;
     border-radius: 20px;
+  }
+
+  .preview {
+    min-height: 200px;
+  }
+
+  /* Touch targets */
+  input[type="text"],
+  input[type="month"],
+  select,
+  textarea,
+  button {
+    min-height: 44px;
+  }
+
+  input[type="text"],
+  input[type="month"],
+  select,
+  textarea {
+    font-size: 16px;
+    padding: 10px 12px;
+  }
+
+  input[type="file"] {
+    font-size: 14px;
+  }
+
+  .mode-bar {
+    flex-wrap: wrap;
+    gap: 8px;
   }
 }

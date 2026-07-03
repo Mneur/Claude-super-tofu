@@ -1445,8 +1445,10 @@ async function generatePdfInBrowser(filled) {
     throw new Error("PDF export libraries did not load.");
   }
 
-  const PAGE_WIDTH_PX = 1440;
-  const PAGE_HEIGHT_PX = 2160;
+  const isMobileDevice = window.matchMedia('(max-width: 760px)').matches;
+  const PAGE_WIDTH_PX = isMobileDevice ? 720 : 1440;
+  const PAGE_HEIGHT_PX = isMobileDevice ? 1080 : 2160;
+  const SCALE = isMobileDevice ? 2 : 3;
   const PDF_WIDTH_MM = 264.6;
   const PDF_HEIGHT_MM = 396.9;
   const html = await buildMasterOfferingHtmlStable(filled);
@@ -1522,7 +1524,7 @@ async function generatePdfInBrowser(filled) {
     console.log("canvas-target", PAGE_WIDTH_PX, PAGE_HEIGHT_PX, PAGE_WIDTH_PX / PAGE_HEIGHT_PX);
     console.log("pdf-target", PDF_WIDTH_MM, PDF_HEIGHT_MM, PDF_WIDTH_MM / PDF_HEIGHT_MM);
     const canvas = await window.html2canvas(mount.firstElementChild, {
-      scale: 3,
+      scale: SCALE,
       useCORS: true,
       backgroundColor: "#ffffff",
       scrollX: 0,
@@ -1542,7 +1544,14 @@ async function generatePdfInBrowser(filled) {
       compress: true,
     });
     pdf.addImage(imageData, "PNG", 0, 0, PDF_WIDTH_MM, PDF_HEIGHT_MM);
-    pdf.save(filename);
+    if (isMobileDevice) {
+      const blob = pdf.output("blob");
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } else {
+      pdf.save(filename);
+    }
   } finally {
     runtimeStyle.remove();
     mount.remove();
