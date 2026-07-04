@@ -935,6 +935,18 @@ function deriveUniqueFeatures(data) {
     .slice(0, 6);
 }
 
+function clampLeadDescription(text) {
+  if (!text) return "";
+  const hasCJK = /[一-鿿]/.test(text);
+  if (hasCJK) {
+    if (text.length <= 60) return text;
+    return text.substring(0, 57) + "...";
+  }
+  const words = text.split(/\s+/);
+  if (words.length <= 40) return text;
+  return words.slice(0, 40).join(" ") + "...";
+}
+
 function deriveHeroFeature(data, features) {
   const normalizedMain = String(data.mainSellingPoint || "").trim().toLowerCase();
   const primary = features.find((item) => normalizedMain && scoreMainSellingPointMatch(item, normalizedMain) > 0)
@@ -946,7 +958,7 @@ function deriveHeroFeature(data, features) {
   const heroLead = buildHeroLead(primary.title, data.productType, data.mainSellingPoint || primary.title);
   return {
     sectionTitle: String(data.heroFeature.sectionTitle || "").trim() || shortenFeatureTitle(primary.title) || "Key Product Story",
-    leadDescription: String(data.heroFeature.leadDescription || "").trim() || heroLead,
+    leadDescription: clampLeadDescription(String(data.heroFeature.leadDescription || "").trim() || heroLead),
     detail1Name: String(data.heroFeature.detail1Name || "").trim() || (isViewShowcase ? "TOP VIEW" : shortenFeatureTitle(primary.title) || "MODE 01"),
     detail1Image: data.heroFeature.detail1Image || "",
     detail1Caption: isViewShowcase ? "" : (String(data.heroFeature.detail1Caption || "").trim() || primary.description || ""),
