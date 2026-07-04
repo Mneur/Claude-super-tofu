@@ -747,7 +747,7 @@ function buildOfferingHtml(data) {
   .fr-left { width: ${hasSoftware ? "50%" : "100%"}; padding-right: ${hasSoftware ? "5mm" : "0"}; padding-top: 0; }
   .fr-divider { border-top: 2pt solid var(--primary); margin-top: 1.5mm; margin-bottom: 1.5mm; }
   .fr-right { width: 50%; padding-left: 4mm; border-top: 1pt solid #E5E7EB; border-left: 1pt solid #E5E7EB; padding-top: 2.5mm; }
-  .feature-sub { font-size: 7.2pt; color: #566171; margin: 1.5mm 0 2.5mm; max-height: 11mm; overflow: hidden; }
+  .feature-sub { font-size: 7.2pt; color: #566171; margin: 1.5mm 0 2.5mm; max-height: 12mm; overflow: hidden; }
   .card-row { width: 100%; display: table; }
   .card-cell { width: 50%; display: table-cell; vertical-align: top; }
   .card-cell:first-child { padding-right: 2.5mm; }
