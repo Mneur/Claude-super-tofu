@@ -1489,7 +1489,7 @@ async function generatePdfInBrowser(filled) {
   const PAGE_HEIGHT_PX = 1683;
   const PDF_WIDTH_MM = 210;
   const PDF_HEIGHT_MM = 297;
-  const html = await buildMasterOfferingHtmlStable(filled);
+  const html = await buildOfferingV2(filled);
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
   const page = doc.querySelector(".page");
@@ -1532,7 +1532,7 @@ async function generatePdfInBrowser(filled) {
   .hero-img-placeholder,
   .mode-img,
   .sw-editor-img {
-    overflow: hidden !important;
+    
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -1634,7 +1634,7 @@ async function buildMasterOfferingHtml(data) {
 .hero-img-placeholder,
 .mode-img,
 .sw-editor-img {
-  overflow: hidden !important;
+  
 }
 .product-view-img,
 .product-view-dark,
@@ -1821,7 +1821,7 @@ img:not(.logo-img):not(.hero-fit):not(.mode-fit):not(.sw-fit) { max-width: 100%;
 .hero-img-placeholder,
 .mode-img,
 .sw-editor-img {
-  overflow: hidden !important;
+  
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -1971,6 +1971,179 @@ img:not(.logo-img):not(.hero-fit):not(.mode-fit):not(.sw-fit) { max-width: 100%;
   setText(".footer-right", `INTERNAL OFFERING - ${footerMonth}`);
 
   return `<!DOCTYPE html>\n${doc.documentElement.outerHTML}`;
+}
+
+// ================================================================
+// OFFERING ENGINE V2 — Layout Engine
+// ================================================================
+
+function stateToBlocks(data) {
+  const features = data.uniqueFeatures.filter(f => f.title);
+  const hero = data.heroFeature || {};
+  const sw = data.softwareControl || {};
+  const isView = data.showcaseType === 'VIEW_SHOWCASE';
+  return {
+    heroConcept: {
+      sceneTitle: data.sceneTitle || '',
+      heroImage: data.heroImage || '',
+      heroPrompt: data.heroPrompt || '',
+    },
+    featureBlocks: features.map((f, i) => ({ ...f, highlight: f.highlight || i === 0 })),
+    modeSystem: {
+      type: isView ? 'VIEW' : 'MODE',
+      items: [
+        { tag: isView ? 'TOP VIEW' : 'MODE 01', name: hero.detail1Name || '', image: hero.detail1Image || '', caption: isView ? '' : (hero.detail1Caption || '') },
+        { tag: isView ? 'ANGLE VIEW' : 'MODE 02', name: hero.detail2Name || '', image: hero.detail2Image || '', caption: isView ? '' : (hero.detail2Caption || '') },
+      ],
+    },
+    softwareSystem: data.hasSoftware !== 'no' ? {
+      title: sw.sectionTitle || '',
+      lead: sw.leadDescription || '',
+      cards: [
+        { name: sw.editor1Name || '', image: sw.editor1Image || '', desc: sw.editor1Caption || '' },
+        { name: sw.editor2Name || '', image: sw.editor2Image || '', desc: sw.editor2Caption || '' },
+      ],
+    } : null,
+    specStrip: {
+      keywords: data.specKeywords || '',
+      price: (data.priceStrip || {}).price || '',
+      priceSub: (data.priceStrip || {}).priceSub || '',
+      moq: (data.priceStrip || {}).moq || '',
+      moqSub: (data.priceStrip || {}).moqSub || '',
+      color: (data.priceStrip || {}).color || '',
+      colorSub: (data.priceStrip || {}).colorSub || '',
+      boxSize: (data.priceStrip || {}).boxSize || '',
+      boxSizeSub: (data.priceStrip || {}).boxSizeSub || '',
+      cartonQty: (data.priceStrip || {}).cartonQty || '',
+      cartonQtySub: (data.priceStrip || {}).cartonQtySub || '',
+    },
+  };
+}
+
+function selectLayoutStrategy(blocks) {
+  if (blocks.modeSystem && blocks.modeSystem.type === 'MODE') return 'HERO_MODE';
+  if (blocks.softwareSystem) return 'HERO_SOFTWARE';
+  return 'HERO_STANDARD';
+}
+
+async function buildOfferingV2(data) {
+  const blocks = stateToBlocks(data);
+  const strategy = selectLayoutStrategy(blocks);
+  const theme = THEMES[data.themeId] || Object.values(THEMES)[0];
+
+  let html = await loadOfferingEngineTemplate();
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+
+  // Inject theme tokens
+  doc.documentElement.style.setProperty('--dt-primary', theme.colors.primary);
+  doc.documentElement.style.setProperty('--dt-topbar-bg', theme.colors.topbarBg);
+  doc.documentElement.style.setProperty('--dt-price-bg', theme.colors.priceStripBg || '#1A1A1A');
+
+  // Helper: set text content
+  const setText = (sel, val) => { const el = doc.querySelector(sel); if (el) el.textContent = val; };
+  // Helper: set image src
+  const setImg = (sel, src, fallback) => { const el = doc.querySelector(sel); if (el) el.src = getImageSrc(src, fallback, ''); };
+  // Helper: set attribute
+  const setAttr = (sel, attr, val) => { const el = doc.querySelector(sel); if (el) el.setAttribute(attr, val); };
+
+  // Header
+  setText('.topbar-right b', formatMonthLabel(data.documentMonth));
+  setAttr('.logo-img', 'src', 'assets/logo/gaming2.png');
+
+  // Title
+  setText('[data-field="productName"]', `${data.productName} ${data.productModel}`.trim());
+  setText('[data-field="productType"]', data.productType);
+  setText('[data-field="specKeywords"]', blocks.specStrip.keywords);
+
+  // Hero
+  setText('[data-field="sceneTitle"]', blocks.heroConcept.sceneTitle);
+  setImg('[data-field="heroImage"]', blocks.heroConcept.heroImage, 'HERO IMAGE');
+
+  // Features
+  const featureList = doc.querySelector('[data-list="uniqueFeatures"]');
+  if (featureList) {
+    featureList.innerHTML = blocks.featureBlocks.map(f =>
+      `<div class="feature-item"><div class="feature-name${f.highlight ? ' red' : ''}">${escapeHtml(f.title)}</div><div class="feature-desc">${escapeHtml(f.description)}</div></div>`
+    ).join('');
+  }
+
+  // Hero Feature (left column)
+  setText('[data-field="heroFeatureHeadline"]', data.heroFeature.sectionTitle || '');
+  setText('[data-field="heroFeatureLead"]', data.heroFeature.leadDescription || '');
+
+  // Showcase cards
+  const showcaseSection = doc.querySelector('[data-section="showcase"]');
+  if (showcaseSection) {
+    showcaseSection.setAttribute('data-showcase-type', blocks.modeSystem.type);
+    const cards = showcaseSection.querySelectorAll('.mode-cell');
+    blocks.modeSystem.items.forEach((item, i) => {
+      if (cards[i]) {
+        const card = cards[i].querySelector('.mode-card');
+        if (blocks.modeSystem.type === 'VIEW') card.classList.add('simple-view');
+        cards[i].querySelector('.mode-tag').textContent = item.tag;
+        cards[i].querySelector('.mode-title').textContent = item.name;
+        cards[i].querySelector('.mode-desc').textContent = item.caption;
+        const img = cards[i].querySelector('.mode-fit');
+        if (img) img.src = getImageSrc(item.image, item.tag, '');
+      }
+    });
+  }
+
+  // Right column
+  const rightCol = doc.querySelector('[data-section="rightColumn"]');
+  if (rightCol) {
+    if (blocks.softwareSystem) {
+      rightCol.setAttribute('data-has-software', 'yes');
+      setText('[data-field="softwareHeadline"]', blocks.softwareSystem.title);
+      setText('[data-field="softwareLead"]', blocks.softwareSystem.lead);
+      blocks.softwareSystem.cards.forEach((card, i) => {
+        setImg(`[data-field="editor${i+1}Image"]`, card.image, `SOFTWARE ${i+1}`);
+        setText(`[data-field="editor${i+1}Name"]`, card.name);
+        setText(`[data-field="editor${i+1}Caption"]`, card.desc);
+      });
+    } else {
+      rightCol.setAttribute('data-has-software', 'no');
+      const extraFeatures = blocks.featureBlocks.slice(6);
+      if (extraFeatures.length > 0) {
+        rightCol.innerHTML = `<div class="highlights-title">ADDITIONAL HIGHLIGHTS</div>${extraFeatures.map(f => `<div class="feature-item"><div class="feature-name">${escapeHtml(f.title)}</div><div class="feature-desc">${escapeHtml(f.description)}</div></div>`).join('')}`;
+      } else {
+        rightCol.innerHTML = '';
+      }
+    }
+  }
+
+  // Price
+  setText('[data-field="price"]', blocks.specStrip.price || '');
+  setText('[data-field="priceSub"]', blocks.specStrip.priceSub || '');
+  setText('[data-field="moq"]', blocks.specStrip.moq || '');
+  setText('[data-field="moqSub"]', blocks.specStrip.moqSub || '');
+  setText('[data-field="color"]', blocks.specStrip.color || '');
+  setText('[data-field="colorSub"]', blocks.specStrip.colorSub || '');
+  setText('[data-field="boxSize"]', blocks.specStrip.boxSize || '');
+  setText('[data-field="boxSizeSub"]', blocks.specStrip.boxSizeSub || '');
+  setText('[data-field="cartonQty"]', blocks.specStrip.cartonQty || '');
+  setText('[data-field="cartonQtySub"]', blocks.specStrip.cartonQtySub || '');
+
+  // Footer
+  const monthLabel = formatMonthLabel(data.documentMonth);
+  setText('[data-field="footerLeft"]', `${data.productName} ${data.productModel} · ${data.productType} · ${data.colorVariant} · ${theme.brandName} Internal Offering · Confidential`);
+  setText('[data-field="footerRight"]', `INTERNAL OFFERING — ${monthLabel.toUpperCase()}`);
+
+  // Set title
+  doc.title = `${data.productName} ${data.productModel}`.trim() || 'Internal Offering';
+
+  return `<!DOCTYPE html>\n${doc.documentElement.outerHTML}`;
+}
+
+// Template cache for v2 engine
+let offeringEngineCache = null;
+async function loadOfferingEngineTemplate() {
+  if (offeringEngineCache) return offeringEngineCache;
+  const response = await fetch('offering-engine.html');
+  if (!response.ok) throw new Error('Offering engine template failed to load.');
+  offeringEngineCache = await response.text();
+  return offeringEngineCache;
 }
 
 function replaceFirst(pattern, replacement, input) {

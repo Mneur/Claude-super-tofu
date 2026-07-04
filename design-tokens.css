@@ -1,0 +1,52 @@
+/* ================================================================
+   OFFERING ENGINE v2 — DESIGN TOKENS
+   Single source of visual truth. All layouts reference these tokens.
+   DO NOT hardcode px/mm/sizes in templates. Use these variables.
+   ================================================================ */
+
+:root {
+  /* ── Colors ─────────────────────────────────────────────── */
+  --dt-primary:           #E70012;     /* brand red / accent */
+  --dt-topbar-bg:         #14171C;     /* top bar background */
+  --dt-price-bg:          #1A1A1A;     /* price strip background */
+  --dt-text:              #14171C;     /* primary body text */
+  --dt-text-secondary:    #525864;     /* secondary / muted text */
+  --dt-card-border:       #E5E7EB;     /* card border color */
+  --dt-card-bg:           #FAFAFA;     /* card background */
+  --dt-white:             #FFFFFF;     /* page background */
+
+  /* ── Spacing ─────────────────────────────────────────────── */
+  --dt-section-gap:       6mm;         /* vertical gap between major sections */
+  --dt-block-gap:         4mm;         /* gap between cards / blocks in a row */
+  --dt-page-h-pad:        7mm;         /* left & right page margin */
+  --dt-page-v-pad:        2mm;         /* top & bottom page breathing room */
+
+  /* ── Typography ──────────────────────────────────────────── */
+  --dt-font:              'Poppins', 'Noto Sans CJK SC', sans-serif;
+  --dt-font-size-body:    9pt;
+  --dt-font-size-small:   7pt;
+  --dt-font-size-xs:      6.5pt;
+  --dt-font-size-title:   16pt;
+  --dt-font-weight-bold:  700;
+  --dt-font-weight-medium:500;
+  --dt-font-weight-normal:400;
+  --dt-line-height:       1.35;
+
+  /* ── Images ─────────────────────────────────────────────────
+     RULES (NON-NEGOTIABLE):
+     - object-fit: contain ONLY — never cover, never fill
+     - max-width / max-height — never width:100% + height:100%
+     - images fit INSIDE containers, never forced to fill
+     - containers may have fixed height; images do not stretch
+     - NO overflow: hidden on image containers (no clipping)
+     ----------------------------------------------------------- */
+  --dt-img-fit:           contain;
+  --dt-img-max-w:         100%;
+  --dt-img-max-h:         100%;
+  --dt-hero-max-h:        72mm;
+  --dt-card-img-h:        44mm;
+  --dt-editor-img-h:      46mm;
+
+  /* ── Cards ───────────────────────────────────────────────── */
+  --dt-card-radius:       2pt;
+}

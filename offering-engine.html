@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Internal Offering</title>
+<link rel="stylesheet" href="design-tokens.css">
+<style>
+  @page { size: 210mm 297mm; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: var(--dt-font);
+    font-size: var(--dt-font-size-body);
+    color: var(--dt-text);
+    background: var(--dt-white);
+    line-height: var(--dt-line-height);
+    font-weight: var(--dt-font-weight-normal);
+  }
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── Top Bar ─────────────────────────────────────────────── */
+  .topbar {
+    background: var(--dt-topbar-bg);
+    color: #FFFFFF;
+    padding: 3.5mm var(--dt-page-h-pad);
+    display: table;
+    width: 100%;
+  }
+  .topbar-left, .topbar-right { display: table-cell; vertical-align: middle; }
+  .topbar-right { text-align: right; font-size: var(--dt-font-size-small); color: #B8BCC5; line-height: 1.3; }
+  .topbar-right b { color: #FFFFFF; font-weight: var(--dt-font-weight-medium); }
+  .logo-img { height: 7mm; vertical-align: middle; display: inline-block; }
+  .topbar-title {
+    font-size: 10pt;
+    font-weight: var(--dt-font-weight-medium);
+    letter-spacing: 2pt;
+    color: #FFFFFF;
+    vertical-align: middle;
+    margin-left: 6mm;
+  }
+
+  /* ── Title Strip ─────────────────────────────────────────── */
+  .title-strip {
+    padding: 2.5mm var(--dt-page-h-pad);
+    border-bottom: 1.5pt solid var(--dt-primary);
+    display: table;
+    width: 100%;
+  }
+  .title-left, .title-right { display: table-cell; vertical-align: middle; }
+  .product-name {
+    font-size: var(--dt-font-size-title);
+    font-weight: var(--dt-font-weight-bold);
+    letter-spacing: -0.3pt;
+    color: var(--dt-text);
+  }
+  .product-category {
+    display: inline-block;
+    border: 1pt solid var(--dt-card-border);
+    background: var(--dt-white);
+    color: var(--dt-text-secondary);
+    font-size: var(--dt-font-size-small);
+    padding: 1.5pt 5pt;
+    margin-left: 6pt;
+    vertical-align: middle;
+    font-weight: var(--dt-font-weight-normal);
+  }
+  .title-right {
+    text-align: right;
+    font-size: 7pt;
+    color: var(--dt-text-secondary);
+    letter-spacing: 0.8pt;
+    font-weight: var(--dt-font-weight-normal);
+  }
+
+  /* ── Hero Block ──────────────────────────────────────────── */
+  .hero-block {
+    padding: var(--dt-page-v-pad) var(--dt-page-h-pad) 0;
+    display: table;
+    width: 100%;
+  }
+  .hero-left, .hero-right { display: table-cell; vertical-align: top; }
+  .hero-left { width: 50%; padding-right: 3mm; }
+  .hero-right { width: 50%; padding-left: 3mm; }
+  .scene-tag {
+    display: inline-block;
+    background: var(--dt-primary);
+    color: #FFFFFF;
+    font-size: var(--dt-font-size-small);
+    font-weight: 600;
+    padding: 1.5pt 5pt;
+    letter-spacing: 0.6pt;
+  }
+  .scene-caption {
+    font-size: var(--dt-font-size-body);
+    font-weight: var(--dt-font-weight-medium);
+    color: var(--dt-text);
+    margin-left: 4pt;
+  }
+  .hero-img-box {
+    width: 100%;
+    max-height: var(--dt-hero-max-h);
+    background: var(--dt-white);
+    border: 1pt dashed #D0D5DC;
+    border-radius: var(--dt-card-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #B8BCC5;
+    font-size: 8pt;
+    margin-top: 2mm;
+  }
+  .hero-img-box .img-inner {
+    text-align: center;
+    padding: 4mm;
+  }
+  .hero-img-box .img-inner .label {
+    font-weight: 600;
+    color: #C8CDD3;
+    letter-spacing: 1.2pt;
+    font-size: var(--dt-font-size-small);
+  }
+  .hero-img-box .img-inner .hint {
+    font-size: 7pt;
+    color: #D0D5DC;
+    margin-top: 2pt;
+  }
+  .hero-fit, .mode-fit, .sw-fit {
+    max-width: var(--dt-img-max-w);
+    max-height: var(--dt-img-max-h);
+    display: block;
+    background: var(--dt-white);
+    object-fit: var(--dt-img-fit);
+    object-position: center center;
+    margin: auto;
+  }
+  .features-title {
+    font-size: var(--dt-font-size-small);
+    font-weight: var(--dt-font-weight-medium);
+    color: var(--dt-text-secondary);
+    letter-spacing: 1.2pt;
+    margin-bottom: 2mm;
+  }
+  .feature-item {
+    margin-bottom: 2.5mm;
+    padding-left: 4mm;
+    position: relative;
+  }
+  .feature-item::before {
+    content: '';
+    width: 1.8mm;
+    height: 1.8mm;
+    background: var(--dt-primary);
+    position: absolute;
+    left: 0;
+    top: 1.8mm;
+    border-radius: 50%;
+  }
+  .feature-name {
+    font-size: 8.5pt;
+    font-weight: 600;
+    color: var(--dt-text);
+    margin-bottom: 0.8pt;
+    line-height: 1.3;
+  }
+  .feature-name.red { color: var(--dt-primary); }
+  .feature-desc {
+    font-size: 7pt;
+    color: var(--dt-text-secondary);
+    line-height: 1.42;
+  }
+  .feature-desc b { color: var(--dt-text); font-weight: 600; }
+
+  /* ── Feature Row ─────────────────────────────────────────── */
+  .feature-row {
+    padding: var(--dt-section-gap) var(--dt-page-h-pad) 0;
+    width: 100%;
+    display: table;
+  }
+  .fr-left, .fr-right { display: table-cell; vertical-align: top; }
+  .fr-left { width: 50%; padding-right: 5mm; padding-top: 0; }
+  .fr-right { width: 50%; padding-left: 4mm; border-left: 1pt solid var(--dt-card-border); padding-top: 0; }
+  .feature-header {
+    display: flex;
+    align-items: center;
+    gap: 4pt;
+    min-height: 6.5mm;
+  }
+  .feature-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--dt-primary);
+    color: #FFFFFF;
+    font-size: var(--dt-font-size-xs);
+    font-weight: 600;
+    padding: 1.5pt 4.5pt;
+    letter-spacing: 0.5pt;
+    min-height: 4.8mm;
+    line-height: 1;
+    text-align: center;
+    flex: 0 0 auto;
+  }
+  .feature-headline {
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--dt-font-size-body);
+    font-weight: var(--dt-font-weight-bold);
+    color: var(--dt-text);
+    min-height: 4.8mm;
+  }
+  .feature-sub {
+    font-size: 8pt;
+    color: var(--dt-text-secondary);
+    margin: 1.5mm 0 2mm;
+    font-weight: var(--dt-font-weight-normal);
+    line-height: var(--dt-line-height);
+    max-height: 12mm;
+    overflow: hidden;
+  }
+
+  /* ── Red Divider ─────────────────────────────────────────── */
+  .fr-divider {
+    border-top: 2pt solid var(--dt-primary);
+    margin: 0 0 var(--dt-block-gap) 0;
+  }
+
+  /* ── Mode / View Cards ───────────────────────────────────── */
+  .mode-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--dt-block-gap);
+    width: 100%;
+    align-items: start;
+  }
+  .mode-cell { min-width: 0; }
+  .mode-card {
+    background: var(--dt-card-bg);
+    border: 1pt solid var(--dt-card-border);
+    padding: 1.8mm 2mm;
+    display: flex;
+    flex-direction: column;
+  }
+  .mode-tag {
+    font-size: var(--dt-font-size-xs);
+    color: var(--dt-primary);
+    font-weight: 600;
+    letter-spacing: 0.8pt;
+    margin-bottom: 0.8mm;
+    min-height: 2.5mm;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+  }
+  .mode-title {
+    font-size: var(--dt-font-size-body);
+    font-weight: var(--dt-font-weight-bold);
+    color: var(--dt-text);
+    margin-bottom: 1mm;
+    line-height: 1.25;
+  }
+  .mode-img {
+    width: 100%;
+    height: var(--dt-card-img-h);
+    background: var(--dt-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1mm;
+  }
+  .mode-desc {
+    font-size: 7.5pt;
+    color: var(--dt-text-secondary);
+    line-height: 1.3;
+  }
+  .mode-card.simple-view .mode-title { display: none; }
+  .mode-card.simple-view .mode-desc { display: none; }
+  .mode-card.simple-view .mode-img {
+    margin-bottom: 0;
+  }
+  .mode-card.simple-view .mode-tag {
+    margin-bottom: 0;
+    justify-content: center;
+  }
+
+  /* ── Software Editor Cards ───────────────────────────────── */
+  .sw-editor-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--dt-block-gap);
+    width: 100%;
+  }
+  .sw-editor-cell { min-width: 0; }
+  .sw-editor-card {
+    background: var(--dt-card-bg);
+    border: 1pt solid var(--dt-card-border);
+    padding: 1.8mm 2mm;
+    display: flex;
+    flex-direction: column;
+  }
+  .sw-editor-img {
+    width: 100%;
+    height: var(--dt-editor-img-h);
+    background: var(--dt-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5mm;
+  }
+  .sw-editor-name {
+    font-size: var(--dt-font-size-body);
+    font-weight: var(--dt-font-weight-bold);
+    color: var(--dt-text);
+    margin-bottom: 0.8mm;
+    line-height: 1.25;
+  }
+  .sw-editor-desc {
+    font-size: 7.5pt;
+    color: var(--dt-text-secondary);
+    line-height: 1.3;
+  }
+
+  /* ── Additional Highlights (no-SW fallback) ──────────────── */
+  .highlights-title {
+    font-size: var(--dt-font-size-small);
+    font-weight: var(--dt-font-weight-medium);
+    color: var(--dt-text-secondary);
+    letter-spacing: 1pt;
+    margin-bottom: 2mm;
+    min-height: 6.5mm;
+    display: flex;
+    align-items: center;
+  }
+
+  /* ── Price Strip ─────────────────────────────────────────── */
+  .price-strip {
+    background: var(--dt-price-bg);
+    margin-top: var(--dt-section-gap);
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  .price-cell {
+    display: table-cell;
+    padding: 2mm 3mm;
+    vertical-align: top;
+    border-right: 1pt solid #2A2D33;
+  }
+  .price-cell:last-child { border-right: none; }
+  .price-label {
+    font-size: var(--dt-font-size-xs);
+    color: #B8BCC5;
+    letter-spacing: 1pt;
+    font-weight: var(--dt-font-weight-medium);
+    margin-bottom: 0.8mm;
+  }
+  .price-value {
+    font-size: 13pt;
+    font-weight: var(--dt-font-weight-bold);
+    color: #FFFFFF;
+    line-height: 1.1;
+  }
+  .price-value.red { color: var(--dt-primary); font-size: 15pt; }
+  .price-suffix {
+    font-size: 7pt;
+    color: #B8BCC5;
+    margin-top: 0.7mm;
+  }
+
+  /* ── Footer ──────────────────────────────────────────────── */
+  .footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 2.5mm;
+    padding: 0 var(--dt-page-h-pad);
+    width: 100%;
+    display: table;
+    font-size: 6.3pt;
+    color: #6A7280;
+  }
+  .footer-right {
+    display: table-cell;
+    text-align: right;
+    color: var(--dt-primary);
+    font-weight: 800;
+    letter-spacing: 0.8pt;
+  }
+  .footer-left { display: table-cell; }
+
+  /* ── PDF Hardening ───────────────────────────────────────── */
+  img:not(.logo-img):not(.hero-fit):not(.mode-fit):not(.sw-fit) { max-width: 100%; height: auto; }
+  .hero-fit, .mode-fit, .sw-fit {
+    max-width: var(--dt-img-max-w) !important;
+    max-height: var(--dt-img-max-h) !important;
+    display: block !important;
+    object-fit: var(--dt-img-fit) !important;
+    object-position: center center !important;
+    margin: auto !important;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── TOP BAR ────────────────────────────────────────────── -->
+  <div class="topbar" data-section="header">
+    <div class="topbar-left">
+      <img class="logo-img" src="assets/logo/gaming2.png" alt="FANTECH">
+      <span class="topbar-title">INTERNAL OFFERING</span>
+    </div>
+    <div class="topbar-right">Document Date<br><b data-field="documentMonth">May 2026</b></div>
+  </div>
+
+  <!-- ── TITLE STRIP ────────────────────────────────────────── -->
+  <div class="title-strip" data-section="title">
+    <div class="title-left">
+      <span class="product-name" data-field="productName">MAXFIT 86 WMK702</span>
+      <span class="product-category" data-field="productType">Wireless Mechanical Keyboard</span>
+    </div>
+    <div class="title-right" data-field="specKeywords">TRI-MODE · HOT SWAP · LED MATRIX · 8000MAH</div>
+  </div>
+
+  <!-- ── HERO BLOCK ─────────────────────────────────────────── -->
+  <div class="hero-block" data-section="hero">
+    <div class="hero-left">
+      <div>
+        <span class="scene-tag">APPLICATION SCENE</span>
+        <span class="scene-caption" data-field="sceneTitle">Fantech Gaming Performance Setup</span>
+      </div>
+      <div class="hero-img-box" data-container="heroImage">
+        <img class="hero-fit" src="" alt="hero image" data-field="heroImage">
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="features-title">PRODUCT UNIQUE FEATURES</div>
+      <div data-list="uniqueFeatures">
+        <div class="feature-item"><div class="feature-name red">LED Matrix Display</div><div class="feature-desc">A built-in smart display panel gives the keyboard a more memorable identity on the desk and helps retailers show something customers notice at first glance.</div></div>
+        <div class="feature-item"><div class="feature-name">Tri-Mode Connectivity</div><div class="feature-desc">Flexible wired and wireless switching makes the product fit more setups without extra friction for users or sellers.</div></div>
+        <div class="feature-item"><div class="feature-name">8000 mAh Battery</div><div class="feature-desc">A stronger battery improves real daily usability and gives the product a more confident wireless positioning.</div></div>
+        <div class="feature-item"><div class="feature-name">5-PIN Hot Swappable</div><div class="feature-desc">Users can change switches without soldering, making the keyboard more attractive to enthusiast buyers.</div></div>
+        <div class="feature-item"><div class="feature-name">Gasket Mount</div><div class="feature-desc">A flexible mounting system absorbs typing vibration for a softer, more consistent feel.</div></div>
+        <div class="feature-item"><div class="feature-name">Advanced Software</div><div class="feature-desc">Full driver support extends the product beyond basic hardware use with a clearer long-term value story.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FEATURE ROW ────────────────────────────────────────── -->
+  <div class="feature-row" data-section="featureRow">
+    <!-- LEFT COLUMN: Hero Feature + Red Divider + Mode/View Cards -->
+    <div class="fr-left" data-section="leftColumn">
+      <div class="feature-header">
+        <span class="feature-label">HERO FEATURE</span>
+        <span class="feature-headline" data-field="heroFeatureHeadline">LED Matrix Display</span>
+      </div>
+      <div class="feature-sub" data-field="heroFeatureLead">The keyboard's most visible surface is no longer cold plastic — it's a fabric-and-display composite.</div>
+      <div class="fr-divider"></div>
+      <div class="mode-row" data-section="showcase" data-showcase-type="MODE">
+        <div class="mode-cell">
+          <div class="mode-card">
+            <div class="mode-tag">MODE 01</div>
+            <div class="mode-title">Display Attached</div>
+            <div class="mode-img" data-container="detail1Image">
+              <img class="mode-fit" src="" alt="mode 01" data-field="detail1Image">
+            </div>
+            <div class="mode-desc">Full-size keyboard with smart display panel.</div>
+          </div>
+        </div>
+        <div class="mode-cell">
+          <div class="mode-card">
+            <div class="mode-tag">MODE 02</div>
+            <div class="mode-title">Display Removed</div>
+            <div class="mode-img" data-container="detail2Image">
+              <img class="mode-fit" src="" alt="mode 02" data-field="detail2Image">
+            </div>
+            <div class="mode-desc">Compact layout ideal for travel or minimal setups.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Software Control or Additional Highlights -->
+    <div class="fr-right" data-section="rightColumn" data-has-software="yes">
+      <div class="feature-header">
+        <span class="feature-label">SOFTWARE CONTROL</span>
+        <span class="feature-headline" data-field="softwareHeadline">Customize Everything in One App</span>
+      </div>
+      <div class="feature-sub" data-field="softwareLead">Web-based driver — no install required.</div>
+      <div class="sw-editor-row">
+        <div class="sw-editor-cell">
+          <div class="sw-editor-card">
+            <div class="sw-editor-img" data-container="editor1Image">
+              <img class="sw-fit" src="" alt="software 01" data-field="editor1Image">
+            </div>
+            <div class="sw-editor-name" data-field="editor1Name">Matrix Display Editor</div>
+            <div class="sw-editor-desc" data-field="editor1Caption">Pre-loaded animations + pixel art editor.</div>
+          </div>
+        </div>
+        <div class="sw-editor-cell">
+          <div class="sw-editor-card">
+            <div class="sw-editor-img" data-container="editor2Image">
+              <img class="sw-fit" src="" alt="software 02" data-field="editor2Image">
+            </div>
+            <div class="sw-editor-name" data-field="editor2Name">Lighting &amp; Keymap</div>
+            <div class="sw-editor-desc" data-field="editor2Caption">19 ARGB modes, full key remapping.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PRICE STRIP ────────────────────────────────────────── -->
+  <div class="price-strip" data-section="price">
+    <div class="price-cell">
+      <div class="price-label">PRICE</div>
+      <div class="price-value red" data-field="price">¥ TBD</div>
+      <div class="price-suffix" data-field="priceSub">RMB · Tax excl.</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">MOQ</div>
+      <div class="price-value" data-field="moq"></div>
+      <div class="price-suffix" data-field="moqSub">Min. order qty</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">COLOR</div>
+      <div class="price-value" data-field="color"></div>
+      <div class="price-suffix" data-field="colorSub">OEM available</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">BOX SIZE</div>
+      <div class="price-value" data-field="boxSize">TBD</div>
+      <div class="price-suffix" data-field="boxSizeSub">To be confirmed</div>
+    </div>
+    <div class="price-cell">
+      <div class="price-label">CARTON QTY</div>
+      <div class="price-value" data-field="cartonQty"></div>
+      <div class="price-suffix" data-field="cartonQtySub">Per master carton</div>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────── -->
+  <div class="footer" data-section="footer">
+    <div class="footer-left" data-field="footerLeft">MAXFIT 86 WMK702 · Wireless Mechanical Keyboard · FANTECH Internal Offering</div>
+    <div class="footer-right" data-field="footerRight">INTERNAL OFFERING — MAY 2026</div>
+  </div>
+
+</div>
+</body>
+</html>
