@@ -1501,7 +1501,7 @@ async function generatePdfInBrowser(filled) {
   runtimeStyle.textContent = `${styleTag.textContent}
   .page { width: ${PAGE_WIDTH_PX}px !important; height: ${PAGE_HEIGHT_PX}px !important; }
   html, body { margin: 0 !important; padding: 0 !important; }
-  img:not(.logo-img) { max-width: 100% !important; height: auto !important; }
+  img:not(.logo-img):not(.hero-fit):not(.mode-fit):not(.sw-fit) { max-width: 100% !important; height: auto !important; }
   .hero-fit,
   .mode-fit,
   .sw-fit {
@@ -1608,7 +1608,7 @@ async function buildMasterOfferingHtml(data) {
 
   html = replaceFirst(
     /<\/style>/s,
-    `img { max-width: 100%; height: auto; }
+    `img:not(.hero-fit):not(.mode-fit):not(.sw-fit) { max-width: 100%; height: auto; }
 .hero-fit,
 .mode-fit,
 .sw-fit {
@@ -1791,12 +1791,12 @@ async function buildMasterOfferingHtmlStable(data) {
 
   const hardeningStyle = doc.createElement("style");
   hardeningStyle.textContent = `
-img:not(.logo-img) { max-width: 100%; height: auto; }
+img:not(.logo-img):not(.hero-fit):not(.mode-fit):not(.sw-fit) { max-width: 100%; height: auto; }
 .hero-fit,
 .mode-fit,
 .sw-fit {
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
   display: block !important;
   object-fit: contain !important;
   object-position: center center !important;
