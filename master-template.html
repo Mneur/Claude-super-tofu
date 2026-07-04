@@ -209,17 +209,6 @@
   .feature-desc b { color: #14171C; font-weight: 600; }
 
   /* ============================================ */
-  /* HERO FEATURE STRIP                              */
-  /* ============================================ */
-  .hero-feature-strip {
-    padding: 0 7mm;
-    width: 100%;
-  }
-  .hfs-inner {
-    padding-top: 0;
-  }
-
-  /* ============================================ */
   /* FEATURE ROW                                    */
   /* ============================================ */
   .feature-row {
@@ -234,8 +223,7 @@
     width: 100%;
   }
   .fr-left {
-    border-top: 2pt solid var(--primary);
-    padding-top: 2.5mm;
+    padding-top: 0;
     padding-right: 4mm;
   }
   .fr-right {
@@ -248,6 +236,11 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
+  }
+  .fr-divider {
+    border-top: 2pt solid var(--primary);
+    margin-top: 1.5mm;
+    margin-bottom: 1.5mm;
   }
   .feature-header {
     display: flex;
@@ -568,19 +561,15 @@
     </div>
   </div>
 
-  <div class="hero-feature-strip">
-   <div class="hfs-inner">
-    <div class="feature-header">
-      <span class="feature-label">HERO FEATURE</span>
-      <span class="feature-headline">Acoustic Knit Top</span>
-    </div>
-    <div class="feature-sub">The keyboard's most visible surface is no longer cold plastic — it's a fabric-and-display composite. MAXFIT 86's signature look.</div>
-   </div>
-  </div>
-
   <div class="feature-row">
    <div class="feature-row-inner">
     <div class="fr-left">
+      <div class="feature-header">
+        <span class="feature-label">HERO FEATURE</span>
+        <span class="feature-headline">Acoustic Knit Top</span>
+      </div>
+      <div class="feature-sub">The keyboard's most visible surface is no longer cold plastic — it's a fabric-and-display composite. MAXFIT 86's signature look.</div>
+      <div class="fr-divider"></div>
       <div class="mode-row">
         <div class="mode-cell">
           <div class="mode-card">
