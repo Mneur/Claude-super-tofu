@@ -1515,12 +1515,12 @@ async function generatePdfInBrowser(filled) {
   runtimeStyle.textContent = `${styleTag.textContent}
   .page { width: ${PAGE_WIDTH_PX}px !important; height: ${PAGE_HEIGHT_PX}px !important; }
   html, body { margin: 0 !important; padding: 0 !important; }
-  img:not(.logo-img):not(.hero-fit):not(.mode-fit):not(.sw-fit) { max-width: 100% !important; height: auto !important; }
+  img:not(.logo-img):not(.hero-fit):not(.mode-fit):not(.sw-fit) { max-max-width: 100% !important; height: auto !important; }
   .hero-fit,
   .mode-fit,
   .sw-fit {
-    width: 100% !important;
-    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
     display: block !important;
     object-fit: contain !important;
     object-position: center center !important;
@@ -1809,8 +1809,8 @@ img:not(.logo-img):not(.hero-fit):not(.mode-fit):not(.sw-fit) { max-width: 100%;
 .hero-fit,
 .mode-fit,
 .sw-fit {
-  width: 100% !important;
-  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
   display: block !important;
   object-fit: contain !important;
   object-position: center center !important;
