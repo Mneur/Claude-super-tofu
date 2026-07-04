@@ -1515,7 +1515,7 @@ async function generatePdfInBrowser(filled) {
   runtimeStyle.textContent = `${styleTag.textContent}
   .page { width: ${PAGE_WIDTH_PX}px !important; height: ${PAGE_HEIGHT_PX}px !important; }
   html, body { margin: 0 !important; padding: 0 !important; }
-  img:not(.logo-img):not(.hero-fit):not(.mode-fit):not(.sw-fit) { max-max-width: 100% !important; height: auto !important; }
+  img:not(.logo-img):not(.hero-fit):not(.mode-fit):not(.sw-fit) { max-width: 100% !important; height: auto !important; }
   .hero-fit,
   .mode-fit,
   .sw-fit {
@@ -1530,6 +1530,7 @@ async function generatePdfInBrowser(filled) {
     transform: none !important;
   }
   .hero-img-placeholder,
+	  .hero-img-box,
   .mode-img,
   .sw-editor-img {
     
@@ -1540,7 +1541,8 @@ async function generatePdfInBrowser(filled) {
   .mode-card.simple-view .mode-img,
   .mode-card .mode-img,
   .sw-editor-img,
-  .hero-img-placeholder {
+  .hero-img-placeholder,
+	  .hero-img-box {
     align-items: center !important;
   }
   .logo-img {
@@ -1632,6 +1634,7 @@ async function buildMasterOfferingHtml(data) {
   object-position: center center !important;
 }
 .hero-img-placeholder,
+	  .hero-img-box,
 .mode-img,
 .sw-editor-img {
   
@@ -1819,6 +1822,7 @@ img:not(.logo-img):not(.hero-fit):not(.mode-fit):not(.sw-fit) { max-width: 100%;
   margin: auto !important;
 }
 .hero-img-placeholder,
+	  .hero-img-box,
 .mode-img,
 .sw-editor-img {
   
@@ -1829,7 +1833,8 @@ img:not(.logo-img):not(.hero-fit):not(.mode-fit):not(.sw-fit) { max-width: 100%;
 .mode-card.simple-view .mode-img,
 .mode-card .mode-img,
 .sw-editor-img,
-.hero-img-placeholder {
+.hero-img-placeholder,
+	  .hero-img-box {
   align-items: center !important;
 }
 .product-view-img,

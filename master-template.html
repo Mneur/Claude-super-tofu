@@ -12,6 +12,9 @@
     --card-border: #E5E7EB;
     --card-bg: #FAFAFA;
     --dark-text: #14171C;
+    --section-gap: 6mm;
+    --card-gap: 4mm;
+    --page-h-pad: 7mm;
   }
   @page { size: 210mm 297mm; margin: 0; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -132,7 +135,7 @@
   }
   .hero-img-placeholder {
     max-width: 100%;
-    height: 72mm;
+    max-height: 72mm;
     background: #FFFFFF;
     border: 1pt dashed #D0D5DC;
     border-radius: 2pt;
@@ -140,7 +143,6 @@
     color: #B8BCC5;
     font-size: 8pt;
     margin-top: 2mm;
-    overflow: hidden;
   }
   .hero-fit, .mode-fit, .sw-fit {
     max-width: 100%;
