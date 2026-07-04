@@ -731,9 +731,9 @@ function buildOfferingHtml(data) {
   .section-chip { display: inline-block; background: var(--primary); color: #FFF; font-size: 6.5pt; padding: 1.4pt 5pt; letter-spacing: 0.8pt; font-weight: 700; }
   .section-title-inline { display: inline-block; margin-left: 4pt; font-size: 8.5pt; font-weight: 700; color: #14171C; }
   .hero-media, .detail-media, .editor-media { width: 100%; border-radius: 2pt; overflow: hidden; background: #F4F4F4; border: 1pt solid #E5E7EB; display: table; }
-  .hero-media { height: 80mm; margin-top: 2mm; }
-  .detail-media { height: 48mm; margin-bottom: 2mm; }
-  .editor-media { height: 50mm; margin-bottom: 2mm; }
+  .hero-media { height: 72mm; margin-top: 2mm; }
+  .detail-media { height: 44mm; margin-bottom: 2mm; }
+  .editor-media { height: 46mm; margin-bottom: 2mm; }
   .media-inner { display: table-cell; vertical-align: middle; text-align: center; color: #AAB0B8; font-size: 7pt; padding: 4mm; }
   .media-inner img { width: 100%; height: 100%; object-fit: contain; display: block; }
   .features-title { font-size: 7pt; color: #6A7280; letter-spacing: 1pt; margin-bottom: 2mm; font-weight: 700; }
