@@ -742,6 +742,8 @@ function buildOfferingHtml(data) {
   .feature-name { font-size: 8.2pt; font-weight: 700; color: #14171C; line-height: 1.28; margin-bottom: 0.6mm; }
   .feature-name.red { color: var(--primary); }
   .feature-desc { font-size: 7.2pt; color: #566171; line-height: 1.34; }
+  .hero-feature-strip { width: 100%; display: table; padding: 0 7mm; }
+  .hfs-inner { padding-top: 0; }
   .feature-row { width: 100%; display: table; padding: 1.5mm 7mm 0; }
   .fr-left, .fr-right { vertical-align: top; }
   .fr-left { width: ${hasSoftware ? "50%" : "100%"}; padding-right: ${hasSoftware ? "5mm" : "0"}; border-top: 2pt solid var(--primary); padding-top: 2.5mm; }
@@ -796,13 +798,17 @@ function buildOfferingHtml(data) {
       ${featureItemsHtml}
     </div>
   </div>
+  <div class="hero-feature-strip">
+   <div class="hfs-inner">
+    <div>
+      <span class="section-chip">KEY FEATURE</span>
+      <span class="section-title-inline">${escapeHtml(data.heroFeature.sectionTitle)}</span>
+    </div>
+    <div class="feature-sub">${escapeHtml(data.heroFeature.leadDescription)}</div>
+   </div>
+  </div>
   <div class="feature-row">
     <div class="fr-left">
-      <div>
-        <span class="section-chip">KEY FEATURE</span>
-        <span class="section-title-inline">${escapeHtml(data.heroFeature.sectionTitle)}</span>
-      </div>
-      <div class="feature-sub">${escapeHtml(data.heroFeature.leadDescription)}</div>
       <div class="card-row">
         ${showcaseCardsHtml}
       </div>
@@ -1647,7 +1653,7 @@ async function buildMasterOfferingHtml(data) {
   html = replaceFirst(/<div class="features-title">PRODUCT UNIQUE FEATURES<\/div>.*?<\/div>\s*<\/div>\s*<\/div>\s*<div class="feature-row">/s, `<div class="features-title">PRODUCT UNIQUE FEATURES</div>\n      ${featuresHtml}\n    </div>\n  </div>\n\n  <div class="feature-row">`, html);
 
   html = replaceFirst(/(<span class="feature-headline">)(.*?)(<\/span>)/s, `$1${escapeHtml(hero.sectionTitle || "")}$3`, html);
-  html = replaceFirst(/(<div class="feature-sub">)(.*?)(<\/div>\s*<div class="mode-row">)/s, `$1${escapeHtml(hero.leadDescription || "")}$3`, html);
+  html = replaceFirst(/(<div class="feature-sub">)(.*?)(<\/div>\s*<\/div>\s*<div class="feature-row">)/s, `$1${escapeHtml(hero.leadDescription || "")}$3`, html);
 
   const showcaseHtml = data.showcaseType === "MODE_SHOWCASE"
     ? `
@@ -1864,8 +1870,8 @@ img:not(.logo-img):not(.hero-fit):not(.mode-fit):not(.sw-fit) { max-width: 100%;
     }
   }
 
-  setText(".fr-left .feature-headline", String(hero.sectionTitle || "").trim());
-  setText(".fr-left .feature-sub", String(hero.leadDescription || "").trim());
+  setText(".hfs-inner .feature-headline", String(hero.sectionTitle || "").trim());
+  setText(".hfs-inner .feature-sub", String(hero.leadDescription || "").trim());
 
   const showcaseHtml = data.showcaseType === "MODE_SHOWCASE"
     ? `
