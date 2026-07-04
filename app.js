@@ -2138,6 +2138,11 @@ async function buildOfferingV2(data) {
   // Set title
   doc.title = `${data.productName} ${data.productModel}`.trim() || 'Internal Offering';
 
+  // Inline hardening for PDF — CSS custom properties may not resolve from external file
+  const h = doc.createElement('style');
+  h.textContent = `.hero-fit,.mode-fit,.sw-fit{max-width:100%!important;max-height:100%!important;display:block!important;object-fit:contain!important;object-position:center center!important;margin:auto!important}.hero-img-box,.mode-img,.sw-editor-img{display:flex!important;align-items:center!important;justify-content:center!important}`;
+  doc.head.appendChild(h);
+
   return `<!DOCTYPE html>\n${doc.documentElement.outerHTML}`;
 }
 
