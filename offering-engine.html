@@ -19,7 +19,6 @@
     width: 210mm;
     height: 297mm;
     padding: 0;
-    position: relative;
     overflow: hidden;
   }
 
@@ -36,365 +35,241 @@
   .topbar-right b { color: #FFFFFF; font-weight: var(--dt-font-weight-medium); }
   .logo-img { height: 7mm; vertical-align: middle; display: inline-block; }
   .topbar-title {
-    font-size: 10pt;
-    font-weight: var(--dt-font-weight-medium);
-    letter-spacing: 2pt;
-    color: #FFFFFF;
-    vertical-align: middle;
-    margin-left: 6mm;
+    font-size: 10pt; font-weight: var(--dt-font-weight-medium);
+    letter-spacing: 2pt; color: #FFFFFF; vertical-align: middle; margin-left: 6mm;
   }
 
   /* ── Title Strip ─────────────────────────────────────────── */
   .title-strip {
     padding: 2.5mm var(--dt-page-h-pad);
     border-bottom: 1.5pt solid var(--dt-primary);
-    display: table;
-    width: 100%;
+    display: table; width: 100%;
   }
   .title-left, .title-right { display: table-cell; vertical-align: middle; }
   .product-name {
-    font-size: var(--dt-font-size-title);
-    font-weight: var(--dt-font-weight-bold);
-    letter-spacing: -0.3pt;
-    color: var(--dt-text);
+    font-size: var(--dt-font-size-title); font-weight: var(--dt-font-weight-bold);
+    letter-spacing: -0.3pt; color: var(--dt-text);
   }
   .product-category {
-    display: inline-block;
-    border: 1pt solid var(--dt-card-border);
-    background: var(--dt-white);
-    color: var(--dt-text-secondary);
-    font-size: var(--dt-font-size-small);
-    padding: 1.5pt 5pt;
-    margin-left: 6pt;
-    vertical-align: middle;
-    font-weight: var(--dt-font-weight-normal);
+    display: inline-block; border: 1pt solid var(--dt-card-border);
+    background: var(--dt-white); color: var(--dt-text-secondary);
+    font-size: var(--dt-font-size-small); padding: 1.5pt 5pt;
+    margin-left: 6pt; vertical-align: middle; font-weight: var(--dt-font-weight-normal);
   }
   .title-right {
-    text-align: right;
-    font-size: 7pt;
-    color: var(--dt-text-secondary);
-    letter-spacing: 0.8pt;
-    font-weight: var(--dt-font-weight-normal);
+    text-align: right; font-size: 7pt; color: var(--dt-text-secondary);
+    letter-spacing: 0.8pt; font-weight: var(--dt-font-weight-normal);
   }
 
-  /* ── Hero Block ──────────────────────────────────────────── */
-  .hero-block {
-    padding: var(--dt-page-v-pad) var(--dt-page-h-pad) 0;
-    display: table;
-    width: 100%;
+  /* ── Hero Zone ────────────────────────────────────────────── */
+  .hero-zone {
+    padding: var(--dt-page-v-pad) var(--dt-page-h-pad) 0; width: 100%;
   }
-  .hero-left, .hero-right { display: table-cell; vertical-align: top; }
-  .hero-left { width: 50%; padding-right: 3mm; }
-  .hero-right { width: 50%; padding-left: 3mm; }
-  .scene-tag {
-    display: inline-block;
-    background: var(--dt-primary);
-    color: #FFFFFF;
-    font-size: var(--dt-font-size-small);
-    font-weight: 600;
-    padding: 1.5pt 5pt;
-    letter-spacing: 0.6pt;
+  .scene-label {
+    display: inline-block; font-size: var(--dt-scene-label-size);
+    color: var(--dt-text-secondary); letter-spacing: 1.2pt;
+    font-weight: var(--dt-font-weight-medium); margin-bottom: 1.5mm;
+    text-transform: uppercase;
   }
-  .scene-caption {
-    font-size: var(--dt-font-size-body);
-    font-weight: var(--dt-font-weight-medium);
-    color: var(--dt-text);
-    margin-left: 4pt;
-  }
-  .hero-img-box {
-    width: 100%;
-    max-height: var(--dt-hero-max-h);
-    background: var(--dt-white);
-    border: 1pt dashed #D0D5DC;
+  .hero-image-container {
+    width: 100%; max-height: var(--dt-hero-zone-h);
+    background: var(--dt-white); border: 1pt dashed #D0D5DC;
+    display: flex; align-items: center; justify-content: center;
     border-radius: var(--dt-card-radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #B8BCC5;
-    font-size: 8pt;
-    margin-top: 2mm;
   }
-  .hero-img-box .img-inner {
-    text-align: center;
-    padding: 4mm;
+  .hero-fit {
+    max-width: var(--dt-img-max-w); max-height: var(--dt-img-max-h);
+    display: block; background: var(--dt-white);
+    object-fit: var(--dt-img-fit); object-position: center center; margin: auto;
   }
-  .hero-img-box .img-inner .label {
-    font-weight: 600;
-    color: #C8CDD3;
-    letter-spacing: 1.2pt;
-    font-size: var(--dt-font-size-small);
+  .hero-zone .scene-caption {
+    font-size: 8pt; color: var(--dt-text-secondary);
+    margin-top: 1.5mm; font-weight: var(--dt-font-weight-normal);
   }
-  .hero-img-box .img-inner .hint {
-    font-size: 7pt;
-    color: #D0D5DC;
-    margin-top: 2pt;
-  }
-  .hero-fit, .mode-fit, .sw-fit {
-    max-width: var(--dt-img-max-w);
-    max-height: var(--dt-img-max-h);
-    display: block;
-    background: var(--dt-white);
-    object-fit: var(--dt-img-fit);
-    object-position: center center;
-    margin: auto;
-  }
-  .features-title {
-    font-size: var(--dt-font-size-small);
-    font-weight: var(--dt-font-weight-medium);
-    color: var(--dt-text-secondary);
-    letter-spacing: 1.2pt;
-    margin-bottom: 2mm;
-  }
-  .feature-item {
-    margin-bottom: 2.5mm;
-    padding-left: 4mm;
-    position: relative;
-  }
-  .feature-item::before {
-    content: '';
-    width: 1.8mm;
-    height: 1.8mm;
-    background: var(--dt-primary);
-    position: absolute;
-    left: 0;
-    top: 1.8mm;
-    border-radius: 50%;
-  }
-  .feature-name {
-    font-size: 8.5pt;
-    font-weight: 600;
-    color: var(--dt-text);
-    margin-bottom: 0.8pt;
-    line-height: 1.3;
-  }
-  .feature-name.red { color: var(--dt-primary); }
-  .feature-desc {
-    font-size: 7pt;
-    color: var(--dt-text-secondary);
-    line-height: 1.42;
-  }
-  .feature-desc b { color: var(--dt-text); font-weight: 600; }
 
-  /* ── Feature Row ─────────────────────────────────────────── */
-  .feature-row {
+  /* ── Value Statement ──────────────────────────────────────── */
+  .value-statement {
+    padding: var(--dt-section-gap) var(--dt-page-h-pad) 0; width: 100%;
+  }
+  .value-headline {
+    font-size: var(--dt-card-headline-size); font-weight: var(--dt-font-weight-bold);
+    color: var(--dt-text); letter-spacing: -0.2pt; margin-bottom: 1mm;
+  }
+  .value-lead {
+    font-size: var(--dt-value-size); color: var(--dt-text-secondary);
+    line-height: 1.45; max-width: 80%;
+  }
+
+  /* ── Capability Grid ──────────────────────────────────────── */
+  .capability-grid {
     padding: var(--dt-section-gap) var(--dt-page-h-pad) 0;
-    width: 100%;
-    display: table;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(40mm, 1fr));
+    gap: var(--dt-capability-gap); width: 100%;
   }
-  .fr-left, .fr-right { display: table-cell; vertical-align: top; }
-  .fr-left { width: 50%; padding-right: 5mm; padding-top: 0; }
-  .fr-right { width: 50%; padding-left: 4mm; border-left: 1pt solid var(--dt-card-border); padding-top: 0; }
-  .feature-header {
-    display: flex;
-    align-items: center;
-    gap: 4pt;
-    min-height: 6.5mm;
+  .capability-card {
+    background: var(--dt-card-bg); border: 1pt solid var(--dt-card-border);
+    border-radius: var(--dt-card-radius); padding: 2.5mm 3mm;
+    display: flex; flex-direction: column;
   }
-  .feature-label {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--dt-primary);
-    color: #FFFFFF;
-    font-size: var(--dt-font-size-xs);
-    font-weight: 600;
-    padding: 1.5pt 4.5pt;
-    letter-spacing: 0.5pt;
-    min-height: 4.8mm;
-    line-height: 1;
-    text-align: center;
-    flex: 0 0 auto;
+  .capability-headline {
+    font-size: var(--dt-card-headline-size); font-weight: var(--dt-font-weight-bold);
+    color: var(--dt-text); line-height: 1.25; margin-bottom: 1mm;
   }
-  .feature-headline {
-    display: inline-flex;
-    align-items: center;
-    font-size: var(--dt-font-size-body);
-    font-weight: var(--dt-font-weight-bold);
-    color: var(--dt-text);
-    min-height: 4.8mm;
+  .capability-headline.highlight { color: var(--dt-primary); }
+  .capability-proof {
+    font-size: var(--dt-card-proof-size); color: var(--dt-text);
+    line-height: 1.35; margin-bottom: 0.8mm;
   }
-  .feature-sub {
-    font-size: 8pt;
-    color: var(--dt-text-secondary);
-    margin: 1.5mm 0 2mm;
-    font-weight: var(--dt-font-weight-normal);
-    line-height: var(--dt-line-height);
-    max-height: 12mm;
-    overflow: hidden;
+  .capability-benefit {
+    font-size: var(--dt-card-benefit-size); color: var(--dt-text-secondary);
+    line-height: 1.35; font-weight: var(--dt-font-weight-medium);
+    margin-top: auto;
   }
 
-  /* ── Red Divider ─────────────────────────────────────────── */
-  .fr-divider {
-    border-top: 2pt solid var(--dt-primary);
-    margin: 0 0 var(--dt-block-gap) 0;
+  /* ── Showcase Zone ────────────────────────────────────────── */
+  .showcase-zone {
+    padding: var(--dt-section-gap) var(--dt-page-h-pad) 0; width: 100%;
   }
-
-  /* ── Mode / View Cards ───────────────────────────────────── */
-  .mode-row {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: var(--dt-block-gap);
-    width: 100%;
-    align-items: start;
-  }
-  .mode-cell { min-width: 0; }
-  .mode-card {
-    background: var(--dt-card-bg);
-    border: 1pt solid var(--dt-card-border);
-    padding: 1.8mm 2mm;
-    display: flex;
-    flex-direction: column;
-  }
-  .mode-tag {
-    font-size: var(--dt-font-size-xs);
-    color: var(--dt-primary);
-    font-weight: 600;
-    letter-spacing: 0.8pt;
-    margin-bottom: 0.8mm;
-    min-height: 2.5mm;
-    display: flex;
-    align-items: center;
-    line-height: 1;
-  }
-  .mode-title {
-    font-size: var(--dt-font-size-body);
-    font-weight: var(--dt-font-weight-bold);
-    color: var(--dt-text);
-    margin-bottom: 1mm;
-    line-height: 1.25;
-  }
-  .mode-img {
-    width: 100%;
-    height: var(--dt-card-img-h);
-    background: var(--dt-white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1mm;
-  }
-  .mode-desc {
-    font-size: 7.5pt;
-    color: var(--dt-text-secondary);
-    line-height: 1.3;
-  }
-  .mode-card.simple-view .mode-title { display: none; }
-  .mode-card.simple-view .mode-desc { display: none; }
-  .mode-card.simple-view .mode-img {
-    margin-bottom: 0;
-  }
-  .mode-card.simple-view .mode-tag {
-    margin-bottom: 0;
-    justify-content: center;
-  }
-
-  /* ── Software Editor Cards ───────────────────────────────── */
-  .sw-editor-row {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: var(--dt-block-gap);
-    width: 100%;
-  }
-  .sw-editor-cell { min-width: 0; }
-  .sw-editor-card {
-    background: var(--dt-card-bg);
-    border: 1pt solid var(--dt-card-border);
-    padding: 1.8mm 2mm;
-    display: flex;
-    flex-direction: column;
-  }
-  .sw-editor-img {
-    width: 100%;
-    height: var(--dt-editor-img-h);
-    background: var(--dt-white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.5mm;
-  }
-  .sw-editor-name {
-    font-size: var(--dt-font-size-body);
-    font-weight: var(--dt-font-weight-bold);
-    color: var(--dt-text);
-    margin-bottom: 0.8mm;
-    line-height: 1.25;
-  }
-  .sw-editor-desc {
-    font-size: 7.5pt;
-    color: var(--dt-text-secondary);
-    line-height: 1.3;
-  }
-
-  /* ── Additional Highlights (no-SW fallback) ──────────────── */
-  .highlights-title {
-    font-size: var(--dt-font-size-small);
-    font-weight: var(--dt-font-weight-medium);
-    color: var(--dt-text-secondary);
-    letter-spacing: 1pt;
+  .showcase-label {
+    font-size: var(--dt-font-size-small); color: var(--dt-text-secondary);
+    letter-spacing: 1pt; font-weight: var(--dt-font-weight-medium);
     margin-bottom: 2mm;
-    min-height: 6.5mm;
-    display: flex;
-    align-items: center;
+  }
+  .showcase-grid {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--dt-showcase-gap); width: 100%;
+  }
+  .showcase-card-inner {
+    background: var(--dt-card-bg); border: 1pt solid var(--dt-card-border);
+    padding: 1.8mm 2mm; display: flex; flex-direction: column;
+  }
+  .showcase-tag {
+    font-size: var(--dt-font-size-xs); color: var(--dt-primary);
+    font-weight: 600; letter-spacing: 0.8pt; margin-bottom: 0.8mm;
+    display: flex; align-items: center; line-height: 1;
+  }
+  .showcase-title {
+    font-size: var(--dt-font-size-body); font-weight: var(--dt-font-weight-bold);
+    color: var(--dt-text); margin-bottom: 1mm; line-height: 1.25;
+  }
+  .showcase-img {
+    width: 100%; height: var(--dt-showcase-img-h); background: var(--dt-white);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 1mm;
+  }
+  .showcase-desc {
+    font-size: 7.5pt; color: var(--dt-text-secondary); line-height: 1.3;
+  }
+  /* VIEW mode: hide title + desc, center tag */
+  .showcase-card-inner.view-only .showcase-title { display: none; }
+  .showcase-card-inner.view-only .showcase-desc { display: none; }
+  .showcase-card-inner.view-only .showcase-img { margin-bottom: 0; }
+  .showcase-card-inner.view-only .showcase-tag {
+    margin-bottom: 0; justify-content: center;
   }
 
-  /* ── Price Strip ─────────────────────────────────────────── */
+  /* ── Control Zone (Software / Highlights) ─────────────────── */
+  .control-zone {
+    padding: var(--dt-section-gap) var(--dt-page-h-pad) 0; width: 100%;
+  }
+  .control-label {
+    display: inline-block; font-size: var(--dt-font-size-xs);
+    color: var(--dt-primary); font-weight: 600; letter-spacing: 1pt;
+    margin-bottom: 1mm;
+  }
+  .control-headline {
+    font-size: var(--dt-font-size-body); font-weight: var(--dt-font-weight-bold);
+    color: var(--dt-text); margin-bottom: 0.8mm; line-height: 1.25;
+  }
+  .control-lead {
+    font-size: 8pt; color: var(--dt-text-secondary); line-height: 1.35;
+    margin-bottom: 2mm;
+  }
+  .control-grid {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--dt-showcase-gap); width: 100%;
+  }
+  .control-card {
+    background: var(--dt-card-bg); border: 1pt solid var(--dt-card-border);
+    padding: 1.8mm 2mm; display: flex; flex-direction: column;
+  }
+  .control-card-img {
+    width: 100%; height: var(--dt-control-img-h); background: var(--dt-white);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 1.5mm;
+  }
+  .control-card-name {
+    font-size: var(--dt-font-size-body); font-weight: var(--dt-font-weight-bold);
+    color: var(--dt-text); margin-bottom: 0.8mm; line-height: 1.25;
+  }
+  .control-card-desc {
+    font-size: 7.5pt; color: var(--dt-text-secondary); line-height: 1.3;
+  }
+
+  /* ── Highlights Fallback (no-software) ────────────────────── */
+  .highlights-label {
+    font-size: var(--dt-font-size-small); color: var(--dt-text-secondary);
+    letter-spacing: 1pt; font-weight: var(--dt-font-weight-medium);
+    margin-bottom: 2mm;
+  }
+  .highlights-list .feature-item {
+    margin-bottom: 2.5mm; padding-left: 4mm; position: relative;
+  }
+  .highlights-list .feature-item::before {
+    content: ''; width: 1.8mm; height: 1.8mm;
+    background: var(--dt-primary); position: absolute;
+    left: 0; top: 1.8mm; border-radius: 50%;
+  }
+  .highlights-list .feature-name {
+    font-size: 8.5pt; font-weight: 600; color: var(--dt-text);
+    margin-bottom: 0.8pt; line-height: 1.3;
+  }
+  .highlights-list .feature-desc {
+    font-size: 7pt; color: var(--dt-text-secondary); line-height: 1.42;
+  }
+
+  /* ── Unified Image Fitting ────────────────────────────────── */
+  .showcase-fit {
+    max-width: var(--dt-img-max-w); max-height: var(--dt-img-max-h);
+    display: block; background: var(--dt-white);
+    object-fit: var(--dt-img-fit); object-position: center center; margin: auto;
+  }
+
+  /* ── Price Strip ──────────────────────────────────────────── */
   .price-strip {
-    background: var(--dt-price-bg);
-    margin-top: var(--dt-section-gap);
-    display: table;
-    width: 100%;
-    table-layout: fixed;
+    background: var(--dt-price-bg); margin-top: var(--dt-section-gap);
+    display: table; width: 100%; table-layout: fixed;
   }
   .price-cell {
-    display: table-cell;
-    padding: 2mm 3mm;
-    vertical-align: top;
+    display: table-cell; padding: 2mm 3mm; vertical-align: top;
     border-right: 1pt solid #2A2D33;
   }
   .price-cell:last-child { border-right: none; }
   .price-label {
-    font-size: var(--dt-font-size-xs);
-    color: #B8BCC5;
-    letter-spacing: 1pt;
-    font-weight: var(--dt-font-weight-medium);
+    font-size: var(--dt-font-size-xs); color: #B8BCC5;
+    letter-spacing: 1pt; font-weight: var(--dt-font-weight-medium);
     margin-bottom: 0.8mm;
   }
   .price-value {
-    font-size: 13pt;
-    font-weight: var(--dt-font-weight-bold);
-    color: #FFFFFF;
-    line-height: 1.1;
+    font-size: 13pt; font-weight: var(--dt-font-weight-bold);
+    color: #FFFFFF; line-height: 1.1;
   }
   .price-value.red { color: var(--dt-primary); font-size: 15pt; }
-  .price-suffix {
-    font-size: 7pt;
-    color: #B8BCC5;
-    margin-top: 0.7mm;
-  }
+  .price-suffix { font-size: 7pt; color: #B8BCC5; margin-top: 0.7mm; }
 
-  /* ── Footer ──────────────────────────────────────────────── */
+  /* ── Footer ───────────────────────────────────────────────── */
   .footer {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 2.5mm;
-    padding: 0 var(--dt-page-h-pad);
-    width: 100%;
-    display: table;
-    font-size: 6.3pt;
-    color: #6A7280;
+    position: absolute; left: 0; right: 0; bottom: 2.5mm;
+    padding: 0 var(--dt-page-h-pad); width: 100%;
+    display: table; font-size: 6.3pt; color: #6A7280;
   }
   .footer-right {
-    display: table-cell;
-    text-align: right;
-    color: var(--dt-primary);
-    font-weight: 800;
-    letter-spacing: 0.8pt;
+    display: table-cell; text-align: right;
+    color: var(--dt-primary); font-weight: 800; letter-spacing: 0.8pt;
   }
   .footer-left { display: table-cell; }
 
-  /* ── PDF Hardening ───────────────────────────────────────── */
-  img:not(.logo-img):not(.hero-fit):not(.mode-fit):not(.sw-fit) { max-width: 100%; height: auto; }
-  .hero-fit, .mode-fit, .sw-fit {
+  /* ── PDF Hardening ────────────────────────────────────────── */
+  img:not(.logo-img):not(.hero-fit):not(.showcase-fit) { max-width: 100%; height: auto; }
+  .hero-fit, .showcase-fit {
     max-width: var(--dt-img-max-w) !important;
     max-height: var(--dt-img-max-h) !important;
     display: block !important;
@@ -425,89 +300,94 @@
     <div class="title-right" data-field="specKeywords">TRI-MODE · HOT SWAP · LED MATRIX · 8000MAH</div>
   </div>
 
-  <!-- ── HERO BLOCK ─────────────────────────────────────────── -->
-  <div class="hero-block" data-section="hero">
-    <div class="hero-left">
-      <div>
-        <span class="scene-tag">APPLICATION SCENE</span>
-        <span class="scene-caption" data-field="sceneTitle">Fantech Gaming Performance Setup</span>
-      </div>
-      <div class="hero-img-box" data-container="heroImage">
-        <img class="hero-fit" src="" alt="hero image" data-field="heroImage">
-      </div>
+  <!-- ── HERO ZONE ──────────────────────────────────────────── -->
+  <div class="hero-zone" data-section="heroZone">
+    <div class="scene-label">APPLICATION SCENE</div>
+    <div class="hero-image-container" data-container="heroImage">
+      <img class="hero-fit" src="" alt="hero image" data-field="heroImage">
     </div>
-    <div class="hero-right">
-      <div class="features-title">PRODUCT UNIQUE FEATURES</div>
-      <div data-list="uniqueFeatures">
-        <div class="feature-item"><div class="feature-name red">LED Matrix Display</div><div class="feature-desc">A built-in smart display panel gives the keyboard a more memorable identity on the desk and helps retailers show something customers notice at first glance.</div></div>
-        <div class="feature-item"><div class="feature-name">Tri-Mode Connectivity</div><div class="feature-desc">Flexible wired and wireless switching makes the product fit more setups without extra friction for users or sellers.</div></div>
-        <div class="feature-item"><div class="feature-name">8000 mAh Battery</div><div class="feature-desc">A stronger battery improves real daily usability and gives the product a more confident wireless positioning.</div></div>
-        <div class="feature-item"><div class="feature-name">5-PIN Hot Swappable</div><div class="feature-desc">Users can change switches without soldering, making the keyboard more attractive to enthusiast buyers.</div></div>
-        <div class="feature-item"><div class="feature-name">Gasket Mount</div><div class="feature-desc">A flexible mounting system absorbs typing vibration for a softer, more consistent feel.</div></div>
-        <div class="feature-item"><div class="feature-name">Advanced Software</div><div class="feature-desc">Full driver support extends the product beyond basic hardware use with a clearer long-term value story.</div></div>
+    <div class="scene-caption" data-field="sceneTitle">Fantech Gaming Performance Setup</div>
+  </div>
+
+  <!-- ── VALUE STATEMENT ────────────────────────────────────── -->
+  <div class="value-statement" data-section="valueStatement">
+    <div class="value-headline" data-field="heroFeatureHeadline">LED Matrix Display</div>
+    <div class="value-lead" data-field="heroFeatureLead">The keyboard's most visible surface is no longer cold plastic — it's a fabric-and-display composite.</div>
+  </div>
+
+  <!-- ── CAPABILITY GRID ────────────────────────────────────── -->
+  <div class="capability-grid" data-section="capabilities" data-list="uniqueFeatures">
+    <div class="capability-card">
+      <div class="capability-headline highlight">LED Matrix Display</div>
+      <div class="capability-proof">A built-in smart display panel gives the keyboard a more memorable identity on the desk.</div>
+      <div class="capability-benefit">Helps retailers show something customers notice at first glance.</div>
+    </div>
+    <div class="capability-card">
+      <div class="capability-headline">Tri-Mode Connectivity</div>
+      <div class="capability-proof">Flexible wired and wireless switching makes the product fit more setups.</div>
+      <div class="capability-benefit">That versatility helps both users and retailers get more value from one SKU.</div>
+    </div>
+    <div class="capability-card">
+      <div class="capability-headline">8000 mAh Battery</div>
+      <div class="capability-proof">A stronger battery improves real daily usability.</div>
+      <div class="capability-benefit">Gives the product a more confident wireless positioning.</div>
+    </div>
+    <div class="capability-card">
+      <div class="capability-headline">5-PIN Hot Swappable</div>
+      <div class="capability-proof">Users can change switches without soldering.</div>
+      <div class="capability-benefit">Makes the keyboard more attractive to enthusiast buyers.</div>
+    </div>
+  </div>
+
+  <!-- ── SHOWCASE ZONE ──────────────────────────────────────── -->
+  <div class="showcase-zone" data-section="showcase" data-showcase-type="MODE">
+    <div class="showcase-label">PRODUCT DETAIL</div>
+    <div class="showcase-grid">
+      <div class="showcase-card">
+        <div class="showcase-card-inner">
+          <div class="showcase-tag">MODE 01</div>
+          <div class="showcase-title">Display Attached</div>
+          <div class="showcase-img" data-container="detail1Image">
+            <img class="showcase-fit" src="" alt="mode 01" data-field="detail1Image">
+          </div>
+          <div class="showcase-desc">Full-size keyboard with smart display panel.</div>
+        </div>
+      </div>
+      <div class="showcase-card">
+        <div class="showcase-card-inner">
+          <div class="showcase-tag">MODE 02</div>
+          <div class="showcase-title">Display Removed</div>
+          <div class="showcase-img" data-container="detail2Image">
+            <img class="showcase-fit" src="" alt="mode 02" data-field="detail2Image">
+          </div>
+          <div class="showcase-desc">Compact layout ideal for travel or minimal setups.</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ── FEATURE ROW ────────────────────────────────────────── -->
-  <div class="feature-row" data-section="featureRow">
-    <!-- LEFT COLUMN: Hero Feature + Red Divider + Mode/View Cards -->
-    <div class="fr-left" data-section="leftColumn">
-      <div class="feature-header">
-        <span class="feature-label">HERO FEATURE</span>
-        <span class="feature-headline" data-field="heroFeatureHeadline">LED Matrix Display</span>
-      </div>
-      <div class="feature-sub" data-field="heroFeatureLead">The keyboard's most visible surface is no longer cold plastic — it's a fabric-and-display composite.</div>
-      <div class="fr-divider"></div>
-      <div class="mode-row" data-section="showcase" data-showcase-type="MODE">
-        <div class="mode-cell">
-          <div class="mode-card">
-            <div class="mode-tag">MODE 01</div>
-            <div class="mode-title">Display Attached</div>
-            <div class="mode-img" data-container="detail1Image">
-              <img class="mode-fit" src="" alt="mode 01" data-field="detail1Image">
-            </div>
-            <div class="mode-desc">Full-size keyboard with smart display panel.</div>
+  <!-- ── CONTROL ZONE ───────────────────────────────────────── -->
+  <div class="control-zone" data-section="controlZone" data-has-software="yes">
+    <div class="control-label">SOFTWARE CONTROL</div>
+    <div class="control-headline" data-field="softwareHeadline">Customize Everything in One App</div>
+    <div class="control-lead" data-field="softwareLead">Web-based driver — no install required.</div>
+    <div class="control-grid">
+      <div class="control-card-cell">
+        <div class="control-card">
+          <div class="control-card-img" data-container="editor1Image">
+            <img class="showcase-fit" src="" alt="software 01" data-field="editor1Image">
           </div>
-        </div>
-        <div class="mode-cell">
-          <div class="mode-card">
-            <div class="mode-tag">MODE 02</div>
-            <div class="mode-title">Display Removed</div>
-            <div class="mode-img" data-container="detail2Image">
-              <img class="mode-fit" src="" alt="mode 02" data-field="detail2Image">
-            </div>
-            <div class="mode-desc">Compact layout ideal for travel or minimal setups.</div>
-          </div>
+          <div class="control-card-name" data-field="editor1Name">Matrix Display Editor</div>
+          <div class="control-card-desc" data-field="editor1Caption">Pre-loaded animations + pixel art editor.</div>
         </div>
       </div>
-    </div>
-
-    <!-- RIGHT COLUMN: Software Control or Additional Highlights -->
-    <div class="fr-right" data-section="rightColumn" data-has-software="yes">
-      <div class="feature-header">
-        <span class="feature-label">SOFTWARE CONTROL</span>
-        <span class="feature-headline" data-field="softwareHeadline">Customize Everything in One App</span>
-      </div>
-      <div class="feature-sub" data-field="softwareLead">Web-based driver — no install required.</div>
-      <div class="sw-editor-row">
-        <div class="sw-editor-cell">
-          <div class="sw-editor-card">
-            <div class="sw-editor-img" data-container="editor1Image">
-              <img class="sw-fit" src="" alt="software 01" data-field="editor1Image">
-            </div>
-            <div class="sw-editor-name" data-field="editor1Name">Matrix Display Editor</div>
-            <div class="sw-editor-desc" data-field="editor1Caption">Pre-loaded animations + pixel art editor.</div>
+      <div class="control-card-cell">
+        <div class="control-card">
+          <div class="control-card-img" data-container="editor2Image">
+            <img class="showcase-fit" src="" alt="software 02" data-field="editor2Image">
           </div>
-        </div>
-        <div class="sw-editor-cell">
-          <div class="sw-editor-card">
-            <div class="sw-editor-img" data-container="editor2Image">
-              <img class="sw-fit" src="" alt="software 02" data-field="editor2Image">
-            </div>
-            <div class="sw-editor-name" data-field="editor2Name">Lighting &amp; Keymap</div>
-            <div class="sw-editor-desc" data-field="editor2Caption">19 ARGB modes, full key remapping.</div>
-          </div>
+          <div class="control-card-name" data-field="editor2Name">Lighting &amp; Keymap</div>
+          <div class="control-card-desc" data-field="editor2Caption">19 ARGB modes, full key remapping.</div>
         </div>
       </div>
     </div>

@@ -22,7 +22,7 @@
   --dt-page-v-pad:        2mm;         /* top & bottom page breathing room */
 
   /* ── Typography ──────────────────────────────────────────── */
-  --dt-font:              'Poppins', 'Noto Sans CJK SC', sans-serif;
+  --dt-font:              'Inter', 'Noto Sans CJK SC', sans-serif;
   --dt-font-size-body:    9pt;
   --dt-font-size-small:   7pt;
   --dt-font-size-xs:      6.5pt;
@@ -43,9 +43,16 @@
   --dt-img-fit:           contain;
   --dt-img-max-w:         100%;
   --dt-img-max-h:         100%;
-  --dt-hero-max-h:        72mm;
-  --dt-card-img-h:        44mm;
-  --dt-editor-img-h:      46mm;
+  --dt-hero-zone-h:       100mm;       /* hero image zone max height */
+  --dt-showcase-img-h:    50mm;        /* showcase image height (MODE/VIEW) */
+  --dt-control-img-h:     46mm;        /* software/highlights image height */
+  --dt-value-size:        10pt;        /* value statement text */
+  --dt-card-headline-size: 11pt;       /* capability card headline */
+  --dt-card-proof-size:   8pt;         /* capability card technical proof */
+  --dt-card-benefit-size: 9pt;         /* capability card customer benefit */
+  --dt-capability-gap:    4mm;         /* gap between capability cards */
+  --dt-showcase-gap:      4mm;         /* gap between showcase/control cards */
+  --dt-scene-label-size:  6.5pt;       /* subtle APPLICATION SCENE label */
 
   /* ── Cards ───────────────────────────────────────────────── */
   --dt-card-radius:       2pt;

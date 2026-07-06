@@ -2027,6 +2027,16 @@ function selectLayoutStrategy(blocks) {
   return 'HERO_STANDARD';
 }
 
+function splitDescriptionToLayers(text) {
+  const cleaned = String(text || '').trim();
+  if (!cleaned) return { proof: '', benefit: '' };
+  const match = cleaned.match(/^([^.!；;]+[.!；;])\s*(.*)$/s);
+  if (match && match[2].length > 5) {
+    return { proof: match[1].trim(), benefit: match[2].trim() };
+  }
+  return { proof: cleaned, benefit: '' };
+}
+
 async function buildOfferingV2(data) {
   const blocks = stateToBlocks(data);
   const strategy = selectLayoutStrategy(blocks);
@@ -2062,11 +2072,16 @@ async function buildOfferingV2(data) {
   setImg('[data-field="heroImage"]', blocks.heroConcept.heroImage, 'HERO IMAGE');
 
   // Features
-  const featureList = doc.querySelector('[data-list="uniqueFeatures"]');
-  if (featureList) {
-    featureList.innerHTML = blocks.featureBlocks.map(f =>
-      `<div class="feature-item"><div class="feature-name${f.highlight ? ' red' : ''}">${escapeHtml(f.title)}</div><div class="feature-desc">${escapeHtml(f.description)}</div></div>`
-    ).join('');
+  const capabilityGrid = doc.querySelector('[data-list="uniqueFeatures"]');
+  if (capabilityGrid) {
+    capabilityGrid.innerHTML = blocks.featureBlocks.slice(0, 5).map(f => {
+      const layers = splitDescriptionToLayers(f.description);
+      const highlightClass = f.highlight ? ' highlight' : '';
+      return `<div class="capability-card">
+      <div class="capability-headline${highlightClass}">${escapeHtml(f.title)}</div>
+      <div class="capability-proof">${escapeHtml(layers.proof)}</div>${layers.benefit ? `\n      <div class="capability-benefit">${escapeHtml(layers.benefit)}</div>` : ''}
+    </div>`;
+    }).join('');
   }
 
   // Hero Feature (left column)
@@ -2077,25 +2092,25 @@ async function buildOfferingV2(data) {
   const showcaseSection = doc.querySelector('[data-section="showcase"]');
   if (showcaseSection) {
     showcaseSection.setAttribute('data-showcase-type', blocks.modeSystem.type);
-    const cards = showcaseSection.querySelectorAll('.mode-cell');
+    const cards = showcaseSection.querySelectorAll('.showcase-card');
     blocks.modeSystem.items.forEach((item, i) => {
       if (cards[i]) {
-        const card = cards[i].querySelector('.mode-card');
-        if (blocks.modeSystem.type === 'VIEW') card.classList.add('simple-view');
-        cards[i].querySelector('.mode-tag').textContent = item.tag;
-        cards[i].querySelector('.mode-title').textContent = item.name;
-        cards[i].querySelector('.mode-desc').textContent = item.caption;
-        const img = cards[i].querySelector('.mode-fit');
+        const inner = cards[i].querySelector('.showcase-card-inner');
+        if (blocks.modeSystem.type === 'VIEW') inner.classList.add('view-only');
+        cards[i].querySelector('.showcase-tag').textContent = item.tag;
+        cards[i].querySelector('.showcase-title').textContent = item.name;
+        cards[i].querySelector('.showcase-desc').textContent = item.caption;
+        const img = cards[i].querySelector('.showcase-fit');
         if (img) img.src = getImageSrc(item.image, item.tag, '');
       }
     });
   }
 
   // Right column
-  const rightCol = doc.querySelector('[data-section="rightColumn"]');
-  if (rightCol) {
+  const controlZone = doc.querySelector('[data-section="controlZone"]');
+  if (controlZone) {
     if (blocks.softwareSystem) {
-      rightCol.setAttribute('data-has-software', 'yes');
+      controlZone.setAttribute('data-has-software', 'yes');
       setText('[data-field="softwareHeadline"]', blocks.softwareSystem.title);
       setText('[data-field="softwareLead"]', blocks.softwareSystem.lead);
       blocks.softwareSystem.cards.forEach((card, i) => {
@@ -2104,12 +2119,12 @@ async function buildOfferingV2(data) {
         setText(`[data-field="editor${i+1}Caption"]`, card.desc);
       });
     } else {
-      rightCol.setAttribute('data-has-software', 'no');
-      const extraFeatures = blocks.featureBlocks.slice(6);
+      controlZone.setAttribute('data-has-software', 'no');
+      const extraFeatures = blocks.featureBlocks.slice(5);
       if (extraFeatures.length > 0) {
-        rightCol.innerHTML = `<div class="highlights-title">ADDITIONAL HIGHLIGHTS</div>${extraFeatures.map(f => `<div class="feature-item"><div class="feature-name">${escapeHtml(f.title)}</div><div class="feature-desc">${escapeHtml(f.description)}</div></div>`).join('')}`;
+        controlZone.innerHTML = `<div class="highlights-label">ADDITIONAL HIGHLIGHTS</div><div class="highlights-list">${extraFeatures.map(f => `<div class="feature-item"><div class="feature-name">${escapeHtml(f.title)}</div><div class="feature-desc">${escapeHtml(f.description)}</div></div>`).join('')}</div>`;
       } else {
-        rightCol.innerHTML = '';
+        controlZone.innerHTML = '';
       }
     }
   }
@@ -2136,7 +2151,7 @@ async function buildOfferingV2(data) {
 
   // Inline hardening for PDF — CSS custom properties may not resolve from external file
   const h = doc.createElement('style');
-  h.textContent = `.hero-fit,.mode-fit,.sw-fit{max-width:100%!important;max-height:100%!important;display:block!important;object-fit:contain!important;object-position:center center!important;margin:auto!important}.hero-img-box,.mode-img,.sw-editor-img{display:flex!important;align-items:center!important;justify-content:center!important}`;
+  h.textContent = `.hero-fit,.showcase-fit{max-width:100%!important;max-height:100%!important;display:block!important;object-fit:contain!important;object-position:center center!important;margin:auto!important}.hero-image-container,.showcase-img,.control-card-img{display:flex!important;align-items:center!important;justify-content:center!important}`;
   doc.head.appendChild(h);
 
   return `<!DOCTYPE html>\n${doc.documentElement.outerHTML}`;
