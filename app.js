@@ -895,22 +895,25 @@ function deriveSceneTitle(data) {
 
 function deriveSpecKeywords(data) {
   const explicit = String(data.specKeywords || "").trim();
-  if (explicit) return shortenKeywordLine(explicit);
-  const specs = combineSpecsIfNeeded(parseSpecLines(data.specSellingPointsText));
-  const picks = specs.slice(0, 4).map((spec) => keywordFromSpec(spec));
+  if (explicit) return explicit;
+  const category = CopyEngine.resolveCategory(data.productType);
+  const specs = parseSpecLines(data.specSellingPointsText);
+  const merged = CopyEngine.mergeSpecs(specs, category);
+  const picks = merged.slice(0, 4).map((spec) => CopyEngine.keyword(spec, category));
   const color = String(data.colorVariant || "").trim().toUpperCase();
   if (color) picks.push(color);
-  return shortenKeywordLine(uniqueStrings(picks).slice(0, 5).join(" · "));
+  return uniqueStrings(picks).slice(0, 5).join(" · ");
 }
 
 function deriveUniqueFeatures(data) {
+  const category = CopyEngine.resolveCategory(data.productType);
   let specs = parseSpecLines(data.specSellingPointsText);
   if (specs.length > 6) {
-    specs = mergeFeatureSpecs(specs);
+    specs = CopyEngine.mergeSpecs(specs, category);
   }
   const normalizedMain = String(data.mainSellingPoint || "").trim().toLowerCase();
   let generated = specs.slice(0, 6).map((spec, index) => {
-    const auto = featureFromSpec(spec);
+    const auto = CopyEngine.feature(spec, category, index);
     const manual = data.uniqueFeatures[index] || {};
     return {
       spec,
@@ -948,6 +951,7 @@ function clampLeadDescription(text) {
 }
 
 function deriveHeroFeature(data, features) {
+  const category = CopyEngine.resolveCategory(data.productType);
   const normalizedMain = String(data.mainSellingPoint || "").trim().toLowerCase();
   const primary = features.find((item) => normalizedMain && scoreMainSellingPointMatch(item, normalizedMain) > 0)
     || features.find((item) => item.highlight)
@@ -955,14 +959,14 @@ function deriveHeroFeature(data, features) {
     || { title: "", description: "" };
   const secondary = features.find((item) => item.title && item.title !== primary.title) || { title: "ANGLE VIEW", description: "" };
   const isViewShowcase = determineShowcaseType(data) === "VIEW_SHOWCASE";
-  const heroLead = buildHeroLead(primary.title, data.productType, data.mainSellingPoint || primary.title);
+  const heroLead = CopyEngine.heroLead(primary.title, category, data.productType);
   return {
-    sectionTitle: String(data.heroFeature.sectionTitle || "").trim() || shortenFeatureTitle(primary.title) || "Key Product Story",
+    sectionTitle: String(data.heroFeature.sectionTitle || "").trim() || CopyEngine.titleCase(primary.title, category) || "Key Product Story",
     leadDescription: clampLeadDescription(String(data.heroFeature.leadDescription || "").trim() || heroLead),
-    detail1Name: String(data.heroFeature.detail1Name || "").trim() || (isViewShowcase ? "TOP VIEW" : shortenFeatureTitle(primary.title) || "MODE 01"),
+    detail1Name: String(data.heroFeature.detail1Name || "").trim() || (isViewShowcase ? "TOP VIEW" : CopyEngine.titleCase(primary.title, category) || "MODE 01"),
     detail1Image: data.heroFeature.detail1Image || "",
     detail1Caption: isViewShowcase ? "" : (String(data.heroFeature.detail1Caption || "").trim() || primary.description || ""),
-    detail2Name: String(data.heroFeature.detail2Name || "").trim() || (isViewShowcase ? "ANGLE VIEW" : shortenFeatureTitle(secondary.title) || "MODE 02"),
+    detail2Name: String(data.heroFeature.detail2Name || "").trim() || (isViewShowcase ? "ANGLE VIEW" : CopyEngine.titleCase(secondary.title, category) || "MODE 02"),
     detail2Image: data.heroFeature.detail2Image || "",
     detail2Caption: isViewShowcase ? "" : (String(data.heroFeature.detail2Caption || "").trim() || secondary.description || ""),
   };
@@ -972,63 +976,24 @@ function deriveSoftwareControl(data) {
   if (data.hasSoftware === "no") {
     return { sectionTitle: "", leadDescription: "", editor1Name: "", editor1Image: "", editor1Caption: "", editor2Name: "", editor2Image: "", editor2Caption: "" };
   }
+  const category = CopyEngine.resolveCategory(data.productType);
   const specs = parseSpecLines(data.specSellingPointsText);
-  const softwareSpecs = specs.filter((spec) => /software|driver|app|macro|editor|custom|lighting|keymap|eq|surround|display/i.test(spec));
-  const productType = String(data.productType || "").toLowerCase();
+  const cards = CopyEngine.softwareCards(specs, category);
 
-  let generated;
-  if (productType.includes("headset")) {
-    generated = {
-      sectionTitle: "Tune Every Session in Software",
-      leadDescription: "Useful driver support gives this headset a stronger premium story at retail. Users can manage communication clarity, sound behavior, and listening profiles from one place instead of relying on a fixed default experience.",
-      card1: {
-        title: "MIC EFFECT / AI ENC CONTROL",
-        description: "Adjust microphone pickup, noise reduction, and voice effects for clearer team chat. Ideal for gaming, voice chat, and streaming use.",
-      },
-      card2: {
-        title: "EQ + SURROUND CONTROL",
-        description: "Customize EQ profiles and surround behavior for different content types. Switch sound signatures quickly for gaming, music, movies, and daily use.",
-      },
-    };
-  } else if (productType.includes("keyboard")) {
-    generated = {
-      sectionTitle: "Customize Everything in One App",
-      leadDescription: "A strong control app extends the product story beyond the first unboxing. It gives users more control over personalization and gives sellers a clearer upgrade angle.",
-      card1: {
-        title: "MATRIX DISPLAY EDITOR",
-        description: "Upload animations, pixel art, or brand visuals to keep the display more personal and more eye-catching in demos.",
-      },
-      card2: {
-        title: "KEYMAP + LIGHTING CONTROL",
-        description: "Remap keys, build macros, and fine-tune ARGB lighting from one panel for a more complete enthusiast setup.",
-      },
-    };
-  } else {
-    const first = softwareSpecs[0] || "Software Customization";
-    const second = softwareSpecs[1] || "Advanced Control";
-    generated = {
-      sectionTitle: "Customize Everything in One App",
-      leadDescription: "Software control adds another premium layer to the product. It gives users more control in real use and gives retailers another reason to sell the upgrade story.",
-      card1: {
-        title: shortenFeatureTitle(titleFromSpec(first)),
-        description: `${descriptionFromSpec(first)} Users can make more precise adjustments instead of relying on one fixed default.`,
-      },
-      card2: {
-        title: shortenFeatureTitle(titleFromSpec(second)),
-        description: `${descriptionFromSpec(second)} It also gives sellers a clearer upgrade conversation against simpler competing products.`,
-      },
-    };
+  if (!cards) {
+    // No software-relevant features found — treat as no-software
+    return { sectionTitle: "", leadDescription: "", editor1Name: "", editor1Image: "", editor1Caption: "", editor2Name: "", editor2Image: "", editor2Caption: "" };
   }
 
   return {
-    sectionTitle: String(data.softwareControl.sectionTitle || "").trim() || generated.sectionTitle,
-    leadDescription: String(data.softwareControl.leadDescription || "").trim() || generated.leadDescription,
-    editor1Name: String(data.softwareControl.editor1Name || "").trim() || generated.card1.title,
+    sectionTitle: String(data.softwareControl.sectionTitle || "").trim() || cards.sectionTitle,
+    leadDescription: String(data.softwareControl.leadDescription || "").trim() || cards.leadDescription,
+    editor1Name: String(data.softwareControl.editor1Name || "").trim() || cards.card1.title,
     editor1Image: data.softwareControl.editor1Image || "",
-    editor1Caption: String(data.softwareControl.editor1Caption || "").trim() || generated.card1.description,
-    editor2Name: String(data.softwareControl.editor2Name || "").trim() || generated.card2.title,
+    editor1Caption: String(data.softwareControl.editor1Caption || "").trim() || cards.card1.description,
+    editor2Name: String(data.softwareControl.editor2Name || "").trim() || cards.card2.title,
     editor2Image: data.softwareControl.editor2Image || "",
-    editor2Caption: String(data.softwareControl.editor2Caption || "").trim() || generated.card2.description,
+    editor2Caption: String(data.softwareControl.editor2Caption || "").trim() || cards.card2.description,
   };
 }
 
@@ -1036,6 +1001,7 @@ function parseSpecLines(value) {
   return String(value || "").split(/\r?\n/).map((line) => line.replace(/^[-*•]\s*/, "").trim()).filter(Boolean);
 }
 
+/** @deprecated Replaced by CopyEngine.mergeSpecs(). Remove after Phase 1 regression passes. */
 function combineSpecsIfNeeded(specs) {
   if (specs.length <= 6) return specs;
   const combined = [];
@@ -1051,6 +1017,7 @@ function combineSpecsIfNeeded(specs) {
   return combined.slice(0, 6);
 }
 
+/** @deprecated Replaced by CopyEngine.mergeSpecs(). Remove after Phase 1 regression passes. */
 function mergeFeatureSpecs(specs) {
   const pool = [...specs];
   const take = (pattern) => {
@@ -1097,10 +1064,12 @@ function mergeFeatureSpecs(specs) {
   return merged.slice(0, 6);
 }
 
+/** @deprecated Replaced by CopyEngine.feature(). Remove after Phase 1 regression passes. */
 function featureFromSpec(spec) {
   return { title: titleFromSpec(spec), description: descriptionFromSpec(spec) };
 }
 
+/** @deprecated Replaced by CopyEngine.feature() internals. Remove after Phase 1 regression passes. */
 function titleFromSpec(spec) {
   const lower = spec.toLowerCase();
   if (lower.includes("retractable microphone")) return "RETRACTABLE MICROPHONE";
@@ -1118,6 +1087,7 @@ function titleFromSpec(spec) {
   return spec.replace(/\s+/g, " ").trim().toUpperCase();
 }
 
+/** @deprecated Replaced by CopyEngine.feature() internals. Remove after Phase 1 regression passes. */
 function descriptionFromSpec(spec) {
   const lower = spec.toLowerCase();
   if (lower.includes("retractable microphone")) return "A retractable mic keeps communication ready when needed while preserving a cleaner everyday look when voice chat is off. That makes the headset easier to use across both gaming and daily listening.";
@@ -1135,10 +1105,12 @@ function descriptionFromSpec(spec) {
   return `${shortenFeatureTitle(spec)} makes the product easier to explain, easier to demo, and easier for buyers to appreciate in real use.`;
 }
 
+/** @deprecated Replaced by CopyEngine.titleCase(). Remove after Phase 1 regression passes. */
 function shortenFeatureTitle(value) {
   return String(value || "").replace(/\s+/g, " ").trim();
 }
 
+/** @deprecated Replaced by CopyEngine.keyword(). Remove after Phase 1 regression passes. */
 function keywordFromSpec(spec) {
   const lower = spec.toLowerCase();
   if (lower.includes("retractable microphone")) return "RETRACTABLE MIC";
@@ -1154,6 +1126,7 @@ function keywordFromSpec(spec) {
   return shortenFeatureTitle(titleFromSpec(spec));
 }
 
+/** @deprecated Replaced by CopyEngine internal logic. Remove after Phase 1 regression passes. */
 function shortenKeywordLine(value) {
   return uniqueStrings(
     String(value || "")
@@ -1232,6 +1205,7 @@ function normalizeMatchText(value) {
     .trim();
 }
 
+/** @deprecated Replaced by CopyEngine.heroLead(). Remove after Phase 1 regression passes. */
 function buildHeroLead(title, productType, mainSellingPoint) {
   const typeText = String(productType || "product").toLowerCase();
   const benefit = descriptionFromSpec(mainSellingPoint || title);
