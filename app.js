@@ -2073,26 +2073,20 @@ async function buildOfferingV2(data) {
   setText('[data-field="moq"]', blocks.specStrip.moq || '');
   setText('[data-field="color"]', blocks.specStrip.color || '');
 
-  // Hero positioning headline
+  // Hero positioning headline (one line, no proof/benefit split)
   setText('[data-field="heroFeatureHeadline"]', data.heroFeature.sectionTitle || '');
-
-  // Split hero lead into proof + benefit
-  const heroLead = data.heroFeature.leadDescription || '';
-  const heroLayers = splitDescriptionToLayers(heroLead);
-  setText('[data-field="heroFeatureProof"]', heroLayers.proof || heroLead);
-  setText('[data-field="heroFeatureLead"]', heroLayers.benefit || '');
 
   // Primary Selling Advantages (first 3 features)
   const primaryList = doc.querySelector('[data-list="primaryAdvantages"]');
   if (primaryList) {
     primaryList.innerHTML = blocks.featureBlocks.slice(0, 3).map((f, i) => {
       const layers = splitDescriptionToLayers(f.description);
-      return `<div class="primary-item">
-        <div class="primary-num">${String(i + 1).padStart(2, '0')}</div>
-        <div class="primary-body">
-          <div class="primary-headline">${escapeHtml(f.title)}</div>
-          <div class="primary-proof">${escapeHtml(layers.proof)}</div>
-          <div class="primary-benefit">${escapeHtml(layers.benefit)}</div>
+      return `<div class="argument-block">
+        <div class="arg-num">${String(i + 1).padStart(2, '0')}</div>
+        <div>
+          <div class="arg-headline">${escapeHtml(f.title)}</div>
+          <div class="arg-proof">${escapeHtml(layers.proof)}</div>
+          <div class="arg-benefit">${escapeHtml(layers.benefit)}</div>
         </div>
       </div>`;
     }).join('');
@@ -2103,15 +2097,15 @@ async function buildOfferingV2(data) {
   if (supportingGrid) {
     supportingGrid.innerHTML = blocks.featureBlocks.slice(3, 6).map((f, i) => {
       const layers = splitDescriptionToLayers(f.description);
-      return `<div class="supporting-item">
-        <div class="supporting-num">${String(i + 4).padStart(2, '0')}</div>
-        <div class="supporting-headline">${escapeHtml(f.title)}</div>
-        <div class="supporting-desc">${escapeHtml(layers.proof)}</div>
+      return `<div class="sup-item">
+        <div class="sup-num">${String(i + 4).padStart(2, '0')}</div>
+        <div class="sup-head">${escapeHtml(f.title)}</div>
+        <div class="sup-desc">${escapeHtml(layers.proof)}</div>
       </div>`;
     }).join('');
   }
 
-  // Product Views (always TOP VIEW + ANGLE VIEW)
+  // Product Views
   const showcaseSection = doc.querySelector('[data-section="showcase"]');
   if (showcaseSection) {
     const viewsTags = showcaseSection.querySelectorAll('.views-tag');
@@ -2127,7 +2121,6 @@ async function buildOfferingV2(data) {
   if (controlZone) {
     if (blocks.softwareSystem) {
       controlZone.setAttribute('data-has-software', 'yes');
-      controlZone.querySelector('.software-label').textContent = 'SOFTWARE CONTROL';
       setText('[data-field="editor1Name"]', blocks.softwareSystem.cards[0].name);
       setText('[data-field="editor1Caption"]', blocks.softwareSystem.cards[0].desc);
       setImg('[data-field="editor1Image"]', blocks.softwareSystem.cards[0].image, 'SW 01');
@@ -2137,14 +2130,13 @@ async function buildOfferingV2(data) {
     } else {
       controlZone.setAttribute('data-has-software', 'no');
       const extraFeatures = blocks.featureBlocks.slice(6);
-      if (extraFeatures.length > 0) {
-        controlZone.querySelector('.software-label').textContent = 'ADDITIONAL HIGHLIGHTS';
-        controlZone.querySelector('.software-cards').innerHTML =
-          `<div class="highlights-grid">${extraFeatures.slice(0, 3).map(f =>
-            `<div class="highlights-item"><div class="highlights-item-name">${escapeHtml(f.title)}</div><div class="highlights-item-desc">${escapeHtml(splitDescriptionToLayers(f.description).proof)}</div></div>`
-          ).join('')}</div>`;
-      } else {
-        controlZone.innerHTML = '';
+      const softwareRow = controlZone.querySelector('.software-row');
+      if (softwareRow && extraFeatures.length > 0) {
+        softwareRow.outerHTML = `<div class="highlights-row">${extraFeatures.slice(0, 3).map(f =>
+          `<div class="hl-item"><div class="hl-name">${escapeHtml(f.title)}</div><div class="hl-desc">${escapeHtml(splitDescriptionToLayers(f.description).proof)}</div></div>`
+        ).join('')}</div>`;
+      } else if (softwareRow) {
+        softwareRow.outerHTML = '';
       }
     }
   }
@@ -2166,7 +2158,7 @@ async function buildOfferingV2(data) {
 
   // Inline hardening for PDF — CSS custom properties may not resolve from external file
   const h = doc.createElement('style');
-  h.textContent = `.hero-fit,.showcase-fit{max-width:100%!important;max-height:100%!important;display:block!important;object-fit:contain!important;object-position:center center!important;margin:auto!important}.hero-image-container,.views-img,.software-card-img{display:flex!important;align-items:center!important;justify-content:center!important}`;
+  h.textContent = `.hero-fit,.showcase-fit{max-width:100%!important;max-height:100%!important;display:block!important;object-fit:contain!important;object-position:center center!important;margin:auto!important}.hero-image,.views-img,.sw-card-img{display:flex!important;align-items:center!important;justify-content:center!important}`;
   doc.head.appendChild(h);
 
   return `<!DOCTYPE html>\n${doc.documentElement.outerHTML}`;
