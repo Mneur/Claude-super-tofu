@@ -2074,15 +2074,16 @@ async function buildOfferingV2(data) {
   // Features
   const capabilityGrid = doc.querySelector('[data-list="uniqueFeatures"]');
   if (capabilityGrid) {
-    capabilityGrid.innerHTML = blocks.featureBlocks.slice(0, 5).map((f, i) => {
+    capabilityGrid.innerHTML = blocks.featureBlocks.slice(0, 6).map((f, i) => {
       const layers = splitDescriptionToLayers(f.description);
       const highlightClass = f.highlight ? ' highlight' : '';
-      const primaryClass = i === 0 ? ' primary' : '';
       const badge = String(i + 1).padStart(2, '0');
-      return `<div class="capability-card${primaryClass}">
+      return `<div class="capability-card">
       <div class="capability-badge">${badge}</div>
-      <div class="capability-headline${highlightClass}">${escapeHtml(f.title)}</div>
-      <div class="capability-proof">${escapeHtml(layers.proof)}</div>${layers.benefit ? `\n      <div class="capability-benefit">${escapeHtml(layers.benefit)}</div>` : ''}
+      <div class="capability-body">
+        <div class="capability-headline${highlightClass}">${escapeHtml(f.title)}</div>
+        <div class="capability-proof">${escapeHtml(layers.proof)}</div>${layers.benefit ? `\n        <div class="capability-benefit">${escapeHtml(layers.benefit)}</div>` : ''}
+      </div>
     </div>`;
     }).join('');
   }
@@ -2098,11 +2099,7 @@ async function buildOfferingV2(data) {
     const cards = showcaseSection.querySelectorAll('.showcase-card');
     blocks.modeSystem.items.forEach((item, i) => {
       if (cards[i]) {
-        const inner = cards[i].querySelector('.showcase-card-inner');
-        if (blocks.modeSystem.type === 'VIEW') inner.classList.add('view-only');
         cards[i].querySelector('.showcase-tag').textContent = item.tag;
-        cards[i].querySelector('.showcase-title').textContent = item.name;
-        cards[i].querySelector('.showcase-desc').textContent = item.caption;
         const img = cards[i].querySelector('.showcase-fit');
         if (img) img.src = getImageSrc(item.image, item.tag, '');
       }
@@ -2123,7 +2120,7 @@ async function buildOfferingV2(data) {
       });
     } else {
       controlZone.setAttribute('data-has-software', 'no');
-      const extraFeatures = blocks.featureBlocks.slice(5);
+      const extraFeatures = blocks.featureBlocks.slice(6);
       if (extraFeatures.length > 0) {
         controlZone.innerHTML = `<div class="highlights-label">ADDITIONAL HIGHLIGHTS</div><div class="highlights-list">${extraFeatures.map(f => `<div class="feature-item"><div class="feature-name">${escapeHtml(f.title)}</div><div class="feature-desc">${escapeHtml(f.description)}</div></div>`).join('')}</div>`;
       } else {

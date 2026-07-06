@@ -107,83 +107,67 @@
   /* ── Capability Grid ──────────────────────────────────────── */
   .capability-grid {
     padding: var(--dt-section-gap) var(--dt-page-h-pad) 0;
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(40mm, 1fr));
-    gap: var(--dt-capability-gap); width: 100%;
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    column-gap: 10mm; row-gap: 5mm; width: 100%;
   }
   .capability-card {
-    background: var(--dt-card-bg); border: 1pt solid var(--dt-card-border);
-    border-radius: var(--dt-card-radius); padding: 2.5mm 3mm 2.5mm 8mm;
-    display: flex; flex-direction: column; position: relative;
-  }
-  .capability-card.primary {
-    border-left: 2.5pt solid var(--dt-primary);
-    background: linear-gradient(135deg, #FFF5F5 0%, var(--dt-card-bg) 40%);
+    display: flex; gap: 3mm; align-items: flex-start;
+    padding: 0; background: none; border: none; position: relative;
   }
   .capability-badge {
-    position: absolute; left: -0.5mm; top: -0.5mm;
-    background: var(--dt-primary); color: #FFFFFF;
-    font-size: 7pt; font-weight: 700; letter-spacing: 0.3pt;
-    width: 5mm; height: 5mm; display: flex;
-    align-items: center; justify-content: center;
-    border-radius: 1pt;
+    flex-shrink: 0; width: 4.5mm; text-align: right;
+    font-size: 8pt; font-weight: 700; color: var(--dt-primary);
+    letter-spacing: 0.5pt; line-height: 1;
+    padding-top: 0.3mm;
   }
-  .capability-card.primary .capability-badge {
-    width: 5.5mm; height: 5.5mm; font-size: 7.5pt;
+  .capability-body {
+    display: flex; flex-direction: column; gap: 0.6mm;
+    padding-left: 2.5mm; border-left: 0.6pt solid var(--dt-card-border);
+  }
+  .capability-card:first-child .capability-body {
+    border-left-color: var(--dt-primary);
   }
   .capability-headline {
     font-size: var(--dt-card-headline-size); font-weight: var(--dt-font-weight-bold);
-    color: var(--dt-text); line-height: 1.25; margin-bottom: 1mm;
+    color: var(--dt-text); line-height: 1.25;
   }
   .capability-headline.highlight { color: var(--dt-primary); }
   .capability-proof {
     font-size: var(--dt-card-proof-size); color: var(--dt-text);
-    line-height: 1.35; margin-bottom: 0.8mm;
+    line-height: 1.35; font-weight: var(--dt-font-weight-medium);
   }
   .capability-benefit {
     font-size: var(--dt-card-benefit-size); color: var(--dt-text-secondary);
-    line-height: 1.35; font-weight: var(--dt-font-weight-medium);
-    margin-top: auto;
+    line-height: 1.35;
   }
 
-  /* ── Showcase Zone ────────────────────────────────────────── */
+  /* ── Product Views ────────────────────────────────────────── */
   .showcase-zone {
     padding: var(--dt-section-gap) var(--dt-page-h-pad) 0; width: 100%;
   }
   .showcase-label {
     font-size: var(--dt-font-size-small); color: var(--dt-text-secondary);
     letter-spacing: 1pt; font-weight: var(--dt-font-weight-medium);
-    margin-bottom: 2mm;
+    margin-bottom: 2.5mm;
   }
   .showcase-grid {
     display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: var(--dt-showcase-gap); width: 100%;
   }
   .showcase-card-inner {
-    background: var(--dt-card-bg); border: 1pt solid var(--dt-card-border);
-    padding: 1.8mm 2mm; display: flex; flex-direction: column;
+    background: none; border: none; padding: 0;
+    display: flex; flex-direction: column; align-items: center;
   }
   .showcase-tag {
-    font-size: var(--dt-font-size-xs); color: var(--dt-primary);
-    font-weight: 600; letter-spacing: 0.8pt; margin-bottom: 0.8mm;
-    display: flex; align-items: center; line-height: 1;
+    font-size: var(--dt-font-size-xs); color: var(--dt-text-secondary);
+    font-weight: var(--dt-font-weight-medium); letter-spacing: 0.8pt;
+    margin-top: 1.5mm; text-align: center;
   }
-  .showcase-title {
-    font-size: var(--dt-font-size-body); font-weight: var(--dt-font-weight-bold);
-    color: var(--dt-text); margin-bottom: 1mm; line-height: 1.25;
-  }
+  .showcase-title { display: none; }
+  .showcase-desc { display: none; }
   .showcase-img {
     width: 100%; height: var(--dt-showcase-img-h); background: var(--dt-white);
-    display: flex; align-items: center; justify-content: center; margin-bottom: 1mm;
-  }
-  .showcase-desc {
-    font-size: 7.5pt; color: var(--dt-text-secondary); line-height: 1.3;
-  }
-  /* VIEW mode: hide title + desc, center tag */
-  .showcase-card-inner.view-only .showcase-title { display: none; }
-  .showcase-card-inner.view-only .showcase-desc { display: none; }
-  .showcase-card-inner.view-only .showcase-img { margin-bottom: 0; }
-  .showcase-card-inner.view-only .showcase-tag {
-    margin-bottom: 0; justify-content: center;
+    display: flex; align-items: center; justify-content: center;
   }
 
   /* ── Control Zone (Software / Highlights) ─────────────────── */
@@ -252,27 +236,30 @@
     object-fit: var(--dt-img-fit); object-position: center center; margin: auto;
   }
 
-  /* ── Price Strip ──────────────────────────────────────────── */
+  /* ── Commercial Strip ─────────────────────────────────────── */
   .price-strip {
-    background: var(--dt-price-bg); margin-top: var(--dt-section-gap);
-    display: table; width: 100%; table-layout: fixed;
+    margin-top: var(--dt-section-gap);
+    padding: 4mm var(--dt-page-h-pad);
+    border-top: 0.6pt solid var(--dt-card-border);
+    border-bottom: 0.6pt solid var(--dt-card-border);
+    display: flex; width: 100%; gap: 0;
   }
   .price-cell {
-    display: table-cell; padding: 2mm 3mm; vertical-align: top;
-    border-right: 1pt solid #2A2D33;
+    flex: 1; padding: 0 3mm;
+    border-right: 0.6pt solid var(--dt-card-border);
+    display: flex; flex-direction: column; gap: 0.8mm;
   }
   .price-cell:last-child { border-right: none; }
   .price-label {
-    font-size: var(--dt-font-size-xs); color: #B8BCC5;
-    letter-spacing: 1pt; font-weight: var(--dt-font-weight-medium);
-    margin-bottom: 0.8mm;
+    font-size: 7pt; color: var(--dt-text-secondary);
+    letter-spacing: 0.8pt; font-weight: var(--dt-font-weight-medium);
+    text-transform: uppercase;
   }
   .price-value {
-    font-size: 13pt; font-weight: var(--dt-font-weight-bold);
-    color: #FFFFFF; line-height: 1.1;
+    font-size: 10pt; font-weight: var(--dt-font-weight-bold);
+    color: var(--dt-text); line-height: 1.2;
   }
-  .price-value.red { color: var(--dt-primary); font-size: 15pt; }
-  .price-suffix { font-size: 7pt; color: #B8BCC5; margin-top: 0.7mm; }
+  .price-suffix { font-size: 6.5pt; color: #999; }
 
   /* ── Footer ───────────────────────────────────────────────── */
   .footer {
@@ -339,54 +326,74 @@
 
   <!-- ── CAPABILITY GRID ────────────────────────────────────── -->
   <div class="capability-grid" data-section="capabilities" data-list="uniqueFeatures">
-    <div class="capability-card primary">
+    <div class="capability-card">
       <div class="capability-badge">01</div>
-      <div class="capability-headline highlight">LED Matrix Display</div>
-      <div class="capability-proof">A built-in smart display panel gives the keyboard a more memorable identity on the desk.</div>
-      <div class="capability-benefit">Helps retailers show something customers notice at first glance.</div>
+      <div class="capability-body">
+        <div class="capability-headline highlight">LED Matrix Display</div>
+        <div class="capability-proof">A built-in smart display panel gives the keyboard a more memorable identity on the desk.</div>
+        <div class="capability-benefit">Helps retailers show something customers notice at first glance.</div>
+      </div>
     </div>
     <div class="capability-card">
       <div class="capability-badge">02</div>
-      <div class="capability-headline">Tri-Mode Connectivity</div>
-      <div class="capability-proof">Flexible wired and wireless switching makes the product fit more setups.</div>
-      <div class="capability-benefit">That versatility helps both users and retailers get more value from one SKU.</div>
+      <div class="capability-body">
+        <div class="capability-headline">Tri-Mode Connectivity</div>
+        <div class="capability-proof">Flexible wired and wireless switching makes the product fit more setups.</div>
+        <div class="capability-benefit">That versatility helps both users and retailers.</div>
+      </div>
     </div>
     <div class="capability-card">
       <div class="capability-badge">03</div>
-      <div class="capability-headline">8000 mAh Battery</div>
-      <div class="capability-proof">A stronger battery improves real daily usability.</div>
-      <div class="capability-benefit">Gives the product a more confident wireless positioning.</div>
+      <div class="capability-body">
+        <div class="capability-headline">8000 mAh Battery</div>
+        <div class="capability-proof">A stronger battery improves real daily usability.</div>
+        <div class="capability-benefit">Wireless confidence, fewer charging interruptions.</div>
+      </div>
     </div>
     <div class="capability-card">
       <div class="capability-badge">04</div>
-      <div class="capability-headline">5-PIN Hot Swappable</div>
-      <div class="capability-proof">Users can change switches without soldering.</div>
-      <div class="capability-benefit">Makes the keyboard more attractive to enthusiast buyers.</div>
+      <div class="capability-body">
+        <div class="capability-headline">5-PIN Hot Swappable</div>
+        <div class="capability-proof">Users can change switches without soldering.</div>
+        <div class="capability-benefit">Attractive to enthusiast buyers who customize.</div>
+      </div>
+    </div>
+    <div class="capability-card">
+      <div class="capability-badge">05</div>
+      <div class="capability-body">
+        <div class="capability-headline">Gasket Mount</div>
+        <div class="capability-proof">5-layer dampening absorbs vibration for a refined feel.</div>
+        <div class="capability-benefit">Premium typing acoustics that justify the price.</div>
+      </div>
+    </div>
+    <div class="capability-card">
+      <div class="capability-badge">06</div>
+      <div class="capability-body">
+        <div class="capability-headline">1000Hz Polling Rate</div>
+        <div class="capability-proof">1ms response — every keystroke registered instantly.</div>
+        <div class="capability-benefit">Competitive gaming without input lag.</div>
+      </div>
     </div>
   </div>
 
-  <!-- ── SHOWCASE ZONE ──────────────────────────────────────── -->
-  <div class="showcase-zone" data-section="showcase" data-showcase-type="MODE">
-    <div class="showcase-label">PRODUCT DETAIL</div>
+  <!-- ── PRODUCT VIEWS ──────────────────────────────────────── -->
+  <div class="showcase-zone" data-section="showcase" data-showcase-type="VIEW">
+    <div class="showcase-label">PRODUCT VIEWS</div>
     <div class="showcase-grid">
       <div class="showcase-card">
         <div class="showcase-card-inner">
-          <div class="showcase-tag">MODE 01</div>
-          <div class="showcase-title">Display Attached</div>
           <div class="showcase-img" data-container="detail1Image">
-            <img class="showcase-fit" src="" alt="mode 01" data-field="detail1Image">
+            <img class="showcase-fit" src="" alt="top view" data-field="detail1Image">
           </div>
-          <div class="showcase-desc">Full-size keyboard with smart display panel.</div>
+          <div class="showcase-tag">TOP VIEW</div>
         </div>
       </div>
       <div class="showcase-card">
         <div class="showcase-card-inner">
-          <div class="showcase-tag">MODE 02</div>
-          <div class="showcase-title">Display Removed</div>
           <div class="showcase-img" data-container="detail2Image">
-            <img class="showcase-fit" src="" alt="mode 02" data-field="detail2Image">
+            <img class="showcase-fit" src="" alt="angle view" data-field="detail2Image">
           </div>
-          <div class="showcase-desc">Compact layout ideal for travel or minimal setups.</div>
+          <div class="showcase-tag">ANGLE VIEW</div>
         </div>
       </div>
     </div>
@@ -419,11 +426,11 @@
     </div>
   </div>
 
-  <!-- ── PRICE STRIP ────────────────────────────────────────── -->
+  <!-- ── COMMERCIAL STRIP ───────────────────────────────────── -->
   <div class="price-strip" data-section="price">
     <div class="price-cell">
-      <div class="price-label">PRICE</div>
-      <div class="price-value red" data-field="price">¥ TBD</div>
+      <div class="price-label">MSRP</div>
+      <div class="price-value" data-field="price">¥ TBD</div>
       <div class="price-suffix" data-field="priceSub">RMB · Tax excl.</div>
     </div>
     <div class="price-cell">
@@ -437,7 +444,7 @@
       <div class="price-suffix" data-field="colorSub">OEM available</div>
     </div>
     <div class="price-cell">
-      <div class="price-label">BOX SIZE</div>
+      <div class="price-label">PACKAGING SIZE</div>
       <div class="price-value" data-field="boxSize">TBD</div>
       <div class="price-suffix" data-field="boxSizeSub">To be confirmed</div>
     </div>
