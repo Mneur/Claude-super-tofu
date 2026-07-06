@@ -99,6 +99,10 @@
     font-size: var(--dt-value-size); color: var(--dt-text-secondary);
     line-height: 1.45; max-width: 80%;
   }
+  .section-divider {
+    border-top: 1pt solid var(--dt-card-border);
+    margin: var(--dt-section-gap) var(--dt-page-h-pad) 0;
+  }
 
   /* ── Capability Grid ──────────────────────────────────────── */
   .capability-grid {
@@ -108,8 +112,23 @@
   }
   .capability-card {
     background: var(--dt-card-bg); border: 1pt solid var(--dt-card-border);
-    border-radius: var(--dt-card-radius); padding: 2.5mm 3mm;
-    display: flex; flex-direction: column;
+    border-radius: var(--dt-card-radius); padding: 2.5mm 3mm 2.5mm 8mm;
+    display: flex; flex-direction: column; position: relative;
+  }
+  .capability-card.primary {
+    border-left: 2.5pt solid var(--dt-primary);
+    background: linear-gradient(135deg, #FFF5F5 0%, var(--dt-card-bg) 40%);
+  }
+  .capability-badge {
+    position: absolute; left: -0.5mm; top: -0.5mm;
+    background: var(--dt-primary); color: #FFFFFF;
+    font-size: 7pt; font-weight: 700; letter-spacing: 0.3pt;
+    width: 5mm; height: 5mm; display: flex;
+    align-items: center; justify-content: center;
+    border-radius: 1pt;
+  }
+  .capability-card.primary .capability-badge {
+    width: 5.5mm; height: 5.5mm; font-size: 7.5pt;
   }
   .capability-headline {
     font-size: var(--dt-card-headline-size); font-weight: var(--dt-font-weight-bold);
@@ -315,24 +334,31 @@
     <div class="value-lead" data-field="heroFeatureLead">The keyboard's most visible surface is no longer cold plastic — it's a fabric-and-display composite.</div>
   </div>
 
+  <!-- ── SECTION DIVIDER ──────────────────────────────────── -->
+  <div class="section-divider"></div>
+
   <!-- ── CAPABILITY GRID ────────────────────────────────────── -->
   <div class="capability-grid" data-section="capabilities" data-list="uniqueFeatures">
-    <div class="capability-card">
+    <div class="capability-card primary">
+      <div class="capability-badge">01</div>
       <div class="capability-headline highlight">LED Matrix Display</div>
       <div class="capability-proof">A built-in smart display panel gives the keyboard a more memorable identity on the desk.</div>
       <div class="capability-benefit">Helps retailers show something customers notice at first glance.</div>
     </div>
     <div class="capability-card">
+      <div class="capability-badge">02</div>
       <div class="capability-headline">Tri-Mode Connectivity</div>
       <div class="capability-proof">Flexible wired and wireless switching makes the product fit more setups.</div>
       <div class="capability-benefit">That versatility helps both users and retailers get more value from one SKU.</div>
     </div>
     <div class="capability-card">
+      <div class="capability-badge">03</div>
       <div class="capability-headline">8000 mAh Battery</div>
       <div class="capability-proof">A stronger battery improves real daily usability.</div>
       <div class="capability-benefit">Gives the product a more confident wireless positioning.</div>
     </div>
     <div class="capability-card">
+      <div class="capability-badge">04</div>
       <div class="capability-headline">5-PIN Hot Swappable</div>
       <div class="capability-proof">Users can change switches without soldering.</div>
       <div class="capability-benefit">Makes the keyboard more attractive to enthusiast buyers.</div>

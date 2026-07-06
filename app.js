@@ -2074,10 +2074,13 @@ async function buildOfferingV2(data) {
   // Features
   const capabilityGrid = doc.querySelector('[data-list="uniqueFeatures"]');
   if (capabilityGrid) {
-    capabilityGrid.innerHTML = blocks.featureBlocks.slice(0, 5).map(f => {
+    capabilityGrid.innerHTML = blocks.featureBlocks.slice(0, 5).map((f, i) => {
       const layers = splitDescriptionToLayers(f.description);
       const highlightClass = f.highlight ? ' highlight' : '';
-      return `<div class="capability-card">
+      const primaryClass = i === 0 ? ' primary' : '';
+      const badge = String(i + 1).padStart(2, '0');
+      return `<div class="capability-card${primaryClass}">
+      <div class="capability-badge">${badge}</div>
       <div class="capability-headline${highlightClass}">${escapeHtml(f.title)}</div>
       <div class="capability-proof">${escapeHtml(layers.proof)}</div>${layers.benefit ? `\n      <div class="capability-benefit">${escapeHtml(layers.benefit)}</div>` : ''}
     </div>`;
