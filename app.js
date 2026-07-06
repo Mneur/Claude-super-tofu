@@ -2062,84 +2062,99 @@ async function buildOfferingV2(data) {
   setText('.topbar-right b', formatMonthLabel(data.documentMonth));
   setAttr('.logo-img', 'src', 'assets/logo/gaming2.png');
 
-  // Title
+  // Hero identity
   setText('[data-field="productName"]', `${data.productName} ${data.productModel}`.trim());
   setText('[data-field="productType"]', data.productType);
-  setText('[data-field="specKeywords"]', blocks.specStrip.keywords);
-
-  // Hero
   setText('[data-field="sceneTitle"]', blocks.heroConcept.sceneTitle);
   setImg('[data-field="heroImage"]', blocks.heroConcept.heroImage, 'HERO IMAGE');
 
-  // Features
-  const capabilityGrid = doc.querySelector('[data-list="uniqueFeatures"]');
-  if (capabilityGrid) {
-    capabilityGrid.innerHTML = blocks.featureBlocks.slice(0, 6).map((f, i) => {
+  // Hero commercial (price, MOQ, color inline)
+  setText('[data-field="price"]', blocks.specStrip.price || '');
+  setText('[data-field="moq"]', blocks.specStrip.moq || '');
+  setText('[data-field="color"]', blocks.specStrip.color || '');
+
+  // Hero positioning headline
+  setText('[data-field="heroFeatureHeadline"]', data.heroFeature.sectionTitle || '');
+
+  // Split hero lead into proof + benefit
+  const heroLead = data.heroFeature.leadDescription || '';
+  const heroLayers = splitDescriptionToLayers(heroLead);
+  setText('[data-field="heroFeatureProof"]', heroLayers.proof || heroLead);
+  setText('[data-field="heroFeatureLead"]', heroLayers.benefit || '');
+
+  // Primary Selling Advantages (first 3 features)
+  const primaryList = doc.querySelector('[data-list="primaryAdvantages"]');
+  if (primaryList) {
+    primaryList.innerHTML = blocks.featureBlocks.slice(0, 3).map((f, i) => {
       const layers = splitDescriptionToLayers(f.description);
-      const highlightClass = f.highlight ? ' highlight' : '';
-      const badge = String(i + 1).padStart(2, '0');
-      return `<div class="capability-card">
-      <div class="capability-badge">${badge}</div>
-      <div class="capability-body">
-        <div class="capability-headline${highlightClass}">${escapeHtml(f.title)}</div>
-        <div class="capability-proof">${escapeHtml(layers.proof)}</div>${layers.benefit ? `\n        <div class="capability-benefit">${escapeHtml(layers.benefit)}</div>` : ''}
-      </div>
-    </div>`;
+      return `<div class="primary-item">
+        <div class="primary-num">${String(i + 1).padStart(2, '0')}</div>
+        <div class="primary-body">
+          <div class="primary-headline">${escapeHtml(f.title)}</div>
+          <div class="primary-proof">${escapeHtml(layers.proof)}</div>
+          <div class="primary-benefit">${escapeHtml(layers.benefit)}</div>
+        </div>
+      </div>`;
     }).join('');
   }
 
-  // Hero Feature (left column)
-  setText('[data-field="heroFeatureHeadline"]', data.heroFeature.sectionTitle || '');
-  setText('[data-field="heroFeatureLead"]', data.heroFeature.leadDescription || '');
+  // Supporting Capabilities (next 3 features)
+  const supportingGrid = doc.querySelector('[data-list="supportingCapabilities"]');
+  if (supportingGrid) {
+    supportingGrid.innerHTML = blocks.featureBlocks.slice(3, 6).map((f, i) => {
+      const layers = splitDescriptionToLayers(f.description);
+      return `<div class="supporting-item">
+        <div class="supporting-num">${String(i + 4).padStart(2, '0')}</div>
+        <div class="supporting-headline">${escapeHtml(f.title)}</div>
+        <div class="supporting-desc">${escapeHtml(layers.proof)}</div>
+      </div>`;
+    }).join('');
+  }
 
-  // Showcase cards
+  // Product Views (always TOP VIEW + ANGLE VIEW)
   const showcaseSection = doc.querySelector('[data-section="showcase"]');
   if (showcaseSection) {
-    showcaseSection.setAttribute('data-showcase-type', blocks.modeSystem.type);
-    const cards = showcaseSection.querySelectorAll('.showcase-card');
+    const viewsTags = showcaseSection.querySelectorAll('.views-tag');
     blocks.modeSystem.items.forEach((item, i) => {
-      if (cards[i]) {
-        cards[i].querySelector('.showcase-tag').textContent = item.tag;
-        const img = cards[i].querySelector('.showcase-fit');
-        if (img) img.src = getImageSrc(item.image, item.tag, '');
-      }
+      if (viewsTags[i]) viewsTags[i].textContent = item.tag;
+      const img = showcaseSection.querySelectorAll('.showcase-fit')[i];
+      if (img) img.src = getImageSrc(item.image, item.tag, '');
     });
   }
 
-  // Right column
+  // Software / Highlights
   const controlZone = doc.querySelector('[data-section="controlZone"]');
   if (controlZone) {
     if (blocks.softwareSystem) {
       controlZone.setAttribute('data-has-software', 'yes');
-      setText('[data-field="softwareHeadline"]', blocks.softwareSystem.title);
-      setText('[data-field="softwareLead"]', blocks.softwareSystem.lead);
-      blocks.softwareSystem.cards.forEach((card, i) => {
-        setImg(`[data-field="editor${i+1}Image"]`, card.image, `SOFTWARE ${i+1}`);
-        setText(`[data-field="editor${i+1}Name"]`, card.name);
-        setText(`[data-field="editor${i+1}Caption"]`, card.desc);
-      });
+      controlZone.querySelector('.software-label').textContent = 'SOFTWARE CONTROL';
+      setText('[data-field="editor1Name"]', blocks.softwareSystem.cards[0].name);
+      setText('[data-field="editor1Caption"]', blocks.softwareSystem.cards[0].desc);
+      setImg('[data-field="editor1Image"]', blocks.softwareSystem.cards[0].image, 'SW 01');
+      setText('[data-field="editor2Name"]', blocks.softwareSystem.cards[1].name);
+      setText('[data-field="editor2Caption"]', blocks.softwareSystem.cards[1].desc);
+      setImg('[data-field="editor2Image"]', blocks.softwareSystem.cards[1].image, 'SW 02');
     } else {
       controlZone.setAttribute('data-has-software', 'no');
       const extraFeatures = blocks.featureBlocks.slice(6);
       if (extraFeatures.length > 0) {
-        controlZone.innerHTML = `<div class="highlights-label">ADDITIONAL HIGHLIGHTS</div><div class="highlights-list">${extraFeatures.map(f => `<div class="feature-item"><div class="feature-name">${escapeHtml(f.title)}</div><div class="feature-desc">${escapeHtml(f.description)}</div></div>`).join('')}</div>`;
+        controlZone.querySelector('.software-label').textContent = 'ADDITIONAL HIGHLIGHTS';
+        controlZone.querySelector('.software-cards').innerHTML =
+          `<div class="highlights-grid">${extraFeatures.slice(0, 3).map(f =>
+            `<div class="highlights-item"><div class="highlights-item-name">${escapeHtml(f.title)}</div><div class="highlights-item-desc">${escapeHtml(splitDescriptionToLayers(f.description).proof)}</div></div>`
+          ).join('')}</div>`;
       } else {
         controlZone.innerHTML = '';
       }
     }
   }
 
-  // Price
-  setText('[data-field="price"]', blocks.specStrip.price || '');
-  setText('[data-field="priceSub"]', blocks.specStrip.priceSub || '');
-  setText('[data-field="moq"]', blocks.specStrip.moq || '');
-  setText('[data-field="moqSub"]', blocks.specStrip.moqSub || '');
-  setText('[data-field="color"]', blocks.specStrip.color || '');
-  setText('[data-field="colorSub"]', blocks.specStrip.colorSub || '');
+  // Commercial Info
   setText('[data-field="boxSize"]', blocks.specStrip.boxSize || '');
-  setText('[data-field="boxSizeSub"]', blocks.specStrip.boxSizeSub || '');
   setText('[data-field="cartonQty"]', blocks.specStrip.cartonQty || '');
-  setText('[data-field="cartonQtySub"]', blocks.specStrip.cartonQtySub || '');
+  setText('[data-field="priceSub"]', blocks.specStrip.priceSub || '');
+  setText('[data-field="moqSub"]', blocks.specStrip.moqSub || '');
+  setText('[data-field="colorSub"]', blocks.specStrip.colorSub || '');
 
   // Footer
   const monthLabel = formatMonthLabel(data.documentMonth);
@@ -2151,7 +2166,7 @@ async function buildOfferingV2(data) {
 
   // Inline hardening for PDF — CSS custom properties may not resolve from external file
   const h = doc.createElement('style');
-  h.textContent = `.hero-fit,.showcase-fit{max-width:100%!important;max-height:100%!important;display:block!important;object-fit:contain!important;object-position:center center!important;margin:auto!important}.hero-image-container,.showcase-img,.control-card-img{display:flex!important;align-items:center!important;justify-content:center!important}`;
+  h.textContent = `.hero-fit,.showcase-fit{max-width:100%!important;max-height:100%!important;display:block!important;object-fit:contain!important;object-position:center center!important;margin:auto!important}.hero-image-container,.views-img,.software-card-img{display:flex!important;align-items:center!important;justify-content:center!important}`;
   doc.head.appendChild(h);
 
   return `<!DOCTYPE html>\n${doc.documentElement.outerHTML}`;
