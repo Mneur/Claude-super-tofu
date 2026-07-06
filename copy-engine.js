@@ -59,7 +59,7 @@ const CopyEngine = (() => {
   function resolveCategory(productType) {
     const t = String(productType || '').toLowerCase();
     if (/keyboard|keeb/i.test(t))               return CATEGORY.KEYBOARD;
-    if (/headset|headphone|iem|earphone|earbud/i.test(t)) return CATEGORY.HEADSET;
+    if (/headset|headphone|iem|earphone|earbud|in.?ear|ear.?monitor/i.test(t)) return CATEGORY.HEADSET;
     if (/racing|wheel|sim\s*rig|direct\s*drive/i.test(t)) return CATEGORY.RACING_WHEEL;
     if (/\bmouse\b/i.test(t))                   return CATEGORY.MOUSE;
     if (/speaker/i.test(t))                     return CATEGORY.SPEAKER;
@@ -111,17 +111,17 @@ const CopyEngine = (() => {
   const INTENT_PATTERNS = [
     { intent: INTENT.POWER,          re: /\b(battery|mah|charging|recharge|runtime|hours?\s*(play|use|life)|quick.?charge|wireless.*(charge|power)|power.?bank|long.?life.*battery|battery.*long.?life)\b/i, weight: 10 },
     { intent: INTENT.CONNECTIVITY,   re: /\b(tri.?mode|quad.?mode|dual.?mode|bluetooth|2\.4g|wireless|wired|usb.[cba]|dongle|receiver|multi.?mode|multi.?connection|rf.*mode)\b/i, weight: 10 },
-    { intent: INTENT.ERGONOMICS,     re: /\b(ergonomic|gasket|mount|lightweight|ultra.?light|super.?light|weight|grams?|contour|shape|grip|leather|comfort|palm|wrist|angled|tilt|adjustable.*(stand|height|angle))\b/i, weight: 8 },
-    { intent: INTENT.PERFORMANCE,    re: /\b(speed|fast|response|polling|hz|latency|low.?latency|throughput|processing|chipset|processor|mcu|arm|cortex)\b/i, weight: 8 },
+    { intent: INTENT.ERGONOMICS,     re: /\b(ergonomic|gasket|mount|lightweight|ultra.?light|super.?light|weight|grams?|contour|shape|grip|leather|comfort|palm|wrist|angled|tilt|adjustable.*(stand|height|angle)|dampen|dampening|sound.*(dampen|absorption)|typing.*(feel|sound|acoustic)|acoustic.*typing)\b/i, weight: 8 },
+    { intent: INTENT.PERFORMANCE,    re: /\b(speed|fast|response|polling|hz|latency|low.?latency|throughput|processing|chipset|processor|mcu|arm|cortex|refresh.*rate|report.*rate)\b/i, weight: 8 },
     { intent: INTENT.PRECISION,      re: /\b(precision|accurate|accuracy|resolution|dpi|cpi|tracking|pixart|paw\d|sensor.*precision|fine.*control|high.?res|8k.*polling|4k.*polling)\b/i, weight: 8 },
-    { intent: INTENT.IMMERSION,      re: /\b(force.?feedback|direct.?drive|belt.?drive|torque|nm|newton|haptic|vibration|rumble|surround|7\.1|spatial.*audio|3d.*audio|virtual.*surround|positional)\b/i, weight: 10 },
-    { intent: INTENT.CONTROL,        re: /\b(knob|dial|wheel|slider|button|switch.*control|media.*key|macro.*key|multi.?function.*(wheel|dial|knob)|scroll.*wheel|thumb.*wheel|rotary)\b/i, weight: 7 },
+    { intent: INTENT.IMMERSION,      re: /\b(force.?feedback|direct.?drive|belt.?drive|torque|nm|newton|haptic|vibration|rumble|surround|7\.1|spatial.*audio|3d.*audio|virtual.*surround|positional|motor.*vibration|vibration.*motor|vibration.*feedback|dual.*motor)\b/i, weight: 10 },
+    { intent: INTENT.CONTROL,        re: /\b(knob|dial|wheel|slider|button|switch.*control|media.*key|macro.*key|multi.?function.*(wheel|dial|knob)|scroll.*wheel|thumb.*wheel|rotary|d.?pad|shifter|gear.*shift|h.?pattern|paddle.*shift|pedal|rotation.*angle|steering.*angle|adjustable.*rotation)\b/i, weight: 7 },
     { intent: INTENT.DISPLAY,        re: /\b(display|screen|oled|lcd|led.*matrix|led.*display|dot.*matrix|pixel.*display|smart.*display|status.*screen|info.*panel)\b/i, weight: 9 },
-    { intent: INTENT.CUSTOMIZATION,  re: /\b(hot.?swap|modular|swap|change.*switch|replaceable|custom|rgb|argb|lighting|led|backlit|keycap|plate|foam|dampen|mod|tuning|configurable|assignable|programmable|remap)\b/i, weight: 8 },
+    { intent: INTENT.CUSTOMIZATION,  re: /\b(hot.?swap|modular|swap|change.*switch|replaceable|custom|rgb|argb|lighting|led|backlit|keycap|plate|foam|mod|tuning|configurable|assignable|programmable|remap|detachable.*(cable|connector|cord))\b/i, weight: 8 },
     { intent: INTENT.COMPATIBILITY,  re: /\b(multi.?platform|console|playstation|xbox|nintendo|switch|pc|mac|ios|android|linux|cross.?platform|universal|os.*support|platform.*support)\b/i, weight: 8 },
-    { intent: INTENT.DURABILITY,     re: /\b(durable|lifespan|long.?life|million.*click|rated.*click|rating|military|ip.*rating|ipx|water.*resistant|dust.*proof|splash|pbt|double.?shot|aluminum|metal|steel|alloy|carbon.*fiber|reinforced)\b/i, weight: 7 },
-    { intent: INTENT.PORTABILITY,    re: /\b(portable|compact|foldable|travel|carry|case|bag|storage|mini|small.*form|low.*profile|slim|thin|light.*weight|detachable.*cable)\b/i, weight: 6 },
-    { intent: INTENT.AUDIO,          re: /\b(driver|speaker|audio|sound|tuning|eq|equalizer|bass|treble|frequency|response|dynamic|balanced.*armature|planar.*magnetic|neodymium|diaphragm|acoustic|resonance|soundstage|imaging)\b/i, weight: 10 },
+    { intent: INTENT.DURABILITY,     re: /\b(durable|lifespan|long.?life|million.*click|rated.*(click|actuation)|rating|military|ip.*rating|ipx|water.*resistant|dust.*proof|splash|pbt|double.?shot|aluminum|metal|steel|alloy|carbon.*fiber|reinforced|click.*life|actuation.*life)\b/i, weight: 7 },
+    { intent: INTENT.PORTABILITY,    re: /\b(portable|compact|foldable|travel|carry|case|bag|storage|mini|small.*form|low.*profile|slim|thin|light.*weight|retractable.*(cable|cord)|built.?in.*(cable|storage))\b/i, weight: 6 },
+    { intent: INTENT.AUDIO,          re: /\b(driver\s*(unit|size|diameter)?|speaker|audio|sound\s*(quality|stage|signature|profile|tuning|clarity|field|reproduction|imaging|isolation|cancelling)|tuning|eq|equalizer|bass|treble|frequency|response|dynamic|balanced.*armature|planar.*magnetic|neodymium|diaphragm|acoustic|resonance|soundstage|imaging)\b/i, weight: 10 },
     { intent: INTENT.MICROPHONE,     re: /\b(microphone|mic|voice|noise.*cancelling|noise.*cancel|enc|anc|ai.*noise|ai.*mic|beam.*form|pickup|mute|retractable.*mic|detachable.*mic|flip.*mic|boom.*mic)\b/i, weight: 10 },
     { intent: INTENT.SOFTWARE,       re: /\b(software|driver|app|firmware|editor|companion.*app|desktop.*app|mobile.*app|web.*(driver|app)|control.*panel|dashboard|macro.*editor|profile.*manager|custom.*(software|app|driver))\b/i, weight: 9 },
     { intent: INTENT.SENSORS,        re: /\b(sensor|hall.*effect|hall.*sensor|optical.*sensor|laser.*sensor|magnetic.*sensor|potentiometer|load.*cell|pressure.*sensor|position.*sensor|encoder)\b/i, weight: 9 },
@@ -421,6 +421,7 @@ const CopyEngine = (() => {
         return titleCase(core, category);
       }
       case INTENT.CONNECTIVITY: {
+        if (prefix && core && core.length > 3) return titleCase(prefix + ' ' + core, category);
         if (prefix) return titleCase(prefix, category);
         return titleCase(core, category);
       }
@@ -579,10 +580,18 @@ const CopyEngine = (() => {
     [INTENT.IMMERSION]: {
       [CATEGORY.RACING_WHEEL]: [
         (s, c, p) => {
-          const nm = p.number || '';
-          return `Delivers ${nm ? nm + ' newton-meters of ' : ''}direct-drive torque for instant, detailed force feedback with no belt slack or gear rattle. Every curb, slip angle, and surface change reaches the driver's hands without lag or filtering — the difference between playing a racing game and driving a car.`;
+          if (/direct.?drive|nm|newton|torque/i.test(s)) {
+            const nm = p.number || '';
+            return `Delivers ${nm ? nm + ' newton-meters of ' : ''}direct-drive torque for instant, detailed force feedback with no belt slack or gear rattle. Every curb, slip angle, and surface change reaches the driver's hands without lag or filtering — the difference between playing a racing game and driving a car.`;
+          }
+          return `Dual-motor vibration delivers tactile feedback through the wheel rim — engine rumble, road texture, and collision impact transmitted directly to the driver's hands. The physical sensation makes the simulation more convincing and helps the driver react to surface changes they can feel before they see them.`;
         },
-        (s, c, p) => `Direct-drive fidelity means the wheel communicates what the car is doing the moment it happens. Belt and gear systems smooth over the details; direct drive preserves them. For the driver, that's earlier correction, better consistency, and more convincing immersion.`,
+        (s, c, p) => {
+          if (/direct.?drive|nm|newton|torque/i.test(s)) {
+            return `Direct-drive fidelity means the wheel communicates what the car is doing the moment it happens. Belt and gear systems smooth over the details; direct drive preserves them. For the driver, that's earlier correction, better consistency, and more convincing immersion.`;
+          }
+          return `Vibration feedback adds a physical layer to the racing experience that visuals alone cannot deliver. Feeling the car's behavior through the wheel helps the driver develop intuition for grip, weight transfer, and track surface — skills that transfer to faster, more consistent driving.`;
+        },
       ],
       [CATEGORY.HEADSET]: [
         (s, c, p) => `Spatial audio positioning lets the user hear exactly where footsteps, gunshots, and engine sounds come from — not just left or right, but distance and height. In competitive games, that information is the difference between reacting first and reacting late.`,
@@ -602,7 +611,18 @@ const CopyEngine = (() => {
         (s, c, p) => `Switch customization means the keyboard can evolve with the user's taste — lighter, heavier, tactile, linear. That flexibility keeps the product relevant longer, which builds brand loyalty and word-of-mouth.`,
       ],
       [CATEGORY.HEADSET]: [
-        (s, c, p) => `Customizable settings let the user tune the audio profile to their preference rather than accepting a fixed factory tuning. That flexibility makes the headset more personal — and more likely to be recommended.`,
+        (s, c, p) => {
+          if (/detachable.*(cable|connector|cord)/i.test(s)) {
+            return `A detachable cable means the most vulnerable part of an in-ear monitor — the connection point — can be replaced if damaged, without replacing the entire unit. Users can also upgrade to different cable materials or terminations as their setup evolves.`;
+          }
+          return `Customizable settings let the user tune the audio profile to their preference rather than accepting a fixed factory tuning. That flexibility makes the headset more personal — and more likely to be recommended.`;
+        },
+        (s, c, p) => {
+          if (/detachable.*(cable|connector|cord)/i.test(s)) {
+            return `The 2-pin connector standard opens the IEM to a wide ecosystem of aftermarket cables — balanced, inline-mic, or higher-purity conductors. It gives the buyer an upgrade path without replacing the earphones themselves.`;
+          }
+          return `Adjustable fit and configuration options let the user adapt the product to their anatomy and listening preference. A better individual fit creates a better experience — and a more loyal owner.`;
+        },
       ],
       [CATEGORY.RACING_WHEEL]: [
         (s, c, p) => `Adjustable components let the driver configure pedal resistance, wheel rotation angle, and shifter feel to match their driving style and the car they're racing. One wheel base serves every racing discipline.`,
@@ -627,7 +647,18 @@ const CopyEngine = (() => {
 
     [INTENT.DURABILITY]: {
       [CATEGORY.KEYBOARD]: [
-        (s, c, p) => `Rated for millions of actuations per switch, built with materials that survive daily use without developing shine, wobble, or failure. A keyboard that still feels new after a year of heavy use earns repeat purchases and brand trust.`,
+        (s, c, p) => {
+          if (/million.*click|click.*life|actuation.*life|lifespan/i.test(s)) {
+            return `Rated for millions of actuations per switch — tested to survive far beyond typical keyboard usage. Consistent key feel across the rated lifespan means the typing experience doesn't degrade over time, which builds trust with repeat buyers.`;
+          }
+          return `Built with materials that survive daily use without developing shine, wobble, or failure. A keyboard that still feels new after a year of heavy use earns repeat purchases and brand trust.`;
+        },
+        (s, c, p) => {
+          if (/million.*click|click.*life|lifespan/i.test(s)) {
+            return `Switch lifespan directly affects long-term owner satisfaction. Higher-rated switches mean fewer returns, fewer complaints, and a product that maintains its reputation through months of real-world use.`;
+          }
+          return `Materials that resist wear, fading, and deformation keep the product looking and feeling consistent over time. Durability at this level is invisible — users only notice it when it's missing.`;
+        },
       ],
       [CATEGORY.HEADSET]: [
         (s, c, p) => `Built to survive daily wear — reinforced joints, durable cable connections, and materials that don't degrade with sweat and movement. A headset that lasts builds the kind of owner loyalty that drives word-of-mouth.`,
