@@ -908,10 +908,32 @@ function deriveSpecKeywords(data) {
 function deriveUniqueFeatures(data) {
   const category = CopyEngine.resolveCategory(data.productType);
   let specs = parseSpecLines(data.specSellingPointsText);
+  const normalizedMain = String(data.mainSellingPoint || "").trim().toLowerCase();
+
+  // Protect the main selling point spec from losing its identity during merging
+  let protectedSpec = null;
+  if (normalizedMain && specs.length > 6) {
+    // Find the spec that best matches mainSellingPoint BEFORE merging
+    let bestScore = 0;
+    let bestIdx = -1;
+    specs.forEach((spec, i) => {
+      const score = scoreMainSellingPointMatch({ spec, title: spec, description: '' }, normalizedMain);
+      if (score > bestScore) { bestScore = score; bestIdx = i; }
+    });
+    if (bestIdx >= 0 && bestScore > 0) {
+      protectedSpec = specs.splice(bestIdx, 1)[0];
+    }
+  }
+
   if (specs.length > 6) {
     specs = CopyEngine.mergeSpecs(specs, category);
   }
-  const normalizedMain = String(data.mainSellingPoint || "").trim().toLowerCase();
+
+  // Restore protected spec at the front
+  if (protectedSpec) {
+    specs.unshift(protectedSpec);
+  }
+
   let generated = specs.slice(0, 6).map((spec, index) => {
     const auto = CopyEngine.feature(spec, category, index);
     const manual = data.uniqueFeatures[index] || {};
