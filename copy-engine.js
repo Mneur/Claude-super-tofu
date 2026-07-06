@@ -311,7 +311,7 @@ const CopyEngine = (() => {
         (title, type) => `Most ${type || 'keyboard'} buyers make decisions based on feel. ${titleCase(title)} gives this model a distinct tactile story that no competing SKU can copy.`,
         (title, type) => `${titleCase(title)} addresses a specific friction that keyboard users complain about. Solving it creates an immediate reason to choose this product over a generic alternative.`,
       ],
-      titlePreserve: /^(USB|RGB|LED|PC|Mac|PBT|ABS|ARGB|DPI|IPS|CPI|TKL|QMK|VIA|MK|BT|RF|2\.4G|5G|Type-C|USB-C|LAN)$/i,
+      titlePreserve: /^(USB|RGB|LED|PC|Mac|PBT|ABS|ARGB|DPI|IPS|CPI|TKL|QMK|VIA|MK|BT|RF|2\.4G|5G|Type-C|USB-C|LAN|PIN|ENC|ANC|AI|EQ)$/i,
     },
     [CATEGORY.HEADSET]: {
       domain: 'audio quality, communication clarity, and wearing comfort',
@@ -377,6 +377,14 @@ const CopyEngine = (() => {
     return words.map((word, i) => {
       if (preserve.test(word)) return word.toUpperCase();
       if (i > 0 && i < words.length - 1 && lowercase.test(word)) return word.toLowerCase();
+      // Handle hyphenated words: capitalize each segment
+      if (word.includes('-')) {
+        return word.split('-').map(seg => {
+          if (preserve.test(seg)) return seg.toUpperCase();
+          if (lowercase.test(seg)) return seg.toLowerCase();
+          return seg.charAt(0).toUpperCase() + seg.slice(1).toLowerCase();
+        }).join('-');
+      }
       return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     }).join(' ');
   }
@@ -769,7 +777,9 @@ const CopyEngine = (() => {
   // ── Keywords ─────────────────────────────────────────────────
 
   function buildKeyword(spec, category) {
-    const s = String(spec || '').toLowerCase();
+    // Handle merged labels: extract first meaningful part before " + "
+    const cleanSpec = String(spec || '').replace(/\s*\+\s*.*$/, '').trim();
+    const s = cleanSpec.toLowerCase();
     const parsed = parseFeature(spec);
 
     // Extract the most distinctive term, category-aware
@@ -934,7 +944,10 @@ const CopyEngine = (() => {
     }
     if (batterySpecs.length > 0 && merged.length < 6) {
       const idx = pool.findIndex(s => /\b(battery|mah)\b/i.test(s));
-      if (idx !== -1) merged.push(pool.splice(idx, 1)[0] + ' Battery');
+      if (idx !== -1) {
+        const spec = pool.splice(idx, 1)[0];
+        merged.push(/\b(battery|mah)\b/i.test(spec) && !/\bbattery\b/i.test(spec) ? spec + ' Battery' : spec);
+      }
     }
 
     // Add remaining specs
