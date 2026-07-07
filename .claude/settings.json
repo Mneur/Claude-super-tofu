@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem *)",
+      "PowerShell(Test-Path *)",
+      "PowerShell(Get-Item *)",
+      "PowerShell(Get-Command *)",
+      "PowerShell(Get-Content *)",
+      "PowerShell(Get-Location)",
+      "PowerShell(Get-Process *)",
+      "PowerShell(Select-String *)",
+      "PowerShell(Measure-Object *)",
+      "PowerShell(Format-Table *)",
+      "PowerShell(Format-List *)",
+      "PowerShell(Select-Object *)",
+      "PowerShell(Group-Object *)",
+      "PowerShell(Sort-Object *)",
+      "WebSearch",
+      "WebFetch"
+    ]
+  }
+}
